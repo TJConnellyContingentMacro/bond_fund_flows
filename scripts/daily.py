@@ -22,7 +22,7 @@ from bondflows.sources.base import SourceAdapter  # noqa: E402
 # One entry per issuer, matching the `issuer` column in universe.csv. Add a
 # line here in the same commit that adds src/bondflows/sources/<issuer>.py.
 _ADAPTER_MODULES: dict[str, tuple[str, str]] = {
-    # "iShares": ("bondflows.sources.ishares", "ISharesAdapter"),
+    "iShares": ("bondflows.sources.ishares", "ISharesAdapter"),
 }
 
 
