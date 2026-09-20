@@ -1,125 +1,125 @@
-ticker,name,issuer,sleeve,sub_sleeve,in_core,confidence,notes
-SGOV,iShares 0-3 Month Treasury Bond,iShares,ust_ultrashort,bills,TRUE,high,
-BIL,SPDR Bloomberg 1-3 Month T-Bill,SSGA,ust_ultrashort,bills,TRUE,high,
-SHV,iShares Short Treasury Bond,iShares,ust_ultrashort,bills,TRUE,high,0-1y
-GBIL,Goldman Sachs Access Treasury 0-1 Year,Goldman,ust_ultrashort,bills,TRUE,high,
-CLIP,Global X 1-3 Month T-Bill,Global X,ust_ultrashort,bills,TRUE,med,
-XHLF,BondBloxx Bloomberg Six Month Target Duration,BondBloxx,ust_ultrashort,bills,TRUE,med,
-VBIL,Vanguard 0-3 Month Treasury Bill,Vanguard,ust_ultrashort,bills,TRUE,med,recent launch - verify ticker
-TFLO,iShares Treasury Floating Rate Bond,iShares,ust_ultrashort,frn,TRUE,high,FRN - near-zero duration
-USFR,WisdomTree Floating Rate Treasury,WisdomTree,ust_ultrashort,frn,TRUE,high,FRN - near-zero duration
-JPST,JPMorgan Ultra-Short Income,JPMorgan,ultrashort_credit,active,TRUE,high,
-MINT,PIMCO Enhanced Short Maturity Active,PIMCO,ultrashort_credit,active,TRUE,high,
-ICSH,iShares Ultra Short-Term Bond Active,iShares,ultrashort_credit,active,TRUE,high,
-GSY,Invesco Ultra Short Duration,Invesco,ultrashort_credit,active,TRUE,high,
-VUSB,Vanguard Ultra-Short Bond,Vanguard,ultrashort_credit,active,TRUE,high,
-NEAR,iShares Short Duration Bond Active,iShares,ultrashort_credit,active,TRUE,med,
-SHY,iShares 1-3 Year Treasury Bond,iShares,ust_short,index,TRUE,high,
-VGSH,Vanguard Short-Term Treasury,Vanguard,ust_short,index,TRUE,high,
-SCHO,Schwab Short-Term US Treasury,Schwab,ust_short,index,TRUE,high,
-SPTS,SPDR Portfolio Short Term Treasury,SSGA,ust_short,index,TRUE,high,
-UTWO,US Treasury 2 Year Note,F/m,ust_short,single_point,FALSE,med,single-tenor - clean duration read
-IEI,iShares 3-7 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,
-IEF,iShares 7-10 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,
-VGIT,Vanguard Intermediate-Term Treasury,Vanguard,ust_intermediate,index,TRUE,high,
-SCHR,Schwab Intermediate-Term US Treasury,Schwab,ust_intermediate,index,TRUE,high,
-SPTI,SPDR Portfolio Intermediate Term Treasury,SSGA,ust_intermediate,index,TRUE,high,
-UTEN,US Treasury 10 Year Note,F/m,ust_intermediate,single_point,FALSE,med,single-tenor
-GOVT,iShares US Treasury Bond,iShares,ust_broad,index,TRUE,high,all-maturity - do not double count vs tenor buckets
-TLT,iShares 20+ Year Treasury Bond,iShares,ust_long,index,TRUE,high,highest-beta duration flow signal
-TLH,iShares 10-20 Year Treasury Bond,iShares,ust_long,index,TRUE,high,
-VGLT,Vanguard Long-Term Treasury,Vanguard,ust_long,index,TRUE,high,
-SPTL,SPDR Portfolio Long Term Treasury,SSGA,ust_long,index,TRUE,high,
-SCHQ,Schwab Long-Term US Treasury,Schwab,ust_long,index,TRUE,high,
-EDV,Vanguard Extended Duration Treasury,Vanguard,ust_long,strips,TRUE,high,STRIPS - very high duration
-ZROZ,PIMCO 25+ Year Zero Coupon US Treasury,PIMCO,ust_long,strips,TRUE,high,STRIPS
-GOVZ,iShares 25+ Year Treasury STRIPS,iShares,ust_long,strips,TRUE,high,STRIPS
-TIP,iShares TIPS Bond,iShares,tips,broad,TRUE,high,
-SCHP,Schwab US TIPS,Schwab,tips,broad,TRUE,high,
-VTIP,Vanguard Short-Term Inflation-Protected Securities,Vanguard,tips,short,TRUE,high,
-STIP,iShares 0-5 Year TIPS Bond,iShares,tips,short,TRUE,high,
-SPIP,SPDR Portfolio TIPS,SSGA,tips,broad,TRUE,high,
-TIPX,SPDR Bloomberg 1-10 Year TIPS,SSGA,tips,intermediate,TRUE,med,
-LTPZ,PIMCO 15+ Year US TIPS,PIMCO,tips,long,TRUE,high,
-MBB,iShares MBS,iShares,agency_mbs,index,TRUE,high,largest pure-play agency MBS
-VMBS,Vanguard Mortgage-Backed Securities,Vanguard,agency_mbs,index,TRUE,high,
-SPMB,SPDR Portfolio Mortgage Backed Bond,SSGA,agency_mbs,index,TRUE,high,
-GNMA,iShares GNMA Bond,iShares,agency_mbs,ginnie,TRUE,med,
-JMBS,Janus Henderson Mortgage-Backed Securities,Janus Henderson,agency_mbs,active,TRUE,high,
-MTBA,Simplify MBS,Simplify,agency_mbs,active,TRUE,med,verify ticker
-LQD,iShares iBoxx USD Investment Grade Corporate,iShares,ig_corp,broad,TRUE,high,
-VCIT,Vanguard Intermediate-Term Corporate Bond,Vanguard,ig_corp,intermediate,TRUE,high,
-VCSH,Vanguard Short-Term Corporate Bond,Vanguard,ig_corp,short,TRUE,high,
-VCLT,Vanguard Long-Term Corporate Bond,Vanguard,ig_corp,long,TRUE,high,
-IGSB,iShares 1-5 Year Investment Grade Corporate,iShares,ig_corp,short,TRUE,high,
-IGIB,iShares 5-10 Year Investment Grade Corporate,iShares,ig_corp,intermediate,TRUE,high,
-IGLB,iShares 10+ Year Investment Grade Corporate,iShares,ig_corp,long,TRUE,high,
-USIG,iShares Broad USD Investment Grade Corporate,iShares,ig_corp,broad,TRUE,high,
-SPSB,SPDR Portfolio Short Term Corporate Bond,SSGA,ig_corp,short,TRUE,high,
-SPIB,SPDR Portfolio Intermediate Term Corporate Bond,SSGA,ig_corp,intermediate,TRUE,high,
-SPLB,SPDR Portfolio Long Term Corporate Bond,SSGA,ig_corp,long,TRUE,high,
-SCHI,Schwab 5-10 Year Corporate Bond,Schwab,ig_corp,intermediate,TRUE,med,
-SCHJ,Schwab 1-5 Year Corporate Bond,Schwab,ig_corp,short,TRUE,med,
-QLTA,iShares Aaa-A Rated Corporate Bond,iShares,ig_corp,high_quality,TRUE,med,
-HYG,iShares iBoxx USD High Yield Corporate,iShares,hy_corp,broad,TRUE,high,
-JNK,SPDR Bloomberg High Yield Bond,SSGA,hy_corp,broad,TRUE,high,
-USHY,iShares Broad USD High Yield Corporate,iShares,hy_corp,broad,TRUE,high,
-SHYG,iShares 0-5 Year High Yield Corporate,iShares,hy_corp,short,TRUE,high,
-SJNK,SPDR Bloomberg Short Term High Yield Bond,SSGA,hy_corp,short,TRUE,high,
-HYLB,Xtrackers USD High Yield Corporate Bond,DWS/Xtrackers,hy_corp,broad,TRUE,med,verify issuer post-rebrand
-ANGL,VanEck Fallen Angel High Yield Bond,VanEck,hy_corp,fallen_angel,TRUE,high,
-FALN,iShares Fallen Angels USD Bond,iShares,hy_corp,fallen_angel,TRUE,high,
-JAAA,Janus Henderson AAA CLO,Janus Henderson,loans_clo,clo_aaa,TRUE,high,major growth story - watch closely
-JBBB,Janus Henderson B-BBB CLO,Janus Henderson,loans_clo,clo_mezz,TRUE,high,
-CLOI,VanEck AA-BB CLO,VanEck,loans_clo,clo_mezz,TRUE,med,
-CLOA,BlackRock AAA CLO,iShares/BlackRock,loans_clo,clo_aaa,TRUE,med,
-ICLO,Invesco AAA CLO Floating Rate Note,Invesco,loans_clo,clo_aaa,TRUE,med,
-BKLN,Invesco Senior Loan,Invesco,loans_clo,bank_loan,TRUE,high,
-SRLN,SPDR Blackstone Senior Loan,SSGA,loans_clo,bank_loan,TRUE,high,
-FTSL,First Trust Senior Loan,First Trust,loans_clo,bank_loan,TRUE,med,
-EMB,iShares JP Morgan USD Emerging Markets Bond,iShares,em_debt,hard_ccy,TRUE,high,
-VWOB,Vanguard Emerging Markets Government Bond,Vanguard,em_debt,hard_ccy,TRUE,high,
-PCY,Invesco Emerging Markets Sovereign Debt,Invesco,em_debt,hard_ccy,TRUE,high,
-EMLC,VanEck J.P. Morgan EM Local Currency Bond,VanEck,em_debt,local_ccy,TRUE,high,
-EBND,SPDR Bloomberg Emerging Markets Local Bond,SSGA,em_debt,local_ccy,TRUE,med,
-MUB,iShares National Muni Bond,iShares,muni,broad,TRUE,high,
-VTEB,Vanguard Tax-Exempt Bond,Vanguard,muni,broad,TRUE,high,
-TFI,SPDR Nuveen Bloomberg Municipal Bond,SSGA,muni,broad,TRUE,high,
-SUB,iShares Short-Term National Muni Bond,iShares,muni,short,TRUE,high,
-SHM,SPDR Nuveen Bloomberg Short Term Municipal Bond,SSGA,muni,short,TRUE,high,
-VTES,Vanguard Short-Term Tax-Exempt Bond,Vanguard,muni,short,TRUE,med,
-PZA,Invesco National AMT-Free Municipal Bond,Invesco,muni,broad,TRUE,high,
-JMUB,JPMorgan Municipal ETF,JPMorgan,muni,active,TRUE,med,
-MUNI,PIMCO Intermediate Municipal Bond Active,PIMCO,muni,active,TRUE,med,
-HYD,VanEck High Yield Muni,VanEck,muni,hy_muni,TRUE,high,
-HYMB,SPDR Nuveen Bloomberg High Yield Municipal Bond,SSGA,muni,hy_muni,TRUE,high,
-CMF,iShares California Muni Bond,iShares,muni,state,FALSE,high,state-specific
-NYF,iShares New York Muni Bond,iShares,muni,state,FALSE,high,state-specific
-AGG,iShares Core US Aggregate Bond,iShares,aggregate,index,TRUE,high,MBS look-through target
-BND,Vanguard Total Bond Market,Vanguard,aggregate,index,TRUE,high,MBS look-through target
-SPAB,SPDR Portfolio Aggregate Bond,SSGA,aggregate,index,TRUE,high,MBS look-through target
-SCHZ,Schwab US Aggregate Bond,Schwab,aggregate,index,TRUE,high,MBS look-through target
-IUSB,iShares Core Total USD Bond Market,iShares,aggregate,index_plus,TRUE,high,broader than Agg
-BOND,PIMCO Active Bond,PIMCO,active_multisector,active,TRUE,high,
-FBND,Fidelity Total Bond,Fidelity,active_multisector,active,TRUE,high,
-TOTL,SPDR DoubleLine Total Return Tactical,SSGA,active_multisector,active,TRUE,high,
-JCPB,JPMorgan Core Plus Bond,JPMorgan,active_multisector,active,TRUE,med,
-BINC,BlackRock Flexible Income,iShares/BlackRock,active_multisector,active,TRUE,high,fast asset growth
-PYLD,PIMCO Multisector Bond Active,PIMCO,active_multisector,active,TRUE,high,fast asset growth
-DFCF,Dimensional Core Fixed Income,Dimensional,active_multisector,active,TRUE,med,
-BNDX,Vanguard Total International Bond,Vanguard,intl_bond,dev_hedged,TRUE,high,USD-hedged - not US duration
-IAGG,iShares Core International Aggregate Bond,iShares,intl_bond,dev_hedged,TRUE,high,
-BWX,SPDR Bloomberg International Treasury Bond,SSGA,intl_bond,dev_unhedged,FALSE,high,
-IGOV,iShares International Treasury Bond,iShares,intl_bond,dev_unhedged,FALSE,high,
-TMF,Direxion Daily 20+ Year Treasury Bull 3X,Direxion,levered_inverse,levered,FALSE,high,EXCLUDE from core - split-prone
-TMV,Direxion Daily 20+ Year Treasury Bear 3X,Direxion,levered_inverse,inverse,FALSE,high,EXCLUDE from core - split-prone
-TBT,ProShares UltraShort 20+ Year Treasury,ProShares,levered_inverse,inverse,FALSE,high,EXCLUDE from core - split-prone
-TBF,ProShares Short 20+ Year Treasury,ProShares,levered_inverse,inverse,FALSE,high,EXCLUDE from core
-UBT,ProShares Ultra 20+ Year Treasury,ProShares,levered_inverse,levered,FALSE,high,EXCLUDE from core
-TLTW,iShares 20+ Year Treasury Bond BuyWrite,iShares,overlay,buywrite,FALSE,high,EXCLUDE from core - option overlay
-HYGW,iShares High Yield Corporate Bond BuyWrite,iShares,overlay,buywrite,FALSE,med,EXCLUDE from core
-LQDW,iShares Investment Grade Corporate Bond BuyWrite,iShares,overlay,buywrite,FALSE,med,EXCLUDE from core
-CWB,SPDR Bloomberg Convertible Securities,SSGA,hybrid_credit,converts,FALSE,high,optional - credit sentiment
-ICVT,iShares Convertible Bond,iShares,hybrid_credit,converts,FALSE,high,optional
-PFF,iShares Preferred and Income Securities,iShares,hybrid_credit,preferred,FALSE,high,optional
-PFFD,Global X US Preferred,Global X,hybrid_credit,preferred,FALSE,high,optional
+ticker,name,issuer,sleeve,sub_sleeve,in_core,confidence,issuer_id,product_url,notes
+SGOV,iShares 0-3 Month Treasury Bond,iShares,ust_ultrashort,bills,TRUE,high,,,
+BIL,SPDR Bloomberg 1-3 Month T-Bill,SSGA,ust_ultrashort,bills,TRUE,high,,,
+SHV,iShares Short Treasury Bond,iShares,ust_ultrashort,bills,TRUE,high,,,0-1y
+GBIL,Goldman Sachs Access Treasury 0-1 Year,Goldman,ust_ultrashort,bills,TRUE,high,,,
+CLIP,Global X 1-3 Month T-Bill,Global X,ust_ultrashort,bills,TRUE,med,,,
+XHLF,BondBloxx Bloomberg Six Month Target Duration,BondBloxx,ust_ultrashort,bills,TRUE,med,,,
+VBIL,Vanguard 0-3 Month Treasury Bill,Vanguard,ust_ultrashort,bills,TRUE,med,,,recent launch - verify ticker
+TFLO,iShares Treasury Floating Rate Bond,iShares,ust_ultrashort,frn,TRUE,high,,,FRN - near-zero duration
+USFR,WisdomTree Floating Rate Treasury,WisdomTree,ust_ultrashort,frn,TRUE,high,,,FRN - near-zero duration
+JPST,JPMorgan Ultra-Short Income,JPMorgan,ultrashort_credit,active,TRUE,high,,,
+MINT,PIMCO Enhanced Short Maturity Active,PIMCO,ultrashort_credit,active,TRUE,high,,,
+ICSH,iShares Ultra Short-Term Bond Active,iShares,ultrashort_credit,active,TRUE,high,,,
+GSY,Invesco Ultra Short Duration,Invesco,ultrashort_credit,active,TRUE,high,,,
+VUSB,Vanguard Ultra-Short Bond,Vanguard,ultrashort_credit,active,TRUE,high,,,
+NEAR,iShares Short Duration Bond Active,iShares,ultrashort_credit,active,TRUE,med,,,
+SHY,iShares 1-3 Year Treasury Bond,iShares,ust_short,index,TRUE,high,,,
+VGSH,Vanguard Short-Term Treasury,Vanguard,ust_short,index,TRUE,high,,,
+SCHO,Schwab Short-Term US Treasury,Schwab,ust_short,index,TRUE,high,,,
+SPTS,SPDR Portfolio Short Term Treasury,SSGA,ust_short,index,TRUE,high,,,
+UTWO,US Treasury 2 Year Note,F/m,ust_short,single_point,FALSE,med,,,single-tenor - clean duration read
+IEI,iShares 3-7 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,,,
+IEF,iShares 7-10 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,,,
+VGIT,Vanguard Intermediate-Term Treasury,Vanguard,ust_intermediate,index,TRUE,high,,,
+SCHR,Schwab Intermediate-Term US Treasury,Schwab,ust_intermediate,index,TRUE,high,,,
+SPTI,SPDR Portfolio Intermediate Term Treasury,SSGA,ust_intermediate,index,TRUE,high,,,
+UTEN,US Treasury 10 Year Note,F/m,ust_intermediate,single_point,FALSE,med,,,single-tenor
+GOVT,iShares US Treasury Bond,iShares,ust_broad,index,TRUE,high,,,all-maturity - do not double count vs tenor buckets
+TLT,iShares 20+ Year Treasury Bond,iShares,ust_long,index,TRUE,high,,,highest-beta duration flow signal
+TLH,iShares 10-20 Year Treasury Bond,iShares,ust_long,index,TRUE,high,,,
+VGLT,Vanguard Long-Term Treasury,Vanguard,ust_long,index,TRUE,high,,,
+SPTL,SPDR Portfolio Long Term Treasury,SSGA,ust_long,index,TRUE,high,,,
+SCHQ,Schwab Long-Term US Treasury,Schwab,ust_long,index,TRUE,high,,,
+EDV,Vanguard Extended Duration Treasury,Vanguard,ust_long,strips,TRUE,high,,,STRIPS - very high duration
+ZROZ,PIMCO 25+ Year Zero Coupon US Treasury,PIMCO,ust_long,strips,TRUE,high,,,STRIPS
+GOVZ,iShares 25+ Year Treasury STRIPS,iShares,ust_long,strips,TRUE,high,,,STRIPS
+TIP,iShares TIPS Bond,iShares,tips,broad,TRUE,high,,,
+SCHP,Schwab US TIPS,Schwab,tips,broad,TRUE,high,,,
+VTIP,Vanguard Short-Term Inflation-Protected Securities,Vanguard,tips,short,TRUE,high,,,
+STIP,iShares 0-5 Year TIPS Bond,iShares,tips,short,TRUE,high,,,
+SPIP,SPDR Portfolio TIPS,SSGA,tips,broad,TRUE,high,,,
+TIPX,SPDR Bloomberg 1-10 Year TIPS,SSGA,tips,intermediate,TRUE,med,,,
+LTPZ,PIMCO 15+ Year US TIPS,PIMCO,tips,long,TRUE,high,,,
+MBB,iShares MBS,iShares,agency_mbs,index,TRUE,high,,,largest pure-play agency MBS
+VMBS,Vanguard Mortgage-Backed Securities,Vanguard,agency_mbs,index,TRUE,high,,,
+SPMB,SPDR Portfolio Mortgage Backed Bond,SSGA,agency_mbs,index,TRUE,high,,,
+GNMA,iShares GNMA Bond,iShares,agency_mbs,ginnie,TRUE,med,,,
+JMBS,Janus Henderson Mortgage-Backed Securities,Janus Henderson,agency_mbs,active,TRUE,high,,,
+MTBA,Simplify MBS,Simplify,agency_mbs,active,TRUE,med,,,verify ticker
+LQD,iShares iBoxx USD Investment Grade Corporate,iShares,ig_corp,broad,TRUE,high,,,
+VCIT,Vanguard Intermediate-Term Corporate Bond,Vanguard,ig_corp,intermediate,TRUE,high,,,
+VCSH,Vanguard Short-Term Corporate Bond,Vanguard,ig_corp,short,TRUE,high,,,
+VCLT,Vanguard Long-Term Corporate Bond,Vanguard,ig_corp,long,TRUE,high,,,
+IGSB,iShares 1-5 Year Investment Grade Corporate,iShares,ig_corp,short,TRUE,high,,,
+IGIB,iShares 5-10 Year Investment Grade Corporate,iShares,ig_corp,intermediate,TRUE,high,,,
+IGLB,iShares 10+ Year Investment Grade Corporate,iShares,ig_corp,long,TRUE,high,,,
+USIG,iShares Broad USD Investment Grade Corporate,iShares,ig_corp,broad,TRUE,high,,,
+SPSB,SPDR Portfolio Short Term Corporate Bond,SSGA,ig_corp,short,TRUE,high,,,
+SPIB,SPDR Portfolio Intermediate Term Corporate Bond,SSGA,ig_corp,intermediate,TRUE,high,,,
+SPLB,SPDR Portfolio Long Term Corporate Bond,SSGA,ig_corp,long,TRUE,high,,,
+SCHI,Schwab 5-10 Year Corporate Bond,Schwab,ig_corp,intermediate,TRUE,med,,,
+SCHJ,Schwab 1-5 Year Corporate Bond,Schwab,ig_corp,short,TRUE,med,,,
+QLTA,iShares Aaa-A Rated Corporate Bond,iShares,ig_corp,high_quality,TRUE,med,,,
+HYG,iShares iBoxx USD High Yield Corporate,iShares,hy_corp,broad,TRUE,high,,,
+JNK,SPDR Bloomberg High Yield Bond,SSGA,hy_corp,broad,TRUE,high,,,
+USHY,iShares Broad USD High Yield Corporate,iShares,hy_corp,broad,TRUE,high,,,
+SHYG,iShares 0-5 Year High Yield Corporate,iShares,hy_corp,short,TRUE,high,,,
+SJNK,SPDR Bloomberg Short Term High Yield Bond,SSGA,hy_corp,short,TRUE,high,,,
+HYLB,Xtrackers USD High Yield Corporate Bond,DWS/Xtrackers,hy_corp,broad,TRUE,med,,,verify issuer post-rebrand
+ANGL,VanEck Fallen Angel High Yield Bond,VanEck,hy_corp,fallen_angel,TRUE,high,,,
+FALN,iShares Fallen Angels USD Bond,iShares,hy_corp,fallen_angel,TRUE,high,,,
+JAAA,Janus Henderson AAA CLO,Janus Henderson,loans_clo,clo_aaa,TRUE,high,,,major growth story - watch closely
+JBBB,Janus Henderson B-BBB CLO,Janus Henderson,loans_clo,clo_mezz,TRUE,high,,,
+CLOI,VanEck AA-BB CLO,VanEck,loans_clo,clo_mezz,TRUE,med,,,
+CLOA,BlackRock AAA CLO,iShares/BlackRock,loans_clo,clo_aaa,TRUE,med,,,
+ICLO,Invesco AAA CLO Floating Rate Note,Invesco,loans_clo,clo_aaa,TRUE,med,,,
+BKLN,Invesco Senior Loan,Invesco,loans_clo,bank_loan,TRUE,high,,,
+SRLN,SPDR Blackstone Senior Loan,SSGA,loans_clo,bank_loan,TRUE,high,,,
+FTSL,First Trust Senior Loan,First Trust,loans_clo,bank_loan,TRUE,med,,,
+EMB,iShares JP Morgan USD Emerging Markets Bond,iShares,em_debt,hard_ccy,TRUE,high,,,
+VWOB,Vanguard Emerging Markets Government Bond,Vanguard,em_debt,hard_ccy,TRUE,high,,,
+PCY,Invesco Emerging Markets Sovereign Debt,Invesco,em_debt,hard_ccy,TRUE,high,,,
+EMLC,VanEck J.P. Morgan EM Local Currency Bond,VanEck,em_debt,local_ccy,TRUE,high,,,
+EBND,SPDR Bloomberg Emerging Markets Local Bond,SSGA,em_debt,local_ccy,TRUE,med,,,
+MUB,iShares National Muni Bond,iShares,muni,broad,TRUE,high,,,
+VTEB,Vanguard Tax-Exempt Bond,Vanguard,muni,broad,TRUE,high,,,
+TFI,SPDR Nuveen Bloomberg Municipal Bond,SSGA,muni,broad,TRUE,high,,,
+SUB,iShares Short-Term National Muni Bond,iShares,muni,short,TRUE,high,,,
+SHM,SPDR Nuveen Bloomberg Short Term Municipal Bond,SSGA,muni,short,TRUE,high,,,
+VTES,Vanguard Short-Term Tax-Exempt Bond,Vanguard,muni,short,TRUE,med,,,
+PZA,Invesco National AMT-Free Municipal Bond,Invesco,muni,broad,TRUE,high,,,
+JMUB,JPMorgan Municipal ETF,JPMorgan,muni,active,TRUE,med,,,
+MUNI,PIMCO Intermediate Municipal Bond Active,PIMCO,muni,active,TRUE,med,,,
+HYD,VanEck High Yield Muni,VanEck,muni,hy_muni,TRUE,high,,,
+HYMB,SPDR Nuveen Bloomberg High Yield Municipal Bond,SSGA,muni,hy_muni,TRUE,high,,,
+CMF,iShares California Muni Bond,iShares,muni,state,FALSE,high,,,state-specific
+NYF,iShares New York Muni Bond,iShares,muni,state,FALSE,high,,,state-specific
+AGG,iShares Core US Aggregate Bond,iShares,aggregate,index,TRUE,high,,,MBS look-through target
+BND,Vanguard Total Bond Market,Vanguard,aggregate,index,TRUE,high,,,MBS look-through target
+SPAB,SPDR Portfolio Aggregate Bond,SSGA,aggregate,index,TRUE,high,,,MBS look-through target
+SCHZ,Schwab US Aggregate Bond,Schwab,aggregate,index,TRUE,high,,,MBS look-through target
+IUSB,iShares Core Total USD Bond Market,iShares,aggregate,index_plus,TRUE,high,,,broader than Agg
+BOND,PIMCO Active Bond,PIMCO,active_multisector,active,TRUE,high,,,
+FBND,Fidelity Total Bond,Fidelity,active_multisector,active,TRUE,high,,,
+TOTL,SPDR DoubleLine Total Return Tactical,SSGA,active_multisector,active,TRUE,high,,,
+JCPB,JPMorgan Core Plus Bond,JPMorgan,active_multisector,active,TRUE,med,,,
+BINC,BlackRock Flexible Income,iShares/BlackRock,active_multisector,active,TRUE,high,,,fast asset growth
+PYLD,PIMCO Multisector Bond Active,PIMCO,active_multisector,active,TRUE,high,,,fast asset growth
+DFCF,Dimensional Core Fixed Income,Dimensional,active_multisector,active,TRUE,med,,,
+BNDX,Vanguard Total International Bond,Vanguard,intl_bond,dev_hedged,TRUE,high,,,USD-hedged - not US duration
+IAGG,iShares Core International Aggregate Bond,iShares,intl_bond,dev_hedged,TRUE,high,,,
+BWX,SPDR Bloomberg International Treasury Bond,SSGA,intl_bond,dev_unhedged,FALSE,high,,,
+IGOV,iShares International Treasury Bond,iShares,intl_bond,dev_unhedged,FALSE,high,,,
+TMF,Direxion Daily 20+ Year Treasury Bull 3X,Direxion,levered_inverse,levered,FALSE,high,,,EXCLUDE from core - split-prone
+TMV,Direxion Daily 20+ Year Treasury Bear 3X,Direxion,levered_inverse,inverse,FALSE,high,,,EXCLUDE from core - split-prone
+TBT,ProShares UltraShort 20+ Year Treasury,ProShares,levered_inverse,inverse,FALSE,high,,,EXCLUDE from core - split-prone
+TBF,ProShares Short 20+ Year Treasury,ProShares,levered_inverse,inverse,FALSE,high,,,EXCLUDE from core
+UBT,ProShares Ultra 20+ Year Treasury,ProShares,levered_inverse,levered,FALSE,high,,,EXCLUDE from core
+TLTW,iShares 20+ Year Treasury Bond BuyWrite,iShares,overlay,buywrite,FALSE,high,,,EXCLUDE from core - option overlay
+HYGW,iShares High Yield Corporate Bond BuyWrite,iShares,overlay,buywrite,FALSE,med,,,EXCLUDE from core
+LQDW,iShares Investment Grade Corporate Bond BuyWrite,iShares,overlay,buywrite,FALSE,med,,,EXCLUDE from core
+CWB,SPDR Bloomberg Convertible Securities,SSGA,hybrid_credit,converts,FALSE,high,,,optional - credit sentiment
+ICVT,iShares Convertible Bond,iShares,hybrid_credit,converts,FALSE,high,,,optional
+PFF,iShares Preferred and Income Securities,iShares,hybrid_credit,preferred,FALSE,high,,,optional
+PFFD,Global X US Preferred,Global X,hybrid_credit,preferred,FALSE,high,,,optional
