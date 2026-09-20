@@ -1,6 +1,6 @@
 ticker,name,issuer,sleeve,sub_sleeve,in_core,confidence,issuer_id,product_url,notes
 SGOV,iShares 0-3 Month Treasury Bond,iShares,ust_ultrashort,bills,TRUE,high,314116,https://www.ishares.com/us/products/314116/ishares-0-3-month-treasury-bond-etf,
-BIL,SPDR Bloomberg 1-3 Month T-Bill,SSGA,ust_ultrashort,bills,TRUE,high,,,
+BIL,SPDR Bloomberg 1-3 Month T-Bill,SSGA,ust_ultrashort,bills,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-bloomberg-1-3-month-t-bill-etf-bil,
 SHV,iShares Short Treasury Bond,iShares,ust_ultrashort,bills,TRUE,high,239466,https://www.ishares.com/us/products/239466/ishares-short-treasury-bond-etf,0-1y
 GBIL,Goldman Sachs Access Treasury 0-1 Year,Goldman,ust_ultrashort,bills,TRUE,high,,,
 CLIP,Global X 1-3 Month T-Bill,Global X,ust_ultrashort,bills,TRUE,med,,,
@@ -17,19 +17,19 @@ NEAR,iShares Short Duration Bond Active,iShares,ultrashort_credit,active,TRUE,me
 SHY,iShares 1-3 Year Treasury Bond,iShares,ust_short,index,TRUE,high,239452,https://www.ishares.com/us/products/239452/ishares-13-year-treasury-bond-etf,
 VGSH,Vanguard Short-Term Treasury,Vanguard,ust_short,index,TRUE,high,3142,,
 SCHO,Schwab Short-Term US Treasury,Schwab,ust_short,index,TRUE,high,,,
-SPTS,SPDR Portfolio Short Term Treasury,SSGA,ust_short,index,TRUE,high,,,
+SPTS,SPDR Portfolio Short Term Treasury,SSGA,ust_short,index,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-short-term-treasury-etf-spts,
 UTWO,US Treasury 2 Year Note,F/m,ust_short,single_point,FALSE,med,,,single-tenor - clean duration read
 IEI,iShares 3-7 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,239455,https://www.ishares.com/us/products/239455/ishares-37-year-treasury-bond-etf,
 IEF,iShares 7-10 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,239456,https://www.ishares.com/us/products/239456/ishares-710-year-treasury-bond-etf,
 VGIT,Vanguard Intermediate-Term Treasury,Vanguard,ust_intermediate,index,TRUE,high,3143,,
 SCHR,Schwab Intermediate-Term US Treasury,Schwab,ust_intermediate,index,TRUE,high,,,
-SPTI,SPDR Portfolio Intermediate Term Treasury,SSGA,ust_intermediate,index,TRUE,high,,,
+SPTI,SPDR Portfolio Intermediate Term Treasury,SSGA,ust_intermediate,index,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-intermediate-term-treasury-etf-spti,
 UTEN,US Treasury 10 Year Note,F/m,ust_intermediate,single_point,FALSE,med,,,single-tenor
 GOVT,iShares US Treasury Bond,iShares,ust_broad,index,TRUE,high,239468,https://www.ishares.com/us/products/239468/ishares-us-treasury-bond-etf,all-maturity - do not double count vs tenor buckets
 TLT,iShares 20+ Year Treasury Bond,iShares,ust_long,index,TRUE,high,239454,https://www.ishares.com/us/products/239454/ishares-20-year-treasury-bond-etf,highest-beta duration flow signal
 TLH,iShares 10-20 Year Treasury Bond,iShares,ust_long,index,TRUE,high,239453,https://www.ishares.com/us/products/239453/ishares-1020-year-treasury-bond-etf,
 VGLT,Vanguard Long-Term Treasury,Vanguard,ust_long,index,TRUE,high,3144,,
-SPTL,SPDR Portfolio Long Term Treasury,SSGA,ust_long,index,TRUE,high,,,
+SPTL,SPDR Portfolio Long Term Treasury,SSGA,ust_long,index,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-long-term-treasury-etf-sptl,
 SCHQ,Schwab Long-Term US Treasury,Schwab,ust_long,index,TRUE,high,,,
 EDV,Vanguard Extended Duration Treasury,Vanguard,ust_long,strips,TRUE,high,0930,,STRIPS - very high duration
 ZROZ,PIMCO 25+ Year Zero Coupon US Treasury,PIMCO,ust_long,strips,TRUE,high,,,STRIPS
@@ -38,12 +38,12 @@ TIP,iShares TIPS Bond,iShares,tips,broad,TRUE,high,239467,https://www.ishares.co
 SCHP,Schwab US TIPS,Schwab,tips,broad,TRUE,high,,,
 VTIP,Vanguard Short-Term Inflation-Protected Securities,Vanguard,tips,short,TRUE,high,3365,,
 STIP,iShares 0-5 Year TIPS Bond,iShares,tips,short,TRUE,high,239450,https://www.ishares.com/us/products/239450/ishares-05-year-tips-bond-etf,
-SPIP,SPDR Portfolio TIPS,SSGA,tips,broad,TRUE,high,,,
-TIPX,SPDR Bloomberg 1-10 Year TIPS,SSGA,tips,intermediate,TRUE,med,,,
+SPIP,SPDR Portfolio TIPS,SSGA,tips,broad,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-tips-etf-spip,
+TIPX,SPDR Bloomberg 1-10 Year TIPS,SSGA,tips,intermediate,TRUE,med,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-bloomberg-1-10-year-tips-etf-tipx,
 LTPZ,PIMCO 15+ Year US TIPS,PIMCO,tips,long,TRUE,high,,,
 MBB,iShares MBS,iShares,agency_mbs,index,TRUE,high,239465,https://www.ishares.com/us/products/239465/ishares-mbs-etf,largest pure-play agency MBS
 VMBS,Vanguard Mortgage-Backed Securities,Vanguard,agency_mbs,index,TRUE,high,3148,,
-SPMB,SPDR Portfolio Mortgage Backed Bond,SSGA,agency_mbs,index,TRUE,high,,,
+SPMB,SPDR Portfolio Mortgage Backed Bond,SSGA,agency_mbs,index,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-mortgage-backed-bond-etf-spmb,
 GNMA,iShares GNMA Bond,iShares,agency_mbs,ginnie,TRUE,med,239461,https://www.ishares.com/us/products/239461/ishares-gnma-bond-etf,
 JMBS,Janus Henderson Mortgage-Backed Securities,Janus Henderson,agency_mbs,active,TRUE,high,,,
 MTBA,Simplify MBS,Simplify,agency_mbs,active,TRUE,med,,,verify ticker
@@ -55,17 +55,17 @@ IGSB,iShares 1-5 Year Investment Grade Corporate,iShares,ig_corp,short,TRUE,high
 IGIB,iShares 5-10 Year Investment Grade Corporate,iShares,ig_corp,intermediate,TRUE,high,239463,https://www.ishares.com/us/products/239463/ishares-intermediate-credit-bond-etf,
 IGLB,iShares 10+ Year Investment Grade Corporate,iShares,ig_corp,long,TRUE,high,239423,https://www.ishares.com/us/products/239423/ishares-10-year-credit-bond-etf,
 USIG,iShares Broad USD Investment Grade Corporate,iShares,ig_corp,broad,TRUE,high,239460,https://www.ishares.com/us/products/239460/ishares-credit-bond-etf,
-SPSB,SPDR Portfolio Short Term Corporate Bond,SSGA,ig_corp,short,TRUE,high,,,
-SPIB,SPDR Portfolio Intermediate Term Corporate Bond,SSGA,ig_corp,intermediate,TRUE,high,,,
-SPLB,SPDR Portfolio Long Term Corporate Bond,SSGA,ig_corp,long,TRUE,high,,,
+SPSB,SPDR Portfolio Short Term Corporate Bond,SSGA,ig_corp,short,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-short-term-corporate-bond-etf-spsb,
+SPIB,SPDR Portfolio Intermediate Term Corporate Bond,SSGA,ig_corp,intermediate,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-intermediate-term-corporate-bond-etf-spib,
+SPLB,SPDR Portfolio Long Term Corporate Bond,SSGA,ig_corp,long,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-long-term-corporate-bond-etf-splb,
 SCHI,Schwab 5-10 Year Corporate Bond,Schwab,ig_corp,intermediate,TRUE,med,,,
 SCHJ,Schwab 1-5 Year Corporate Bond,Schwab,ig_corp,short,TRUE,med,,,
 QLTA,iShares Aaa-A Rated Corporate Bond,iShares,ig_corp,high_quality,TRUE,med,239431,https://www.ishares.com/us/products/239431/ishares-aaa-a-rated-corporate-bond-etf,
 HYG,iShares iBoxx USD High Yield Corporate,iShares,hy_corp,broad,TRUE,high,239565,https://www.ishares.com/us/products/239565/ishares-iboxx-high-yield-corporate-bond-etf,
-JNK,SPDR Bloomberg High Yield Bond,SSGA,hy_corp,broad,TRUE,high,,,
+JNK,SPDR Bloomberg High Yield Bond,SSGA,hy_corp,broad,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-bloomberg-high-yield-bond-etf-jnk,
 USHY,iShares Broad USD High Yield Corporate,iShares,hy_corp,broad,TRUE,high,291299,https://www.ishares.com/us/products/291299/ishares-broad-usd-high-yield-corporate-bond-etf,
 SHYG,iShares 0-5 Year High Yield Corporate,iShares,hy_corp,short,TRUE,high,258100,https://www.ishares.com/us/products/258100/ishares-05-year-high-yield-corporate-bond-etf,
-SJNK,SPDR Bloomberg Short Term High Yield Bond,SSGA,hy_corp,short,TRUE,high,,,
+SJNK,SPDR Bloomberg Short Term High Yield Bond,SSGA,hy_corp,short,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-bloomberg-short-term-high-yield-bond-etf-sjnk,
 HYLB,Xtrackers USD High Yield Corporate Bond,DWS/Xtrackers,hy_corp,broad,TRUE,med,,,verify issuer post-rebrand
 ANGL,VanEck Fallen Angel High Yield Bond,VanEck,hy_corp,fallen_angel,TRUE,high,,,
 FALN,iShares Fallen Angels USD Bond,iShares,hy_corp,fallen_angel,TRUE,high,283855,https://www.ishares.com/us/products/283855/ishares-fallen-angels-usd-bond-etf,
@@ -75,41 +75,41 @@ CLOI,VanEck AA-BB CLO,VanEck,loans_clo,clo_mezz,TRUE,med,,,
 CLOA,BlackRock AAA CLO,iShares/BlackRock,loans_clo,clo_aaa,TRUE,med,,,
 ICLO,Invesco AAA CLO Floating Rate Note,Invesco,loans_clo,clo_aaa,TRUE,med,,,
 BKLN,Invesco Senior Loan,Invesco,loans_clo,bank_loan,TRUE,high,,,
-SRLN,SPDR Blackstone Senior Loan,SSGA,loans_clo,bank_loan,TRUE,high,,,
+SRLN,SPDR Blackstone Senior Loan,SSGA,loans_clo,bank_loan,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-blackstone-senior-loan-etf-srln,
 FTSL,First Trust Senior Loan,First Trust,loans_clo,bank_loan,TRUE,med,,,
 EMB,iShares JP Morgan USD Emerging Markets Bond,iShares,em_debt,hard_ccy,TRUE,high,239572,https://www.ishares.com/us/products/239572/ishares-jp-morgan-usd-emerging-markets-bond-etf,
 VWOB,Vanguard Emerging Markets Government Bond,Vanguard,em_debt,hard_ccy,TRUE,high,3820,,
 PCY,Invesco Emerging Markets Sovereign Debt,Invesco,em_debt,hard_ccy,TRUE,high,,,
 EMLC,VanEck J.P. Morgan EM Local Currency Bond,VanEck,em_debt,local_ccy,TRUE,high,,,
-EBND,SPDR Bloomberg Emerging Markets Local Bond,SSGA,em_debt,local_ccy,TRUE,med,,,
+EBND,SPDR Bloomberg Emerging Markets Local Bond,SSGA,em_debt,local_ccy,TRUE,med,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-bloomberg-emerging-markets-local-bond-etf-ebnd,
 MUB,iShares National Muni Bond,iShares,muni,broad,TRUE,high,239766,https://www.ishares.com/us/products/239766/ishares-national-amtfree-muni-bond-etf,
 VTEB,Vanguard Tax-Exempt Bond,Vanguard,muni,broad,TRUE,high,4391,,
-TFI,SPDR Nuveen Bloomberg Municipal Bond,SSGA,muni,broad,TRUE,high,,,
+TFI,SPDR Nuveen Bloomberg Municipal Bond,SSGA,muni,broad,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-nuveen-ice-municipal-bond-etf-tfi,
 SUB,iShares Short-Term National Muni Bond,iShares,muni,short,TRUE,high,239772,https://www.ishares.com/us/products/239772/ishares-shortterm-national-amtfree-muni-bond-etf,
-SHM,SPDR Nuveen Bloomberg Short Term Municipal Bond,SSGA,muni,short,TRUE,high,,,
+SHM,SPDR Nuveen Bloomberg Short Term Municipal Bond,SSGA,muni,short,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-nuveen-ice-short-term-municipal-bond-etf-shm,
 VTES,Vanguard Short-Term Tax-Exempt Bond,Vanguard,muni,short,TRUE,med,V014,,
 PZA,Invesco National AMT-Free Municipal Bond,Invesco,muni,broad,TRUE,high,,,
 JMUB,JPMorgan Municipal ETF,JPMorgan,muni,active,TRUE,med,,,
 MUNI,PIMCO Intermediate Municipal Bond Active,PIMCO,muni,active,TRUE,med,,,
 HYD,VanEck High Yield Muni,VanEck,muni,hy_muni,TRUE,high,,,
-HYMB,SPDR Nuveen Bloomberg High Yield Municipal Bond,SSGA,muni,hy_muni,TRUE,high,,,
+HYMB,SPDR Nuveen Bloomberg High Yield Municipal Bond,SSGA,muni,hy_muni,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-nuveen-ice-high-yield-municipal-bond-etf-hymb,
 CMF,iShares California Muni Bond,iShares,muni,state,FALSE,high,239731,https://www.ishares.com/us/products/239731/ishares-california-amtfree-muni-bond-etf,state-specific
 NYF,iShares New York Muni Bond,iShares,muni,state,FALSE,high,239767,https://www.ishares.com/us/products/239767/ishares-new-york-amtfree-muni-bond-etf,state-specific
 AGG,iShares Core US Aggregate Bond,iShares,aggregate,index,TRUE,high,239458,https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf,MBS look-through target
 BND,Vanguard Total Bond Market,Vanguard,aggregate,index,TRUE,high,0928,,MBS look-through target
-SPAB,SPDR Portfolio Aggregate Bond,SSGA,aggregate,index,TRUE,high,,,MBS look-through target
+SPAB,SPDR Portfolio Aggregate Bond,SSGA,aggregate,index,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-portfolio-aggregate-bond-etf-spab,MBS look-through target
 SCHZ,Schwab US Aggregate Bond,Schwab,aggregate,index,TRUE,high,,,MBS look-through target
 IUSB,iShares Core Total USD Bond Market,iShares,aggregate,index_plus,TRUE,high,264615,https://www.ishares.com/us/products/264615/ishares-core-total-usd-bond-market-etf,broader than Agg
 BOND,PIMCO Active Bond,PIMCO,active_multisector,active,TRUE,high,,,
 FBND,Fidelity Total Bond,Fidelity,active_multisector,active,TRUE,high,,,
-TOTL,SPDR DoubleLine Total Return Tactical,SSGA,active_multisector,active,TRUE,high,,,
+TOTL,SPDR DoubleLine Total Return Tactical,SSGA,active_multisector,active,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-doubleline-total-return-tactical-etf-totl,
 JCPB,JPMorgan Core Plus Bond,JPMorgan,active_multisector,active,TRUE,med,,,
 BINC,BlackRock Flexible Income,iShares/BlackRock,active_multisector,active,TRUE,high,,,fast asset growth
 PYLD,PIMCO Multisector Bond Active,PIMCO,active_multisector,active,TRUE,high,,,fast asset growth
 DFCF,Dimensional Core Fixed Income,Dimensional,active_multisector,active,TRUE,med,,,
 BNDX,Vanguard Total International Bond,Vanguard,intl_bond,dev_hedged,TRUE,high,3711,,USD-hedged - not US duration
 IAGG,iShares Core International Aggregate Bond,iShares,intl_bond,dev_hedged,TRUE,high,279626,https://www.ishares.com/us/products/279626/ishares-international-aggregate-bond-etf,
-BWX,SPDR Bloomberg International Treasury Bond,SSGA,intl_bond,dev_unhedged,FALSE,high,,,
+BWX,SPDR Bloomberg International Treasury Bond,SSGA,intl_bond,dev_unhedged,FALSE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-bloomberg-international-treasury-bond-etf-bwx,
 IGOV,iShares International Treasury Bond,iShares,intl_bond,dev_unhedged,FALSE,high,239830,https://www.ishares.com/us/products/239830/ishares-international-treasury-bond-etf,
 TMF,Direxion Daily 20+ Year Treasury Bull 3X,Direxion,levered_inverse,levered,FALSE,high,,,EXCLUDE from core - split-prone
 TMV,Direxion Daily 20+ Year Treasury Bear 3X,Direxion,levered_inverse,inverse,FALSE,high,,,EXCLUDE from core - split-prone
@@ -119,7 +119,7 @@ UBT,ProShares Ultra 20+ Year Treasury,ProShares,levered_inverse,levered,FALSE,hi
 TLTW,iShares 20+ Year Treasury Bond BuyWrite,iShares,overlay,buywrite,FALSE,high,329118,https://www.ishares.com/us/products/329118/ishares-20+-year-treasury-bond-buywrite-strategy-etf,EXCLUDE from core - option overlay
 HYGW,iShares High Yield Corporate Bond BuyWrite,iShares,overlay,buywrite,FALSE,med,329119,https://www.ishares.com/us/products/329119/ishares-high-yield-corporate-bond-buywrite-strategy-etf,EXCLUDE from core
 LQDW,iShares Investment Grade Corporate Bond BuyWrite,iShares,overlay,buywrite,FALSE,med,329120,https://www.ishares.com/us/products/329120/ishares-investment-grade-corporate-bond-buywrite-strategy-etf,EXCLUDE from core
-CWB,SPDR Bloomberg Convertible Securities,SSGA,hybrid_credit,converts,FALSE,high,,,optional - credit sentiment
+CWB,SPDR Bloomberg Convertible Securities,SSGA,hybrid_credit,converts,FALSE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-bloomberg-convertible-securities-etf-cwb,optional - credit sentiment
 ICVT,iShares Convertible Bond,iShares,hybrid_credit,converts,FALSE,high,272819,https://www.ishares.com/us/products/272819/ishares-convertible-bond-etf,optional
 PFF,iShares Preferred and Income Securities,iShares,hybrid_credit,preferred,FALSE,high,239826,https://www.ishares.com/us/products/239826/ishares-us-preferred-stock-etf,optional
 PFFD,Global X US Preferred,Global X,hybrid_credit,preferred,FALSE,high,,,optional

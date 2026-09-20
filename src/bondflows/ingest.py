@@ -70,7 +70,10 @@ def _run_issuer(
     adapter: SourceAdapter, funds: list[Fund], run_date: date, con, raw_dir: Path
 ) -> IssuerRunReport:
     tickers = [f.ticker for f in funds]
-    identifiers = {f.ticker: f.issuer_id for f in funds}
+    # issuer_id (a CUSIP/fundId/portfolioId) takes precedence when an adapter
+    # has both; product_url is the fallback for adapters that need a full
+    # resolved URL instead of a short identifier (e.g. SSGA).
+    identifiers = {f.ticker: f.issuer_id or f.product_url for f in funds}
     errors: dict[str, str] = {}
     fetched = 0
 
