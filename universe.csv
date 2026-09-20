@@ -5,52 +5,52 @@ SHV,iShares Short Treasury Bond,iShares,ust_ultrashort,bills,TRUE,high,239466,ht
 GBIL,Goldman Sachs Access Treasury 0-1 Year,Goldman,ust_ultrashort,bills,TRUE,high,,,
 CLIP,Global X 1-3 Month T-Bill,Global X,ust_ultrashort,bills,TRUE,med,,,
 XHLF,BondBloxx Bloomberg Six Month Target Duration,BondBloxx,ust_ultrashort,bills,TRUE,med,,,
-VBIL,Vanguard 0-3 Month Treasury Bill,Vanguard,ust_ultrashort,bills,TRUE,med,,,recent launch - verify ticker
+VBIL,Vanguard 0-3 Month Treasury Bill,Vanguard,ust_ultrashort,bills,TRUE,med,V042,,recent launch - verify ticker
 TFLO,iShares Treasury Floating Rate Bond,iShares,ust_ultrashort,frn,TRUE,high,260652,https://www.ishares.com/us/products/260652/ishares-treasury-floating-rate-bond-etf,FRN - near-zero duration
 USFR,WisdomTree Floating Rate Treasury,WisdomTree,ust_ultrashort,frn,TRUE,high,,,FRN - near-zero duration
 JPST,JPMorgan Ultra-Short Income,JPMorgan,ultrashort_credit,active,TRUE,high,,,
 MINT,PIMCO Enhanced Short Maturity Active,PIMCO,ultrashort_credit,active,TRUE,high,,,
 ICSH,iShares Ultra Short-Term Bond Active,iShares,ultrashort_credit,active,TRUE,high,258806,https://www.ishares.com/us/products/258806/ishares-liquidity-income-etf,
 GSY,Invesco Ultra Short Duration,Invesco,ultrashort_credit,active,TRUE,high,,,
-VUSB,Vanguard Ultra-Short Bond,Vanguard,ultrashort_credit,active,TRUE,high,,,
+VUSB,Vanguard Ultra-Short Bond,Vanguard,ultrashort_credit,active,TRUE,high,0931,,
 NEAR,iShares Short Duration Bond Active,iShares,ultrashort_credit,active,TRUE,med,239854,https://www.ishares.com/us/products/239854/ishares-short-maturity-bond-etf,
 SHY,iShares 1-3 Year Treasury Bond,iShares,ust_short,index,TRUE,high,239452,https://www.ishares.com/us/products/239452/ishares-13-year-treasury-bond-etf,
-VGSH,Vanguard Short-Term Treasury,Vanguard,ust_short,index,TRUE,high,,,
+VGSH,Vanguard Short-Term Treasury,Vanguard,ust_short,index,TRUE,high,3142,,
 SCHO,Schwab Short-Term US Treasury,Schwab,ust_short,index,TRUE,high,,,
 SPTS,SPDR Portfolio Short Term Treasury,SSGA,ust_short,index,TRUE,high,,,
 UTWO,US Treasury 2 Year Note,F/m,ust_short,single_point,FALSE,med,,,single-tenor - clean duration read
 IEI,iShares 3-7 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,239455,https://www.ishares.com/us/products/239455/ishares-37-year-treasury-bond-etf,
 IEF,iShares 7-10 Year Treasury Bond,iShares,ust_intermediate,index,TRUE,high,239456,https://www.ishares.com/us/products/239456/ishares-710-year-treasury-bond-etf,
-VGIT,Vanguard Intermediate-Term Treasury,Vanguard,ust_intermediate,index,TRUE,high,,,
+VGIT,Vanguard Intermediate-Term Treasury,Vanguard,ust_intermediate,index,TRUE,high,3143,,
 SCHR,Schwab Intermediate-Term US Treasury,Schwab,ust_intermediate,index,TRUE,high,,,
 SPTI,SPDR Portfolio Intermediate Term Treasury,SSGA,ust_intermediate,index,TRUE,high,,,
 UTEN,US Treasury 10 Year Note,F/m,ust_intermediate,single_point,FALSE,med,,,single-tenor
 GOVT,iShares US Treasury Bond,iShares,ust_broad,index,TRUE,high,239468,https://www.ishares.com/us/products/239468/ishares-us-treasury-bond-etf,all-maturity - do not double count vs tenor buckets
 TLT,iShares 20+ Year Treasury Bond,iShares,ust_long,index,TRUE,high,239454,https://www.ishares.com/us/products/239454/ishares-20-year-treasury-bond-etf,highest-beta duration flow signal
 TLH,iShares 10-20 Year Treasury Bond,iShares,ust_long,index,TRUE,high,239453,https://www.ishares.com/us/products/239453/ishares-1020-year-treasury-bond-etf,
-VGLT,Vanguard Long-Term Treasury,Vanguard,ust_long,index,TRUE,high,,,
+VGLT,Vanguard Long-Term Treasury,Vanguard,ust_long,index,TRUE,high,3144,,
 SPTL,SPDR Portfolio Long Term Treasury,SSGA,ust_long,index,TRUE,high,,,
 SCHQ,Schwab Long-Term US Treasury,Schwab,ust_long,index,TRUE,high,,,
-EDV,Vanguard Extended Duration Treasury,Vanguard,ust_long,strips,TRUE,high,,,STRIPS - very high duration
+EDV,Vanguard Extended Duration Treasury,Vanguard,ust_long,strips,TRUE,high,0930,,STRIPS - very high duration
 ZROZ,PIMCO 25+ Year Zero Coupon US Treasury,PIMCO,ust_long,strips,TRUE,high,,,STRIPS
 GOVZ,iShares 25+ Year Treasury STRIPS,iShares,ust_long,strips,TRUE,high,315911,https://www.ishares.com/us/products/315911/ishares-25+-year-treasury-strips-bond-etf,STRIPS
 TIP,iShares TIPS Bond,iShares,tips,broad,TRUE,high,239467,https://www.ishares.com/us/products/239467/ishares-tips-bond-etf,
 SCHP,Schwab US TIPS,Schwab,tips,broad,TRUE,high,,,
-VTIP,Vanguard Short-Term Inflation-Protected Securities,Vanguard,tips,short,TRUE,high,,,
+VTIP,Vanguard Short-Term Inflation-Protected Securities,Vanguard,tips,short,TRUE,high,3365,,
 STIP,iShares 0-5 Year TIPS Bond,iShares,tips,short,TRUE,high,239450,https://www.ishares.com/us/products/239450/ishares-05-year-tips-bond-etf,
 SPIP,SPDR Portfolio TIPS,SSGA,tips,broad,TRUE,high,,,
 TIPX,SPDR Bloomberg 1-10 Year TIPS,SSGA,tips,intermediate,TRUE,med,,,
 LTPZ,PIMCO 15+ Year US TIPS,PIMCO,tips,long,TRUE,high,,,
 MBB,iShares MBS,iShares,agency_mbs,index,TRUE,high,239465,https://www.ishares.com/us/products/239465/ishares-mbs-etf,largest pure-play agency MBS
-VMBS,Vanguard Mortgage-Backed Securities,Vanguard,agency_mbs,index,TRUE,high,,,
+VMBS,Vanguard Mortgage-Backed Securities,Vanguard,agency_mbs,index,TRUE,high,3148,,
 SPMB,SPDR Portfolio Mortgage Backed Bond,SSGA,agency_mbs,index,TRUE,high,,,
 GNMA,iShares GNMA Bond,iShares,agency_mbs,ginnie,TRUE,med,239461,https://www.ishares.com/us/products/239461/ishares-gnma-bond-etf,
 JMBS,Janus Henderson Mortgage-Backed Securities,Janus Henderson,agency_mbs,active,TRUE,high,,,
 MTBA,Simplify MBS,Simplify,agency_mbs,active,TRUE,med,,,verify ticker
 LQD,iShares iBoxx USD Investment Grade Corporate,iShares,ig_corp,broad,TRUE,high,239566,https://www.ishares.com/us/products/239566/ishares-iboxx-investment-grade-corporate-bond-etf,
-VCIT,Vanguard Intermediate-Term Corporate Bond,Vanguard,ig_corp,intermediate,TRUE,high,,,
-VCSH,Vanguard Short-Term Corporate Bond,Vanguard,ig_corp,short,TRUE,high,,,
-VCLT,Vanguard Long-Term Corporate Bond,Vanguard,ig_corp,long,TRUE,high,,,
+VCIT,Vanguard Intermediate-Term Corporate Bond,Vanguard,ig_corp,intermediate,TRUE,high,3146,,
+VCSH,Vanguard Short-Term Corporate Bond,Vanguard,ig_corp,short,TRUE,high,3145,,
+VCLT,Vanguard Long-Term Corporate Bond,Vanguard,ig_corp,long,TRUE,high,3147,,
 IGSB,iShares 1-5 Year Investment Grade Corporate,iShares,ig_corp,short,TRUE,high,239451,https://www.ishares.com/us/products/239451/ishares-13-year-credit-bond-etf,
 IGIB,iShares 5-10 Year Investment Grade Corporate,iShares,ig_corp,intermediate,TRUE,high,239463,https://www.ishares.com/us/products/239463/ishares-intermediate-credit-bond-etf,
 IGLB,iShares 10+ Year Investment Grade Corporate,iShares,ig_corp,long,TRUE,high,239423,https://www.ishares.com/us/products/239423/ishares-10-year-credit-bond-etf,
@@ -78,16 +78,16 @@ BKLN,Invesco Senior Loan,Invesco,loans_clo,bank_loan,TRUE,high,,,
 SRLN,SPDR Blackstone Senior Loan,SSGA,loans_clo,bank_loan,TRUE,high,,,
 FTSL,First Trust Senior Loan,First Trust,loans_clo,bank_loan,TRUE,med,,,
 EMB,iShares JP Morgan USD Emerging Markets Bond,iShares,em_debt,hard_ccy,TRUE,high,239572,https://www.ishares.com/us/products/239572/ishares-jp-morgan-usd-emerging-markets-bond-etf,
-VWOB,Vanguard Emerging Markets Government Bond,Vanguard,em_debt,hard_ccy,TRUE,high,,,
+VWOB,Vanguard Emerging Markets Government Bond,Vanguard,em_debt,hard_ccy,TRUE,high,3820,,
 PCY,Invesco Emerging Markets Sovereign Debt,Invesco,em_debt,hard_ccy,TRUE,high,,,
 EMLC,VanEck J.P. Morgan EM Local Currency Bond,VanEck,em_debt,local_ccy,TRUE,high,,,
 EBND,SPDR Bloomberg Emerging Markets Local Bond,SSGA,em_debt,local_ccy,TRUE,med,,,
 MUB,iShares National Muni Bond,iShares,muni,broad,TRUE,high,239766,https://www.ishares.com/us/products/239766/ishares-national-amtfree-muni-bond-etf,
-VTEB,Vanguard Tax-Exempt Bond,Vanguard,muni,broad,TRUE,high,,,
+VTEB,Vanguard Tax-Exempt Bond,Vanguard,muni,broad,TRUE,high,4391,,
 TFI,SPDR Nuveen Bloomberg Municipal Bond,SSGA,muni,broad,TRUE,high,,,
 SUB,iShares Short-Term National Muni Bond,iShares,muni,short,TRUE,high,239772,https://www.ishares.com/us/products/239772/ishares-shortterm-national-amtfree-muni-bond-etf,
 SHM,SPDR Nuveen Bloomberg Short Term Municipal Bond,SSGA,muni,short,TRUE,high,,,
-VTES,Vanguard Short-Term Tax-Exempt Bond,Vanguard,muni,short,TRUE,med,,,
+VTES,Vanguard Short-Term Tax-Exempt Bond,Vanguard,muni,short,TRUE,med,V014,,
 PZA,Invesco National AMT-Free Municipal Bond,Invesco,muni,broad,TRUE,high,,,
 JMUB,JPMorgan Municipal ETF,JPMorgan,muni,active,TRUE,med,,,
 MUNI,PIMCO Intermediate Municipal Bond Active,PIMCO,muni,active,TRUE,med,,,
@@ -96,7 +96,7 @@ HYMB,SPDR Nuveen Bloomberg High Yield Municipal Bond,SSGA,muni,hy_muni,TRUE,high
 CMF,iShares California Muni Bond,iShares,muni,state,FALSE,high,239731,https://www.ishares.com/us/products/239731/ishares-california-amtfree-muni-bond-etf,state-specific
 NYF,iShares New York Muni Bond,iShares,muni,state,FALSE,high,239767,https://www.ishares.com/us/products/239767/ishares-new-york-amtfree-muni-bond-etf,state-specific
 AGG,iShares Core US Aggregate Bond,iShares,aggregate,index,TRUE,high,239458,https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf,MBS look-through target
-BND,Vanguard Total Bond Market,Vanguard,aggregate,index,TRUE,high,,,MBS look-through target
+BND,Vanguard Total Bond Market,Vanguard,aggregate,index,TRUE,high,0928,,MBS look-through target
 SPAB,SPDR Portfolio Aggregate Bond,SSGA,aggregate,index,TRUE,high,,,MBS look-through target
 SCHZ,Schwab US Aggregate Bond,Schwab,aggregate,index,TRUE,high,,,MBS look-through target
 IUSB,iShares Core Total USD Bond Market,iShares,aggregate,index_plus,TRUE,high,264615,https://www.ishares.com/us/products/264615/ishares-core-total-usd-bond-market-etf,broader than Agg
@@ -107,7 +107,7 @@ JCPB,JPMorgan Core Plus Bond,JPMorgan,active_multisector,active,TRUE,med,,,
 BINC,BlackRock Flexible Income,iShares/BlackRock,active_multisector,active,TRUE,high,,,fast asset growth
 PYLD,PIMCO Multisector Bond Active,PIMCO,active_multisector,active,TRUE,high,,,fast asset growth
 DFCF,Dimensional Core Fixed Income,Dimensional,active_multisector,active,TRUE,med,,,
-BNDX,Vanguard Total International Bond,Vanguard,intl_bond,dev_hedged,TRUE,high,,,USD-hedged - not US duration
+BNDX,Vanguard Total International Bond,Vanguard,intl_bond,dev_hedged,TRUE,high,3711,,USD-hedged - not US duration
 IAGG,iShares Core International Aggregate Bond,iShares,intl_bond,dev_hedged,TRUE,high,279626,https://www.ishares.com/us/products/279626/ishares-international-aggregate-bond-etf,
 BWX,SPDR Bloomberg International Treasury Bond,SSGA,intl_bond,dev_unhedged,FALSE,high,,,
 IGOV,iShares International Treasury Bond,iShares,intl_bond,dev_unhedged,FALSE,high,239830,https://www.ishares.com/us/products/239830/ishares-international-treasury-bond-etf,

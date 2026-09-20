@@ -23,6 +23,7 @@ from bondflows.sources.base import SourceAdapter  # noqa: E402
 # line here in the same commit that adds src/bondflows/sources/<issuer>.py.
 _ADAPTER_MODULES: dict[str, tuple[str, str]] = {
     "iShares": ("bondflows.sources.ishares", "ISharesAdapter"),
+    "Vanguard": ("bondflows.sources.vanguard", "VanguardAdapter"),
 }
 
 
