@@ -58,6 +58,50 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   different sites, didn't check the advisor site's ToU separately; Schwab:
   Akamai blocking meant ToU text wasn't the operative constraint anyway).
 
+## Flow calculation (flows.py, step 4) — decisions and open gaps
+
+- **Only 2 of §5.2's 4 adjustments are implemented.** Split detection/flagging
+  and staleness handling are done. Settlement-date normalization and
+  launch/closure suppression are not — both documented below rather than
+  silently skipped, per §5.2's own instruction to document ambiguity rather
+  than guess.
+- **Settlement-date vs trade-date is unresolved for every issuer** (see the
+  conventions table below — every row says "Undetermined"). `flow_date` is
+  therefore just the adapter-reported `asof_date`, unnormalized. Revisit once
+  enough `fund_daily` history has accumulated to actually determine each
+  issuer's convention empirically (the thing §5.2 says to wait for).
+- **Launch/closure suppression is not implemented.** It needs
+  `inception_date`/`delisting_date`, which exist as columns on the `universe`
+  DB table but are never populated — `universe.csv`/`universe.py` don't carry
+  them. Not a live correctness problem for the current universe (nothing in
+  it launched inside the lookback window as of 2026-09), but a real gap:
+  populate those two columns and wire launch-suppression into
+  `compute_ticker_flows` before relying on flow data for a fund that's newly
+  listed.
+- **Split candidates are never auto-applied.** `compute_ticker_flows` flags
+  `suspect` (flow_usd left NULL) when `|Δshares|/shares(t-1) > 20%` and
+  `shares_ratio * nav_ratio ≈ 1` (within 10%) — a human confirms the
+  corporate action by adding a row to the version-controlled `splits.csv`
+  (columns: `ticker,split_date,ratio,notes`; `ratio` = new shares per old
+  share, e.g. `0.25` for a 1-for-4 reverse split), then reruns
+  `scripts/compute_flows.py`, which recomputes the full history and picks up
+  the confirmed entry retroactively.
+- **Staleness**: `fund_daily.source_is_stale` rows (set by ingest.py) are
+  skipped entirely when walking a ticker's history, so the next fresh
+  observation's delta spans the whole gap and gets flagged `imputed` — the
+  "preferred" approach §5.2 describes, rather than trying to distribute the
+  change day-by-day. The `stale_prior` flag value (in the `fund_flows.flag`
+  enum) is intentionally unused as a result.
+- **`organic_growth_rate` is populated in flows.py**, not deferred to the
+  §6.3 analytics layer — it's a trivial `flow_usd / total_net_assets(t-1)`
+  using data already in hand while computing flow_usd. `dv01_usd_per_bp` and
+  `spread_dv01_usd_per_bp` stay NULL here — SPEC.md §6.4 explicitly calls
+  those out as phase-2, built later against accumulated history.
+- **The §9 "spot check against a public source" test is not automated** — it
+  inherently means comparing one real fund's real flow against a real
+  published figure, which no fixture can stand in for. It's a manual check to
+  run once enough history has accumulated, not part of `pytest`.
+
 ## Discovered issuer conventions
 
 Full detail — sample endpoints, exact field names, raw response shapes — lives
