@@ -1,14 +1,19 @@
 # VanEck — endpoint discovery
 
-Discovery pass, step 2 of the build order. Verified 2026-09-19/20. Sample fund: ANGL.
+Discovery pass, step 2 of the build order. Verified 2026-09-19/20, **corrected
+2026-09-21 while building the adapter** — two findings below turned out to be
+wrong on the first pass; see the correction notes inline.
 
 ## Bottom line up front
 
-Straightforward, fully server-rendered site — one `curl` per fund page gets NAV,
-Total Net Assets, and same-day Effective Duration, no separate API calls needed.
-One access quirk (needs a cookie jar, not a bot-blocking issue) and one real,
-explicit rate constraint (25-second crawl-delay) to respect. No shares-outstanding
-field found — same fallback situation as SSGA/Invesco, not as bad as Vanguard.
+One access quirk (needs either a cookie jar for `curl`, or
+`wait_until="domcontentloaded"` for Playwright — see below) and one real,
+explicit rate constraint (25-second crawl-delay) to respect. No
+shares-outstanding field found — same fallback situation as SSGA/Invesco, not
+as bad as Vanguard. **Correction**: the page is NOT fully server-rendered — the
+Portfolio tab's content (Effective Duration, Spread Duration) only mounts into
+the DOM once that tab is actually clicked, requiring a headless browser, not a
+plain `curl`, to reach.
 
 ## Access quirk: cookie-consent redirect loop (not bot-blocking)
 
@@ -40,8 +45,20 @@ whole-dollar or JPMorgan/Schwab's full-cent precision.
 **Portfolio tab → "Fundamentals" section, `as of 09/18/2026`** — same day as NAV,
 no lag (matches SSGA's clean same-day pattern, unlike iShares' T-2 or Schwab's
 ~18-day lag): `Yield to Worst` (6.99%), `Years to Maturity` (9.16), `Yield to
-Maturity` (7.14%), **`Effective Duration`** (4.52 yrs). No spread-duration field —
-consistent with every issuer except JPMorgan.
+Maturity` (7.14%), `Coupon` (5.55%), **`Effective Duration`** (4.52 yrs), and
+**`Spread Duration`** (4.57 yrs). **Correction**: the original discovery pass
+missed Coupon and Spread Duration — they're further down the same Fundamentals
+card, past what the screenshot at the time captured. VanEck *does* publish real
+spread duration, same as JPMorgan; this issuer isn't the "every issuer except
+JPMorgan lacks it" case it was first written up as.
+
+**This whole section requires clicking the "Portfolio" tab** — it isn't present
+in the page's initial HTML at all (confirmed empty on a fresh `curl`, and empty
+even in a full headless-browser page load before the tab is clicked). Once
+clicked, the content renders immediately with no new network request visible —
+consistent with the tab data already being loaded into client-side state
+earlier in the page load and just not yet mounted into the DOM until that UI
+action happens.
 
 **No shares-outstanding field found anywhere on the page** — checked the hero
 stats, the Portfolio tab, and grepped the full raw HTML for `shares outstanding`
@@ -50,10 +67,13 @@ not an actual data field). Same situation as SSGA/Invesco: the fallback
 `shares_outstanding = total_net_assets ÷ nav` is required, and inherits the ~0.3%
 imprecision from the rounded TNA figure.
 
-No separate API/JSON endpoint exists — confirmed by watching network traffic while
-loading the live page and switching tabs: zero XHR/fetch calls fired. Everything
-(including the Portfolio tab's Fundamentals) is present in the single initial page
-load.
+No separate, independently-callable API/JSON endpoint was found — watching network
+traffic while switching tabs showed no NEW request firing. **Correction**: this
+does not mean everything is present in the initial page load (see above); it
+means the Portfolio tab's data most likely arrives as part of the same initial
+load's payload (in a client-side state store) and is simply not rendered into
+visible DOM until the tab is clicked. The practical adapter implication is the
+same either way — a plain HTTP GET won't show it, a headless browser click will.
 
 ## robots.txt — permissive for this project's tickers, but with a real crawl-delay
 
@@ -100,9 +120,17 @@ millions ambiguity, just a rounding-precision one (see above).
 
 ## Open questions for the next pass on VanEck
 
-- Confirm the same page structure (single SSR page, Portfolio tab same-day
-  duration, no shares-outstanding field) holds for CLOI, EMLC, and HYD — only ANGL
-  checked in depth.
 - Re-check the ticker-specific robots.txt exclusion list if the universe changes.
-- No spread duration found — matches every issuer except JPMorgan; nothing further
-  to check here.
+
+## Resolved during adapter build (2026-09-21)
+
+- Confirmed the same page structure (Portfolio tab same-day duration and spread
+  duration, no shares-outstanding field anywhere) holds for CLOI, EMLC, and HYD,
+  not just ANGL.
+- Also caught a real bug while parsing "$3.17B"-style figures: constructing a
+  `Decimal` via `Decimal("3.17") * Decimal("1e9")` produces a value whose
+  string form is itself exponential (`3.17E+9`), which DuckDB's parameter
+  binding silently mis-parsed as `317.00` — a 10-million-times-too-small
+  number, with no error raised anywhere. Fixed by scaling with a plain `int`
+  instead. See CLAUDE.md's Conventions section — this risk applies to any
+  future adapter parsing an abbreviated dollar figure.

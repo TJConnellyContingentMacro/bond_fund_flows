@@ -12,6 +12,15 @@ Daily US bond ETF flow model. Read SPEC.md before doing anything.
 - One adapter per issuer. An adapter failure must not stop the run for other issuers.
 - Capture effective_duration and spread_duration daily even though nothing uses
   them yet. Issuers publish current values only; this cannot be backfilled.
+- **Never construct a `Decimal` via multiplication by `Decimal("1eN")`** (e.g.
+  `Decimal("3.17") * Decimal("1e9")`). The result's internal representation is
+  itself exponential (`3.17E+9`), and DuckDB's Python parameter binding
+  silently mis-parses that as `317.00` — a real, confirmed, silent data
+  corruption found while building the VanEck adapter (a $3.17B fund landed in
+  `fund_daily` as $317). Scale by a plain Python `int` instead
+  (`Decimal("3.17") * 1_000_000_000`), which stays in normal notation and
+  binds correctly. Applies to any adapter parsing an abbreviated figure like
+  "$3.17B" or "523.28 M".
 
 ## Stack
 Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only —
