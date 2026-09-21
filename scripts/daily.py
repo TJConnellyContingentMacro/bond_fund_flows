@@ -27,6 +27,7 @@ _ADAPTER_MODULES: dict[str, tuple[str, str]] = {
     "SSGA": ("bondflows.sources.ssga", "SSGAAdapter"),
     "Invesco": ("bondflows.sources.invesco", "InvescoAdapter"),
     "Schwab": ("bondflows.sources.schwab", "SchwabAdapter"),
+    "JPMorgan": ("bondflows.sources.jpmorgan", "JPMorganAdapter"),
 }
 
 

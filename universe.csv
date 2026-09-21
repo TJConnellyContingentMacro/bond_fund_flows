@@ -8,7 +8,7 @@ XHLF,BondBloxx Bloomberg Six Month Target Duration,BondBloxx,ust_ultrashort,bill
 VBIL,Vanguard 0-3 Month Treasury Bill,Vanguard,ust_ultrashort,bills,TRUE,med,V042,,recent launch - verify ticker
 TFLO,iShares Treasury Floating Rate Bond,iShares,ust_ultrashort,frn,TRUE,high,260652,https://www.ishares.com/us/products/260652/ishares-treasury-floating-rate-bond-etf,FRN - near-zero duration
 USFR,WisdomTree Floating Rate Treasury,WisdomTree,ust_ultrashort,frn,TRUE,high,,,FRN - near-zero duration
-JPST,JPMorgan Ultra-Short Income,JPMorgan,ultrashort_credit,active,TRUE,high,,,
+JPST,JPMorgan Ultra-Short Income,JPMorgan,ultrashort_credit,active,TRUE,high,46641Q837,,
 MINT,PIMCO Enhanced Short Maturity Active,PIMCO,ultrashort_credit,active,TRUE,high,,,
 ICSH,iShares Ultra Short-Term Bond Active,iShares,ultrashort_credit,active,TRUE,high,258806,https://www.ishares.com/us/products/258806/ishares-liquidity-income-etf,
 GSY,Invesco Ultra Short Duration,Invesco,ultrashort_credit,active,TRUE,high,46090A887,,
@@ -89,7 +89,7 @@ SUB,iShares Short-Term National Muni Bond,iShares,muni,short,TRUE,high,239772,ht
 SHM,SPDR Nuveen Bloomberg Short Term Municipal Bond,SSGA,muni,short,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-nuveen-ice-short-term-municipal-bond-etf-shm,
 VTES,Vanguard Short-Term Tax-Exempt Bond,Vanguard,muni,short,TRUE,med,V014,,
 PZA,Invesco National AMT-Free Municipal Bond,Invesco,muni,broad,TRUE,high,46138E537,,
-JMUB,JPMorgan Municipal ETF,JPMorgan,muni,active,TRUE,med,,,
+JMUB,JPMorgan Municipal ETF,JPMorgan,muni,active,TRUE,med,46641Q647,,
 MUNI,PIMCO Intermediate Municipal Bond Active,PIMCO,muni,active,TRUE,med,,,
 HYD,VanEck High Yield Muni,VanEck,muni,hy_muni,TRUE,high,,,
 HYMB,SPDR Nuveen Bloomberg High Yield Municipal Bond,SSGA,muni,hy_muni,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-spdr-nuveen-ice-high-yield-municipal-bond-etf-hymb,
@@ -103,7 +103,7 @@ IUSB,iShares Core Total USD Bond Market,iShares,aggregate,index_plus,TRUE,high,2
 BOND,PIMCO Active Bond,PIMCO,active_multisector,active,TRUE,high,,,
 FBND,Fidelity Total Bond,Fidelity,active_multisector,active,TRUE,high,,,
 TOTL,SPDR DoubleLine Total Return Tactical,SSGA,active_multisector,active,TRUE,high,,https://www.ssga.com/us/en/individual/etfs/state-street-doubleline-total-return-tactical-etf-totl,
-JCPB,JPMorgan Core Plus Bond,JPMorgan,active_multisector,active,TRUE,med,,,
+JCPB,JPMorgan Core Plus Bond,JPMorgan,active_multisector,active,TRUE,med,46641Q670,,
 BINC,BlackRock Flexible Income,iShares/BlackRock,active_multisector,active,TRUE,high,,,fast asset growth
 PYLD,PIMCO Multisector Bond Active,PIMCO,active_multisector,active,TRUE,high,,,fast asset growth
 DFCF,Dimensional Core Fixed Income,Dimensional,active_multisector,active,TRUE,med,,,
