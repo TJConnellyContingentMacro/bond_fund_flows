@@ -98,6 +98,19 @@ class BrowserSourceAdapter(SourceAdapter):
     #: session across runs, stored at `state_path`.
     persists_session: ClassVar[bool] = False
 
+    #: Most sites are fine with a headless real browser. Set to False for a
+    #: site whose bot-management specifically distinguishes headless from a
+    #: genuinely displayed browser (confirmed for Schwab: standard headless
+    #: Chromium/Chrome gets Access Denied from Akamai regardless of
+    #: User-Agent or navigator.webdriver patching; a headed real Chrome
+    #: passes with no masking needed at all). A headed adapter needs the cron
+    #: to run in a session with desktop access, not a bare background service.
+    headless: ClassVar[bool] = True
+    #: "chrome" uses the system's real installed Chrome instead of
+    #: Playwright's bundled Chromium — matters for sites that fingerprint
+    #: the browser binary itself.
+    channel: ClassVar[str | None] = None
+
     def __init__(self) -> None:
         self._playwright = None
         self._browser = None
@@ -116,7 +129,10 @@ class BrowserSourceAdapter(SourceAdapter):
         state = str(self.state_path) if self.persists_session and self.state_path.exists() else None
         self._playwright = sync_playwright().start()
         try:
-            self._browser = self._playwright.chromium.launch(headless=True)
+            launch_kwargs = {"headless": self.headless}
+            if self.channel:
+                launch_kwargs["channel"] = self.channel
+            self._browser = self._playwright.chromium.launch(**launch_kwargs)
             self._context = self._browser.new_context(storage_state=state)
             return super().fetch_all(tickers, identifiers)
         finally:
