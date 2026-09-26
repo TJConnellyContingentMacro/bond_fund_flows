@@ -102,6 +102,48 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   published figure, which no fixture can stand in for. It's a manual check to
   run once enough history has accumulated, not part of `pytest`.
 
+## Dollar aggregates (analytics.py, step 5) — decisions and open gaps
+
+- **Gross only — no double-counting correction yet.** §6.2 (net of
+  fund-of-fund holdings, e.g. TLTW holding TLT) is build-order step 6 and
+  needs a holdings-file ingestion path that doesn't exist yet.
+  `flow_aggregates` has no `_net` column. Every number in it is a gross sum.
+- **Every cut filters to `in_core = TRUE`**, applied consistently across the
+  headline total, ex-bills, credit/rates, and every by-sleeve cut — not just
+  the top-line number §6.1 explicitly calls out core-only.
+- **Credit-vs-rates sleeve assignment** (`analytics.py`'s `RATES_SLEEVES` /
+  `CREDIT_SLEEVES` / `MIXED_OTHER_SLEEVES`): `levered_inverse` (TMF/TMV/TBT/
+  TBF/UBT) is all leveraged/inverse long-Treasury products, so it's grouped
+  with rates rather than left as "mixed" despite the name. `intl_bond`
+  (BNDX/IAGG/BWX/IGOV) is developed-market sovereign debt — duration-driven,
+  grouped with rates despite the FX dimension. `aggregate`, `active_multisector`,
+  and `overlay` are genuinely mixed and deliberately excluded from the
+  credit/rates split rather than force-assigned — `overlay`'s 3 tickers
+  (TLTW/HYGW/LQDW) mix a rates underlying and two credit underlyings inside
+  one sleeve, and they're exactly the §6.2 double-counting candidates
+  anyway, so they wait for that phase. `analytics.py` asserts every sleeve
+  in `universe.csv` lands in exactly one of the three groups — a newly added
+  sleeve that isn't assigned fails loudly rather than silently landing
+  nowhere or double-counting.
+- **Rolling sums (5-day/20-day) are windows over each cut's own observed
+  trading days**, not calendar-day windows — there's no market holiday
+  calendar in this project, and none is needed if the window is just "the
+  last N rows" of that cut's own daily series. MTD/QTD reset at the calendar
+  month/quarter boundary.
+- **z-score methodology (§6.7)**: trailing 252-*observed-day* window,
+  computed as of and including the day being scored (the scored day's own
+  value is part of its own calibration set — only days flagged `imputed` or
+  `suspect` are excluded from the mean/stdev calibration, exactly matching
+  §6.7's wording, not the day being scored itself). Requires at least 20
+  clean days in the trailing window or `zscore_252d` is `NULL` — a stated
+  threshold to avoid a meaningless z-score early in the series, not a silent
+  guess.
+- **Aggregate OGR** = `SUM(flow_usd) / SUM(prior-day total_net_assets)`
+  across a cut's constituent tickers. A ticker with no `total_net_assets` at
+  all (e.g. Vanguard) simply drops out of that sum via normal SQL NULL
+  handling — the denominator is a partial sum across issuers that publish
+  TNA, not a fabricated total-universe AUM figure.
+
 ## Discovered issuer conventions
 
 Full detail — sample endpoints, exact field names, raw response shapes — lives

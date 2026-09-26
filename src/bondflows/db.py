@@ -40,6 +40,21 @@ CREATE TABLE IF NOT EXISTS fund_flows (
     PRIMARY KEY (ticker, flow_date)
 );
 
+CREATE TABLE IF NOT EXISTS flow_aggregates (
+    cut                     VARCHAR NOT NULL,
+    asof_date               DATE NOT NULL,
+    flow_usd                DECIMAL(18,2),
+    ogr                     DECIMAL(10,6),
+    flow_5d                 DECIMAL(18,2),
+    flow_20d                DECIMAL(18,2),
+    flow_mtd                DECIMAL(18,2),
+    flow_qtd                DECIMAL(18,2),
+    zscore_252d             DECIMAL(10,4),
+    has_imputed_or_suspect  BOOLEAN NOT NULL,
+    n_funds                 INTEGER NOT NULL,
+    PRIMARY KEY (cut, asof_date)
+);
+
 CREATE TABLE IF NOT EXISTS universe (
     ticker          VARCHAR NOT NULL,
     name            VARCHAR NOT NULL,
@@ -103,5 +118,39 @@ def upsert_fund_daily(
             observation.spread_duration,
             source,
             source_is_stale,
+        ],
+    )
+
+
+def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
+    con.execute(
+        """
+        INSERT INTO flow_aggregates (
+            cut, asof_date, flow_usd, ogr, flow_5d, flow_20d, flow_mtd, flow_qtd,
+            zscore_252d, has_imputed_or_suspect, n_funds
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (cut, asof_date) DO UPDATE SET
+            flow_usd = excluded.flow_usd,
+            ogr = excluded.ogr,
+            flow_5d = excluded.flow_5d,
+            flow_20d = excluded.flow_20d,
+            flow_mtd = excluded.flow_mtd,
+            flow_qtd = excluded.flow_qtd,
+            zscore_252d = excluded.zscore_252d,
+            has_imputed_or_suspect = excluded.has_imputed_or_suspect,
+            n_funds = excluded.n_funds
+        """,
+        [
+            row["cut"],
+            row["asof_date"],
+            row["flow_usd"],
+            row["ogr"],
+            row["flow_5d"],
+            row["flow_20d"],
+            row["flow_mtd"],
+            row["flow_qtd"],
+            row["zscore_252d"],
+            row["has_imputed_or_suspect"],
+            row["n_funds"],
         ],
     )
