@@ -6,3 +6,4 @@ data/raw/
 data/bondflows.duckdb
 data/.state/
 .pytest_cache/
+logs/

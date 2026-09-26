@@ -296,6 +296,47 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   once step 10 forced a first real write attempt. Check for this whenever
   adding a column to an existing table, not just a new table.
 
+## Running this regularly (scripts/run_pipeline.py, SPEC.md §8 Operations)
+
+- **Single entrypoint**: `scripts/run_pipeline.py` runs, in order,
+  `backfill_gaps.py` → `daily.py` → `compute_flows.py` →
+  `compute_analytics.py` → `fetch_overlay_holdings.py` →
+  `fetch_mbs_weights.py` → `compute_mbs_flows.py` → `fetch_ici_weekly.py`,
+  logs each step's output to `logs/pipeline_YYYYMMDD.log`, then checks
+  SPEC.md §8's exact alert conditions and exits non-zero if anything needs
+  attention: coverage below `COVERAGE_ALERT_THRESHOLD_PCT` (90%, a starting
+  point — not derived from anything, revisit once real daily variance is
+  observed), any `|OGR| > 10%`, any sleeve z-score beyond ±4, or any
+  `suspect`-flagged flow still awaiting a `splits.csv` resolution.
+- **`backfill_gaps.py` cannot actually re-fetch history.** SPEC.md §8 asks
+  for "attempt re-fetch where the issuer offers history" — none of the 8
+  adapters can pull a historical date, only today's live value. So this
+  script is a pure report (coverage as % of expected business-days since
+  each ticker's own first observation), never a repair tool. The "mark the
+  rest permanently imputed" half already happens for free: flows.py flags a
+  gap-spanning catch-up row `imputed` on its own.
+- **Schwab's adapter needs a visible desktop** (a real, headed Chrome
+  window — confirmed during discovery as the only way past Akamai's
+  bot-blocking). `run_pipeline.py` must run in an interactive desktop
+  session (Windows Task Scheduler configured to run only when logged on),
+  not a headless service account.
+- **First live run of the full orchestrator (2026-09-26)**: all 8 steps
+  completed; coverage came in at 78.2% (97/124) and correctly triggered a
+  coverage alert — Invesco's whole 5-ticker batch failed on the same
+  self-inflicted 406 rate-limit documented during adapter-building (hitting
+  its API repeatedly during heavy same-session testing), not a new problem.
+  Caught one real bug: the alert-printing code used a `⚠` character that
+  Windows' console (cp1252) can't encode, crashing after all 8 steps had
+  already succeeded and logged. Fixed by using plain ASCII in console
+  output — worth remembering for any future print statement in a script
+  meant to run under Windows Task Scheduler, not just a UTF-8 terminal.
+- **Not yet set up**: an actual Windows Task Scheduler entry (or equivalent)
+  to run this daily, and a scheduled Claude task to read the DuckDB output
+  after the ETL completes and republish the dashboard artifact with fresh
+  commentary. SPEC.md §10 is explicit these are different jobs — the ETL
+  must stay deterministic Python with no model in the loop; only the
+  presentation/commentary layer belongs to a scheduled Claude task.
+
 ## Discovered issuer conventions
 
 Full detail — sample endpoints, exact field names, raw response shapes — lives
