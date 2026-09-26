@@ -54,10 +54,22 @@ def seed_fund_daily_tna(con, ticker: str, asof_date: date, total_net_assets: Dec
     )
 
 
+def seed_overlay_holding(
+    con, ticker: str, asof_date: date, underlying_ticker: str, weight_pct: Decimal
+) -> None:
+    con.execute(
+        """
+        INSERT INTO overlay_holdings (ticker, asof_date, underlying_ticker, weight_pct, source)
+        VALUES (?, ?, ?, ?, 'test')
+        """,
+        [ticker, asof_date, underlying_ticker, weight_pct],
+    )
+
+
 def get_row(con, cut: str, asof_date: date) -> dict:
     cols = [
-        "cut", "asof_date", "flow_usd", "ogr", "flow_5d", "flow_20d", "flow_mtd",
-        "flow_qtd", "zscore_252d", "has_imputed_or_suspect", "n_funds",
+        "cut", "asof_date", "flow_usd", "flow_usd_net", "ogr", "flow_5d", "flow_20d",
+        "flow_mtd", "flow_qtd", "zscore_252d", "has_imputed_or_suspect", "n_funds",
     ]
     row = con.execute(
         f"SELECT {', '.join(cols)} FROM flow_aggregates WHERE cut = ? AND asof_date = ?",
@@ -173,6 +185,41 @@ def test_ogr_uses_prior_day_total_net_assets(tmp_path):
 
     row = get_row(con, "total", day1)
     assert row["ogr"] == Decimal("5000000") / Decimal("1000000000.00")
+    con.close()
+
+
+def test_flow_usd_net_backs_out_overlay_funds_underlying_etf_flow(tmp_path):
+    """SPEC.md §6.2, narrowly scoped to TLTW/HYGW/LQDW (overlay.py): a
+    dollar into TLTW is (almost) a dollar into TLT, so it should net out of
+    flow_usd_net using the *prior* day's holdings weight. A ticker with no
+    overlay_holdings row (AAA) must be completely unaffected."""
+    con = db.connect(tmp_path / "db.duckdb")
+    funds = [
+        make_fund("TLTW", "overlay", "buywrite"),
+        make_fund("AAA", "ig_corp", "broad"),
+    ]
+    day0, day1 = date(2026, 9, 17), date(2026, 9, 18)
+    seed_overlay_holding(con, "TLTW", day0, "TLT", Decimal("100.00"))
+    # fetch_overlay_holdings.py writes a row every day it runs (including
+    # day1) — the LAG in analytics.py's SQL reads *that* row's predecessor,
+    # same reason the OGR test needs a fund_daily row on the flow's own date.
+    seed_overlay_holding(con, "TLTW", day1, "TLT", Decimal("99.50"))
+    seed_fund_flow(con, "TLTW", day1, Decimal("1000000"))
+    seed_fund_flow(con, "AAA", day1, Decimal("500"))
+
+    compute_aggregates(con, funds=funds)
+
+    total = get_row(con, "total", day1)
+    assert total["flow_usd"] == Decimal("1000500")
+    assert total["flow_usd_net"] == Decimal("500")  # TLTW's $1mm nets out entirely
+
+    overlay_cut = get_row(con, "overlay", day1)
+    assert overlay_cut["flow_usd"] == Decimal("1000000")
+    assert overlay_cut["flow_usd_net"] == Decimal("0")
+
+    credit = get_row(con, "credit", day1)
+    assert credit["flow_usd"] == Decimal("500")
+    assert credit["flow_usd_net"] == Decimal("500")  # unaffected, no overlay ticker here
     con.close()
 
 

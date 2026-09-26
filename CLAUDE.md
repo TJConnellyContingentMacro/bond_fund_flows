@@ -144,6 +144,42 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   handling — the denominator is a partial sum across issuers that publish
   TNA, not a fabricated total-universe AUM figure.
 
+## Double-counting control (overlay.py, step 6) — narrowly scoped, by design
+
+- **§6.2 is only partly built.** SPEC.md names two double-counting sources:
+  option-overlay funds holding their underlying ETF (TLTW→TLT, HYGW→HYG,
+  LQDW→LQD), and active multisector funds that "hold ETF positions
+  opportunistically." Only the first is implemented.
+- **Why the second isn't**: checked BOND, TOTL, PYLD, JCPB directly (the
+  active_multisector tickers whose issuers we have adapters for — FBND and
+  DFCF have no adapter at all, different issuers never discovered). BOND has
+  2,044 holdings, TOTL has 1,710 — large, granular active portfolios.
+  Detecting an ETF holding among them would need full holdings-file parsing
+  and name/CUSIP matching across 3-4 differently-shaped issuer formats
+  (iShares, PIMCO, SSGA, JPMorgan each publish holdings differently), for a
+  payoff SPEC.md itself hedges as "opportunistic" — not a certain effect.
+  Decided with T.J. to skip this for now rather than build a large,
+  uncertain-payoff pipeline. `flow_aggregates.flow_usd_net` therefore only
+  nets out TLTW/HYGW/LQDW; it is **not** a complete §6.2 implementation.
+- **How the overlay correction works**: `overlay.py` fetches each of the 3
+  funds' iShares holdings CSV directly (no auth, `<product_url>/latest-
+  holdings.csv`) via `scripts/fetch_overlay_holdings.py`. Each fund's
+  dominant holding (~100% weight, confirmed live 2026-09-25: TLTW 100.17%,
+  HYGW 100.28%, LQDW 100.44%) is its underlying ETF; the rest is a small
+  cash sleeve plus (for TLTW) a short call option position. A row is
+  rejected (logged, not written) if the top holding's name doesn't match the
+  expected underlying or its weight drops below a 50% sanity floor — both
+  guard against silently misreading a wrong row if iShares changes the CSV's
+  shape.
+- **Uses the prior day's weight**, matching §6.6's "computed from the prior
+  day to avoid look-ahead" principle for the same kind of holdings-weight
+  calculation, even though §6.2's own text doesn't restate that timing
+  explicitly.
+- Run `scripts/fetch_overlay_holdings.py` before `scripts/compute_analytics.py`
+  for `flow_usd_net` to reflect that day's overlay weight; if it hasn't run
+  yet, `flow_usd_net` just equals `flow_usd` for that day (no adjustment
+  available yet), which is a silent-but-honest degrade, not a wrong number.
+
 ## Discovered issuer conventions
 
 Full detail — sample endpoints, exact field names, raw response shapes — lives

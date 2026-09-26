@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS flow_aggregates (
     cut                     VARCHAR NOT NULL,
     asof_date               DATE NOT NULL,
     flow_usd                DECIMAL(18,2),
+    flow_usd_net            DECIMAL(18,2),
     ogr                     DECIMAL(10,6),
     flow_5d                 DECIMAL(18,2),
     flow_20d                DECIMAL(18,2),
@@ -53,6 +54,19 @@ CREATE TABLE IF NOT EXISTS flow_aggregates (
     has_imputed_or_suspect  BOOLEAN NOT NULL,
     n_funds                 INTEGER NOT NULL,
     PRIMARY KEY (cut, asof_date)
+);
+
+-- SPEC.md §6.2, narrowly scoped to the option-overlay funds (TLTW/HYGW/
+-- LQDW) — see overlay.py. `weight_pct` is the underlying ETF's share of
+-- portfolio market value as published in that day's holdings file (e.g.
+-- 100.17 for 100.17%), not a fraction.
+CREATE TABLE IF NOT EXISTS overlay_holdings (
+    ticker              VARCHAR NOT NULL,
+    asof_date           DATE NOT NULL,
+    underlying_ticker   VARCHAR NOT NULL,
+    weight_pct          DECIMAL(7,4) NOT NULL,
+    source              VARCHAR NOT NULL,
+    PRIMARY KEY (ticker, asof_date)
 );
 
 CREATE TABLE IF NOT EXISTS universe (
@@ -126,11 +140,12 @@ def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
     con.execute(
         """
         INSERT INTO flow_aggregates (
-            cut, asof_date, flow_usd, ogr, flow_5d, flow_20d, flow_mtd, flow_qtd,
-            zscore_252d, has_imputed_or_suspect, n_funds
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            cut, asof_date, flow_usd, flow_usd_net, ogr, flow_5d, flow_20d, flow_mtd,
+            flow_qtd, zscore_252d, has_imputed_or_suspect, n_funds
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (cut, asof_date) DO UPDATE SET
             flow_usd = excluded.flow_usd,
+            flow_usd_net = excluded.flow_usd_net,
             ogr = excluded.ogr,
             flow_5d = excluded.flow_5d,
             flow_20d = excluded.flow_20d,
@@ -144,6 +159,7 @@ def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             row["cut"],
             row["asof_date"],
             row["flow_usd"],
+            row["flow_usd_net"],
             row["ogr"],
             row["flow_5d"],
             row["flow_20d"],
@@ -153,4 +169,18 @@ def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             row["has_imputed_or_suspect"],
             row["n_funds"],
         ],
+    )
+
+
+def upsert_overlay_holding(con: duckdb.DuckDBPyConnection, row: dict) -> None:
+    con.execute(
+        """
+        INSERT INTO overlay_holdings (ticker, asof_date, underlying_ticker, weight_pct, source)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT (ticker, asof_date) DO UPDATE SET
+            underlying_ticker = excluded.underlying_ticker,
+            weight_pct = excluded.weight_pct,
+            source = excluded.source
+        """,
+        [row["ticker"], row["asof_date"], row["underlying_ticker"], row["weight_pct"], row["source"]],
     )

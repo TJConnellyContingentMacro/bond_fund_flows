@@ -2,12 +2,15 @@
 ex-bills, by-sleeve, and a credit-vs-rates cut, each with OGR, rolling sums,
 and a z-score. Populates `flow_aggregates` from `fund_flows` + `fund_daily`.
 
-**Gross only.** §6.2's double-counting control (net of fund-of-fund holdings,
-e.g. TLTW holding TLT) is build-order step 6 and needs a holdings-file
-ingestion path that doesn't exist yet. Every row here is a gross sum; there
-is no `_net` column. `overlay` (TLTW/HYGW/LQDW) is deliberately left out of
-the credit/rates split rather than force-assigned — see `MIXED_OTHER_SLEEVES`
-below — since it's exactly the set §6.2 will need to treat specially.
+Also computes `flow_usd_net` (§6.2, build order step 6) — `flow_usd` minus
+the portion of TLTW/HYGW/LQDW's own flow attributable to their underlying
+ETF holding (see `overlay.py`). This is a **narrower** double-counting
+correction than §6.2 fully describes: the other candidate it names — active
+multisector funds holding ETF positions "opportunistically" — is not netted
+out here (see `overlay.py`'s docstring for why). `flow_usd_net == flow_usd`
+for every cut that doesn't include TLTW/HYGW/LQDW, and for `credit`/`rates`
+specifically, which exclude the `overlay` sleeve entirely (see
+`MIXED_OTHER_SLEEVES` below).
 
 Scope: every cut is computed over `in_core = TRUE` tickers only, matching
 §6.1's "all core funds" wording for the headline and applied consistently to
@@ -111,16 +114,29 @@ WITH tna_lag AS (
            LAG(total_net_assets) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_tna
     FROM fund_daily
 ),
+-- SPEC.md §6.2, narrowly scoped (see overlay.py): the prior day's weight is
+-- used, not the current day's, matching §6.6's "computed from the prior day
+-- to avoid look-ahead" principle for the same kind of holdings-weight
+-- calculation.
+overlay_lag AS (
+    SELECT ticker, asof_date,
+           LAG(weight_pct) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_weight_pct
+    FROM overlay_holdings
+),
 flow_with_tna AS (
-    SELECT f.ticker, f.flow_date, f.flow_usd, f.flag, t.prior_tna
+    SELECT
+        f.ticker, f.flow_date, f.flow_usd, f.flag, t.prior_tna,
+        COALESCE(f.flow_usd * o.prior_weight_pct / 100, 0) AS overlay_adjustment
     FROM fund_flows f
     LEFT JOIN tna_lag t ON t.ticker = f.ticker AND t.asof_date = f.flow_date
+    LEFT JOIN overlay_lag o ON o.ticker = f.ticker AND o.asof_date = f.flow_date
 ),
 cut_daily AS (
     SELECT
         c.cut,
         f.flow_date AS asof_date,
         SUM(f.flow_usd) AS flow_usd,
+        SUM(f.flow_usd) - SUM(f.overlay_adjustment) AS flow_usd_net,
         SUM(f.prior_tna) AS total_prior_tna,
         BOOL_OR(f.flag IN ('imputed', 'suspect')) AS has_imputed_or_suspect,
         COUNT(*) AS n_funds
@@ -130,7 +146,7 @@ cut_daily AS (
 ),
 windowed AS (
     SELECT
-        cut, asof_date, flow_usd, has_imputed_or_suspect, n_funds,
+        cut, asof_date, flow_usd, flow_usd_net, has_imputed_or_suspect, n_funds,
         CASE WHEN total_prior_tna IS NOT NULL AND total_prior_tna != 0
              THEN flow_usd / total_prior_tna ELSE NULL END AS ogr,
         SUM(flow_usd) OVER (
@@ -162,7 +178,7 @@ windowed AS (
     FROM cut_daily
 )
 SELECT
-    cut, asof_date, flow_usd, ogr, flow_5d, flow_20d, flow_mtd, flow_qtd,
+    cut, asof_date, flow_usd, flow_usd_net, ogr, flow_5d, flow_20d, flow_mtd, flow_qtd,
     CASE WHEN calib_n >= {min_clean_days} AND calib_stdev IS NOT NULL AND calib_stdev != 0
          THEN (flow_usd - calib_mean) / calib_stdev ELSE NULL END AS zscore_252d,
     has_imputed_or_suspect, n_funds
