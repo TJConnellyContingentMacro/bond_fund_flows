@@ -214,6 +214,51 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   explicitly showing the lag") rather than plotting it flush against the
   daily series.
 
+## Agency MBS look-through (mbs.py, step 8) — narrowly scoped, by design
+
+- **Only 6 of the 16 §6.6 tickers are covered**: iShares (MBB, GNMA, AGG,
+  IUSB) and SSGA (SPMB, SPAB) — the only issuers confirmed to publish a
+  genuine full daily holdings file with real market values. Checked all 16
+  directly (the agency_mbs and aggregate sleeves, plus BINC/PYLD/BOND/FBND/
+  JCPB) before narrowing: Vanguard's holdings endpoint has no market-value
+  field at all (a pre-existing gap from original discovery, needs a separate
+  bottom-up pricing project); PIMCO/JPMorgan/Schwab's holdings-file shapes
+  were never checked; Fidelity and Simplify are entirely new, never-
+  discovered issuers; Janus Henderson is an already-confirmed dead end; and
+  BINC isn't even resolved in universe.csv — its `issuer` field
+  ("iShares/BlackRock") doesn't match the adapter registry's "iShares" key,
+  so it's silently getting zero coverage today for basic flow data too, a
+  pre-existing bug unrelated to holdings. `mbs_weight` is simply absent for
+  all of these rather than guessed.
+- **No flow/allocation decomposition** (§6.6's `Δ implied_mbs ≈
+  flow*weight(t-1) + aum(t-1)*Δweight`). That decomposition is about
+  discretionary managers changing their MBS view — it only makes sense for
+  the active multisector funds, none of which made the cut above (all 6
+  in-scope tickers are index funds). Only the basic `implied_mbs_flow` is
+  computed.
+- **Classification is genuinely different per issuer's actual fields**,
+  confirmed against real holdings 2026-09-25/26: iShares' CSV has a `Sector`
+  column (`MBS Pass-Through`, `Agency Fixed Rate`, `Hybrid Arms` are always
+  agency MBS; `CMBS` is a mixed bucket needing a name filter — AGG's own
+  CMBS rows include both FHLMC/FHMS/FREMF-prefixed agency paper and private
+  conduits like WFCM/JPMCC/BANK; `Agency` — e.g. "FHLMC REFERENCE NOTE" — is
+  general GSE debt, not a mortgage pool, and is excluded entirely). SSGA's
+  XLSX has no Sector column, so classification is name-pattern-only.
+- **A real trap, found in SPAB's actual holdings**: "FREDDIE MAC NOTES
+  07/32 6.25" matches the FREDDIE MAC issuer prefix but is agency *debt*,
+  not a mortgage-backed security — excluded via a NOTE/DEBENTURE veto that
+  applies regardless of an issuer-prefix match. Same veto covers iShares'
+  "Agency" sector and its CMBS rows.
+- **Cross-issuer sanity check, live 2026-09-25**: MBB 94.09%, GNMA 98.61%,
+  and SSGA's SPMB 98.61% (independently classified via a completely
+  different code path) all land in the same range for pure-play agency MBS
+  funds — a good sign the classifier isn't issuer-specific by accident.
+  AGG 21.90% and SPAB 23.37% (both blended aggregate funds) are in the same
+  ballpark too.
+- Uses the *prior* day's weight for `implied_mbs_flow`, same principle as
+  overlay.py's §6.2 treatment. Run `scripts/fetch_mbs_weights.py` then
+  `scripts/compute_mbs_flows.py`, after `scripts/compute_flows.py`.
+
 ## Discovered issuer conventions
 
 Full detail — sample endpoints, exact field names, raw response shapes — lives

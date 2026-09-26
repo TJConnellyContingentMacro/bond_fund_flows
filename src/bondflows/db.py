@@ -91,6 +91,28 @@ CREATE TABLE IF NOT EXISTS ici_weekly_flows (
     PRIMARY KEY (week_ended)
 );
 
+-- SPEC.md §6.6, narrowly scoped (see mbs.py): agency-MBS share of portfolio
+-- market value, for the 6 tickers with a confirmed full daily holdings file
+-- with real market values (iShares: MBB/GNMA/AGG/IUSB; SSGA: SPMB/SPAB).
+CREATE TABLE IF NOT EXISTS mbs_weights (
+    ticker          VARCHAR NOT NULL,
+    asof_date       DATE NOT NULL,
+    mbs_weight_pct  DECIMAL(7,4) NOT NULL,
+    source          VARCHAR NOT NULL,
+    PRIMARY KEY (ticker, asof_date)
+);
+
+-- flow_usd(fund,t) * mbs_weight(fund,t-1)/100, SPEC.md §6.6. `SUM(...)
+-- GROUP BY flow_date` over this table is total_etf_mbs_flow(t) — not
+-- separately materialized, to avoid a second source of truth that could
+-- go stale if this table is recomputed but a cached total isn't.
+CREATE TABLE IF NOT EXISTS mbs_implied_flows (
+    ticker                  VARCHAR NOT NULL,
+    flow_date               DATE NOT NULL,
+    implied_mbs_flow_usd    DECIMAL(18,2),
+    PRIMARY KEY (ticker, flow_date)
+);
+
 CREATE TABLE IF NOT EXISTS universe (
     ticker          VARCHAR NOT NULL,
     name            VARCHAR NOT NULL,
@@ -228,6 +250,31 @@ def upsert_ici_weekly_flow(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             row["retrieved_at"],
             row["source_file"],
         ],
+    )
+
+
+def upsert_mbs_weight(con: duckdb.DuckDBPyConnection, row: dict) -> None:
+    con.execute(
+        """
+        INSERT INTO mbs_weights (ticker, asof_date, mbs_weight_pct, source)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT (ticker, asof_date) DO UPDATE SET
+            mbs_weight_pct = excluded.mbs_weight_pct,
+            source = excluded.source
+        """,
+        [row["ticker"], row["asof_date"], row["mbs_weight_pct"], row["source"]],
+    )
+
+
+def upsert_mbs_implied_flow(con: duckdb.DuckDBPyConnection, row: dict) -> None:
+    con.execute(
+        """
+        INSERT INTO mbs_implied_flows (ticker, flow_date, implied_mbs_flow_usd)
+        VALUES (?, ?, ?)
+        ON CONFLICT (ticker, flow_date) DO UPDATE SET
+            implied_mbs_flow_usd = excluded.implied_mbs_flow_usd
+        """,
+        [row["ticker"], row["flow_date"], row["implied_mbs_flow_usd"]],
     )
 
 
