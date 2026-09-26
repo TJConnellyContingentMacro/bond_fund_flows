@@ -180,6 +180,40 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   yet, `flow_usd_net` just equals `flow_usd` for that day (no adjustment
   available yet), which is a silent-but-honest degrade, not a wrong number.
 
+## ICI weekly overlay (sources/ici.py, step 7)
+
+- **Real URL, confirmed live 2026-09-26**: the release page
+  (ici.org/research/statistics/etfs/weekly-combined-estimated-etf-and-longterm-flows)
+  links to `ici.org/combined_flows_data_<year>.xls` — a legacy binary `.xls`
+  (OLE2/BIFF), not `.xlsx`. Needs the `xlrd` package (added to
+  pyproject.toml) — `openpyxl` cannot read this format.
+- **The sheet has both a monthly and a weekly section** ("Weekly MF & ETF
+  Public Report" sheet: a monthly-flows block first, then an "Estimated
+  weekly fund flows" block). Only the weekly section is parsed into
+  `ici_weekly_flows` — SPEC.md §7 only asks for the weekly overlay. The
+  monthly section isn't ingested but is still recoverable from the raw
+  `.xls` snapshot under `data/raw/.../ici/`, same rebuildability guarantee
+  as everything else.
+- **Publish-day observed as Wednesday, not Tuesday** — SPEC.md's own
+  research pass said "published Tuesdays"; the live site's most recent
+  posting (checked 2026-09-26) was dated Wednesday Sep 23, covering the week
+  ended Wednesday Sep 16 (matches SPEC.md's "week ended the prior Wednesday"
+  exactly). Not worth changing anything over — the loader doesn't assume a
+  posting day, it just fetches whatever's live — but noted here since it's a
+  factual correction to the spec's own text.
+- **Units converted from the file's native millions to raw USD** (`*
+  1_000_000`, a plain int) for consistency with the rest of the schema,
+  which stores raw dollars everywhere else.
+- Stored in its own `ici_weekly_flows` table, `week_ended`-keyed, upserted on
+  every fetch — safe to run `scripts/fetch_ici_weekly.py` daily even though
+  ICI only posts weekly. Never blended into the daily `fund_flows`/
+  `flow_aggregates` tables, per SPEC.md §7's explicit instruction.
+- **Not yet consumed anywhere** — this step only builds the loader. Whatever
+  eventually displays this data (the dashboard, step 9) must show the lag
+  explicitly per §7 ("never align an ICI week to a current ETF day without
+  explicitly showing the lag") rather than plotting it flush against the
+  daily series.
+
 ## Discovered issuer conventions
 
 Full detail — sample endpoints, exact field names, raw response shapes — lives

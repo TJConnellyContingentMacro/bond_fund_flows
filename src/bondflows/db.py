@@ -69,6 +69,28 @@ CREATE TABLE IF NOT EXISTS overlay_holdings (
     PRIMARY KEY (ticker, asof_date)
 );
 
+-- SPEC.md §7: ICI's weekly estimated flows, its own table, never blended
+-- into the daily fund_flows series. All dollar columns converted from the
+-- source file's native millions to raw USD (`* 1_000_000`, a plain int per
+-- CLAUDE.md's Decimal-scaling rule) for consistency with the rest of the
+-- schema. `week_ended` is the Wednesday the file itself reports, not the
+-- (later) date ICI posted the release.
+CREATE TABLE IF NOT EXISTS ici_weekly_flows (
+    week_ended          DATE NOT NULL,
+    total_ltf_and_etf   DECIMAL(20,2) NOT NULL,
+    equity_total        DECIMAL(20,2) NOT NULL,
+    equity_domestic     DECIMAL(20,2) NOT NULL,
+    equity_world        DECIMAL(20,2) NOT NULL,
+    hybrid              DECIMAL(20,2) NOT NULL,
+    bond_total          DECIMAL(20,2) NOT NULL,
+    bond_taxable        DECIMAL(20,2) NOT NULL,
+    bond_municipal      DECIMAL(20,2) NOT NULL,
+    commodity           DECIMAL(20,2) NOT NULL,
+    retrieved_at        TIMESTAMP NOT NULL,
+    source_file         VARCHAR NOT NULL,
+    PRIMARY KEY (week_ended)
+);
+
 CREATE TABLE IF NOT EXISTS universe (
     ticker          VARCHAR NOT NULL,
     name            VARCHAR NOT NULL,
@@ -168,6 +190,43 @@ def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             row["zscore_252d"],
             row["has_imputed_or_suspect"],
             row["n_funds"],
+        ],
+    )
+
+
+def upsert_ici_weekly_flow(con: duckdb.DuckDBPyConnection, row: dict) -> None:
+    con.execute(
+        """
+        INSERT INTO ici_weekly_flows (
+            week_ended, total_ltf_and_etf, equity_total, equity_domestic, equity_world,
+            hybrid, bond_total, bond_taxable, bond_municipal, commodity, retrieved_at, source_file
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (week_ended) DO UPDATE SET
+            total_ltf_and_etf = excluded.total_ltf_and_etf,
+            equity_total = excluded.equity_total,
+            equity_domestic = excluded.equity_domestic,
+            equity_world = excluded.equity_world,
+            hybrid = excluded.hybrid,
+            bond_total = excluded.bond_total,
+            bond_taxable = excluded.bond_taxable,
+            bond_municipal = excluded.bond_municipal,
+            commodity = excluded.commodity,
+            retrieved_at = excluded.retrieved_at,
+            source_file = excluded.source_file
+        """,
+        [
+            row["week_ended"],
+            row["total_ltf_and_etf"],
+            row["equity_total"],
+            row["equity_domestic"],
+            row["equity_world"],
+            row["hybrid"],
+            row["bond_total"],
+            row["bond_taxable"],
+            row["bond_municipal"],
+            row["commodity"],
+            row["retrieved_at"],
+            row["source_file"],
         ],
     )
 
