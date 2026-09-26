@@ -330,12 +330,26 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   already succeeded and logged. Fixed by using plain ASCII in console
   output — worth remembering for any future print statement in a script
   meant to run under Windows Task Scheduler, not just a UTF-8 terminal.
-- **Not yet set up**: an actual Windows Task Scheduler entry (or equivalent)
-  to run this daily, and a scheduled Claude task to read the DuckDB output
+- **Windows Task Scheduler is set up** (2026-09-26), two tasks, both running
+  `scripts/run_pipeline.py` via the project's own venv Python, `LogonType
+  Interactive` / `RunLevel Limited` under the `tj` user (required for
+  Schwab's headed Chrome — this only runs while that user is logged into an
+  interactive desktop session, never as a background service account):
+  - `bondflows-daily` — 6:00 AM ET, the primary run.
+  - `bondflows-catchup` — 11:00 AM ET, SPEC.md §8's "second catch-up run a
+    few hours later for issuers that were stale on the first pass." Just
+    reruns the same full pipeline — nothing yet skips tickers that were
+    already fresh on the morning pass, so this is a blunt but correct
+    catch-up, not a targeted retry.
+  - Both times are a starting guess, not derived from measured per-issuer
+    post times (SPEC.md §8 says to determine this empirically) — revisit
+    once there's enough `retrieved_at`/`asof_date` history to see when each
+    issuer's site actually updates.
+- **Not yet set up**: a scheduled Claude task to read the DuckDB output
   after the ETL completes and republish the dashboard artifact with fresh
-  commentary. SPEC.md §10 is explicit these are different jobs — the ETL
-  must stay deterministic Python with no model in the loop; only the
-  presentation/commentary layer belongs to a scheduled Claude task.
+  commentary. SPEC.md §10 is explicit this is a different job from the ETL
+  above — deterministic Python only there, no model in the loop; the
+  presentation/commentary layer is where a scheduled Claude task belongs.
 
 ## Discovered issuer conventions
 
