@@ -21,6 +21,24 @@ purpose rather than by oversight:
   matters — see the open item in CLAUDE.md.
 
 Distributions need no adjustment (§5.2, verified) — nothing to implement.
+
+**DV01 and spread DV01 (§6.4/§6.5)** are computed here too, now that enough
+history exists for them to mean something. `dv01_usd_per_bp` is universal
+(any ticker with a same-day `effective_duration`). `spread_dv01_usd_per_bp`
+is scoped to `SPREAD_DV01_ELIGIBLE_SLEEVES` — §6.5 also names "the credit
+portion of aggregate," which isn't computed: that needs a credit-vs-
+government holdings decomposition for the `aggregate` sleeve (AGG/BND/SPAB/
+SCHZ/IUSB) that doesn't exist, the same category of gap as the narrowed
+scope in overlay.py/mbs.py. Checked the real data (2026-09-26): 27 of the
+28 tickers in the eligible sleeves have no `spread_duration` at all (only
+VanEck's ANGL does), so `spread_dv01_is_proxied = TRUE` — using
+`effective_duration` as the stand-in §6.5 explicitly allows — is the normal
+case here, not a rare fallback. 5 tickers (BKLN, CLOI, ICLO, SRLN, PCY) have
+neither duration figure published at all, so `spread_dv01_usd_per_bp` stays
+NULL for them rather than guessed. The optional `tenyr_equiv` unit
+conversion (§6.4) isn't implemented — it needs a live on-the-run 10-year
+Treasury figure, a data source this project doesn't have, and SPEC.md
+explicitly marks it optional.
 """
 
 from __future__ import annotations
@@ -33,7 +51,17 @@ from pathlib import Path
 
 import duckdb
 
+from bondflows.universe import load_universe
+
 SPLITS_CSV = Path(__file__).resolve().parents[2] / "splits.csv"
+
+# §6.4: dv01_flow(t) = flow_usd(t) * effective_duration(t) * 0.0001 — dollars
+# of P&L per 1bp parallel move. Universal, no sleeve restriction.
+DV01_BP_SCALE = Decimal("0.0001")
+# §6.5: spread DV01 uses spread duration "for ig_corp, hy_corp, loans_clo,
+# em_debt, and the credit portion of aggregate" — the aggregate sub-case is
+# excluded here, see the module docstring.
+SPREAD_DV01_ELIGIBLE_SLEEVES = frozenset({"ig_corp", "hy_corp", "loans_clo", "em_debt"})
 
 # §5.2: "|Δshares| / shares(t-1) exceeds ~20%" is the candidate threshold.
 SPLIT_CANDIDATE_SHARES_THRESHOLD = Decimal("0.20")
@@ -56,6 +84,8 @@ class _Observation:
     shares_outstanding: int
     nav_per_share: Decimal
     total_net_assets: Decimal | None
+    effective_duration: Decimal | None
+    spread_duration: Decimal | None
 
 
 def load_splits(path: Path = SPLITS_CSV) -> dict[tuple[str, date], Decimal]:
@@ -86,17 +116,24 @@ def _is_split_candidate(shares_a: int, shares_b: int, nav_a: Decimal, nav_b: Dec
 
 
 def compute_ticker_flows(
-    con: duckdb.DuckDBPyConnection, ticker: str, splits: dict[tuple[str, date], Decimal]
+    con: duckdb.DuckDBPyConnection,
+    ticker: str,
+    splits: dict[tuple[str, date], Decimal],
+    sleeve: str | None = None,
 ) -> list[dict]:
     """Walk `ticker`'s fund_daily history in order, skipping any day flagged
     `source_is_stale` (§5.2: "emit no flow for that day") and rows missing
     the fields the identity needs. A gap left by skipped/missing days means
     the next real observation's delta spans more than one day — that row
     gets `imputed` instead of `clean` rather than trying to distribute the
-    change day-by-day (§5.2's stated preference)."""
+    change day-by-day (§5.2's stated preference).
+
+    `sleeve` (from universe.csv) gates whether spread_dv01_usd_per_bp is
+    computed at all — see SPREAD_DV01_ELIGIBLE_SLEEVES."""
     rows = con.execute(
         """
-        SELECT asof_date, shares_outstanding, nav_per_share, total_net_assets
+        SELECT asof_date, shares_outstanding, nav_per_share, total_net_assets,
+               effective_duration, spread_duration
         FROM fund_daily
         WHERE ticker = ?
           AND shares_outstanding IS NOT NULL
@@ -106,7 +143,7 @@ def compute_ticker_flows(
         """,
         [ticker],
     ).fetchall()
-    observations = [_Observation(r[0], r[1], r[2], r[3]) for r in rows]
+    observations = [_Observation(r[0], r[1], r[2], r[3], r[4], r[5]) for r in rows]
 
     flow_rows: list[dict] = []
     prev: _Observation | None = None
@@ -141,6 +178,22 @@ def compute_ticker_flows(
         if flow_usd is not None and prev.total_net_assets:
             organic_growth_rate = flow_usd / prev.total_net_assets
 
+        dv01_usd_per_bp = None
+        if flow_usd is not None and obs.effective_duration is not None:
+            dv01_usd_per_bp = flow_usd * obs.effective_duration * DV01_BP_SCALE
+
+        spread_dv01_usd_per_bp = None
+        spread_dv01_is_proxied = None
+        if flow_usd is not None and sleeve in SPREAD_DV01_ELIGIBLE_SLEEVES:
+            spread_duration_used = obs.spread_duration
+            is_proxied = False
+            if spread_duration_used is None:
+                spread_duration_used = obs.effective_duration
+                is_proxied = True
+            if spread_duration_used is not None:
+                spread_dv01_usd_per_bp = flow_usd * spread_duration_used * DV01_BP_SCALE
+                spread_dv01_is_proxied = is_proxied
+
         flow_rows.append(
             {
                 "ticker": ticker,
@@ -149,10 +202,9 @@ def compute_ticker_flows(
                 "shares_delta": shares_delta,
                 "shares_delta_adjusted": shares_delta_adjusted,
                 "organic_growth_rate": organic_growth_rate,
-                # DV01/spread-DV01 are §6.4's phase-2 analytics layer, built
-                # against accumulated history — not this module.
-                "dv01_usd_per_bp": None,
-                "spread_dv01_usd_per_bp": None,
+                "dv01_usd_per_bp": dv01_usd_per_bp,
+                "spread_dv01_usd_per_bp": spread_dv01_usd_per_bp,
+                "spread_dv01_is_proxied": spread_dv01_is_proxied,
                 "flag": flag,
             }
         )
@@ -167,10 +219,12 @@ def compute_all_flows(con: duckdb.DuckDBPyConnection) -> int:
     also means a newly-confirmed splits.csv entry gets applied retroactively
     just by rerunning this."""
     splits = load_splits()
+    sleeve_by_ticker = {f.ticker: f.sleeve for f in load_universe()}
     tickers = [r[0] for r in con.execute("SELECT DISTINCT ticker FROM fund_daily").fetchall()]
     total = 0
     for ticker in tickers:
-        for row in compute_ticker_flows(con, ticker, splits):
+        sleeve = sleeve_by_ticker.get(ticker)
+        for row in compute_ticker_flows(con, ticker, splits, sleeve):
             upsert_fund_flow(con, row)
             total += 1
     return total
@@ -181,8 +235,9 @@ def upsert_fund_flow(con: duckdb.DuckDBPyConnection, row: dict) -> None:
         """
         INSERT INTO fund_flows (
             ticker, flow_date, flow_usd, shares_delta, shares_delta_adjusted,
-            organic_growth_rate, dv01_usd_per_bp, spread_dv01_usd_per_bp, flag
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            organic_growth_rate, dv01_usd_per_bp, spread_dv01_usd_per_bp,
+            spread_dv01_is_proxied, flag
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (ticker, flow_date) DO UPDATE SET
             flow_usd = excluded.flow_usd,
             shares_delta = excluded.shares_delta,
@@ -190,6 +245,7 @@ def upsert_fund_flow(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             organic_growth_rate = excluded.organic_growth_rate,
             dv01_usd_per_bp = excluded.dv01_usd_per_bp,
             spread_dv01_usd_per_bp = excluded.spread_dv01_usd_per_bp,
+            spread_dv01_is_proxied = excluded.spread_dv01_is_proxied,
             flag = excluded.flag
         """,
         [
@@ -201,6 +257,7 @@ def upsert_fund_flow(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             row["organic_growth_rate"],
             row["dv01_usd_per_bp"],
             row["spread_dv01_usd_per_bp"],
+            row["spread_dv01_is_proxied"],
             row["flag"],
         ],
     )

@@ -259,6 +259,43 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   overlay.py's §6.2 treatment. Run `scripts/fetch_mbs_weights.py` then
   `scripts/compute_mbs_flows.py`, after `scripts/compute_flows.py`.
 
+## DV01 / spread DV01 (flows.py + analytics.py, step 10)
+
+- **`dv01_usd_per_bp` is universal**: `flow_usd(t) * effective_duration(t) *
+  0.0001` for any ticker with a same-day `effective_duration` — no sleeve
+  restriction, computed in `flows.py` alongside `flow_usd` itself.
+- **`spread_dv01_usd_per_bp` is scoped to `ig_corp`/`hy_corp`/`loans_clo`/
+  `em_debt`** (`SPREAD_DV01_ELIGIBLE_SLEEVES` in flows.py). §6.5 also names
+  "the credit portion of aggregate" — not implemented, since it needs a
+  credit-vs-government holdings decomposition for the `aggregate` sleeve
+  that doesn't exist, the same category of narrowed scope as overlay.py/
+  mbs.py.
+- **The effective-duration proxy is the normal case, not a rare fallback.**
+  Checked the real data (2026-09-26): 27 of the 28 tickers across the 4
+  eligible sleeves have no `spread_duration` published at all — only
+  VanEck's ANGL does. `spread_dv01_is_proxied` is `TRUE` for all 27; 5
+  tickers (BKLN, CLOI, ICLO, SRLN, PCY) have neither duration figure at all,
+  so `spread_dv01_usd_per_bp` stays NULL for them.
+- **Proxy visibility is preserved at the aggregate level too** — §6.5:
+  "should make that visible rather than laundering it into the aggregate."
+  `flow_aggregates.has_proxied_spread_dv01` is `TRUE` if *any* constituent
+  ticker's spread DV01 for that cut/day used the proxy, so a sleeve total
+  built mostly from proxied estimates doesn't read as clean data.
+- **`tenyr_equiv` (§6.4's optional 10-year-equivalent conversion) is not
+  implemented.** It needs a live on-the-run 10-year Treasury figure — a data
+  source this project doesn't have — and SPEC.md itself marks it optional.
+- **Schema-migration lesson**: adding a column to a table that already has
+  rows created by an earlier `CREATE TABLE IF NOT EXISTS` doesn't reach a
+  pre-existing `data/bondflows.duckdb` — that statement is a no-op once the
+  table exists. `db.py`'s `SCHEMA` now includes explicit `ALTER TABLE ...
+  ADD COLUMN IF NOT EXISTS` migrations for every column added after a
+  table's first creation, run on every `connect()`. Found this the hard way:
+  `flow_usd_net` (added to the schema back in step 6) had silently never
+  reached the real database, because `flow_aggregates` has had zero rows
+  the whole time this project has been running — the mismatch only surfaced
+  once step 10 forced a first real write attempt. Check for this whenever
+  adding a column to an existing table, not just a new table.
+
 ## Discovered issuer conventions
 
 Full detail — sample endpoints, exact field names, raw response shapes — lives

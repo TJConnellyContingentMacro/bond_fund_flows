@@ -33,14 +33,25 @@ def make_fund(ticker: str, sleeve: str, sub_sleeve: str, in_core: bool = True) -
 
 
 def seed_fund_flow(
-    con, ticker: str, flow_date: date, flow_usd: Decimal | None, flag: str = "clean"
+    con,
+    ticker: str,
+    flow_date: date,
+    flow_usd: Decimal | None,
+    flag: str = "clean",
+    *,
+    dv01_usd_per_bp: Decimal | None = None,
+    spread_dv01_usd_per_bp: Decimal | None = None,
+    spread_dv01_is_proxied: bool | None = None,
 ) -> None:
     con.execute(
         """
-        INSERT INTO fund_flows (ticker, flow_date, flow_usd, flag)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO fund_flows (
+            ticker, flow_date, flow_usd, flag,
+            dv01_usd_per_bp, spread_dv01_usd_per_bp, spread_dv01_is_proxied
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
-        [ticker, flow_date, flow_usd, flag],
+        [ticker, flow_date, flow_usd, flag, dv01_usd_per_bp, spread_dv01_usd_per_bp, spread_dv01_is_proxied],
     )
 
 
@@ -70,6 +81,7 @@ def get_row(con, cut: str, asof_date: date) -> dict:
     cols = [
         "cut", "asof_date", "flow_usd", "flow_usd_net", "ogr", "flow_5d", "flow_20d",
         "flow_mtd", "flow_qtd", "zscore_252d", "has_imputed_or_suspect", "n_funds",
+        "dv01_usd_per_bp", "spread_dv01_usd_per_bp", "has_proxied_spread_dv01",
     ]
     row = con.execute(
         f"SELECT {', '.join(cols)} FROM flow_aggregates WHERE cut = ? AND asof_date = ?",
@@ -220,6 +232,36 @@ def test_flow_usd_net_backs_out_overlay_funds_underlying_etf_flow(tmp_path):
     credit = get_row(con, "credit", day1)
     assert credit["flow_usd"] == Decimal("500")
     assert credit["flow_usd_net"] == Decimal("500")  # unaffected, no overlay ticker here
+    con.close()
+
+
+def test_dv01_aggregates_by_sum_and_surfaces_proxy_flag(tmp_path):
+    """SPEC.md §6.4/§6.5: dv01/spread_dv01 aggregate by simple sum, and a cut
+    shows has_proxied_spread_dv01 = TRUE if any constituent ticker's spread
+    DV01 used the effective-duration stand-in — never silently blended in."""
+    con = db.connect(tmp_path / "db.duckdb")
+    funds = [
+        make_fund("HYG", "hy_corp", "broad"),
+        make_fund("ANGL", "hy_corp", "fallen_angel"),
+    ]
+    day = date(2026, 9, 18)
+    seed_fund_flow(
+        con, "HYG", day, Decimal("1000000"),
+        dv01_usd_per_bp=Decimal("3000"), spread_dv01_usd_per_bp=Decimal("3000"),
+        spread_dv01_is_proxied=True,
+    )
+    seed_fund_flow(
+        con, "ANGL", day, Decimal("500000"),
+        dv01_usd_per_bp=Decimal("2000"), spread_dv01_usd_per_bp=Decimal("2100"),
+        spread_dv01_is_proxied=False,
+    )
+
+    compute_aggregates(con, funds=funds)
+
+    row = get_row(con, "hy_corp", day)
+    assert row["dv01_usd_per_bp"] == Decimal("5000")
+    assert row["spread_dv01_usd_per_bp"] == Decimal("5100")
+    assert row["has_proxied_spread_dv01"] is True  # HYG's proxy, even though ANGL's wasn't
     con.close()
 
 

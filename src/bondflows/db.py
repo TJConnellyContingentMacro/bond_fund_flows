@@ -36,6 +36,11 @@ CREATE TABLE IF NOT EXISTS fund_flows (
     organic_growth_rate     DECIMAL(10,6),
     dv01_usd_per_bp         DECIMAL(18,2),
     spread_dv01_usd_per_bp  DECIMAL(18,2),
+    -- SPEC.md §6.5: TRUE when spread_dv01_usd_per_bp used effective_duration
+    -- as a stand-in for a missing spread_duration, FALSE when a real
+    -- spread_duration was used, NULL when spread_dv01 wasn't computed at all
+    -- (out-of-scope sleeve, or neither duration figure was available).
+    spread_dv01_is_proxied BOOLEAN,
     flag                    VARCHAR NOT NULL,
     PRIMARY KEY (ticker, flow_date)
 );
@@ -53,6 +58,13 @@ CREATE TABLE IF NOT EXISTS flow_aggregates (
     zscore_252d             DECIMAL(10,4),
     has_imputed_or_suspect  BOOLEAN NOT NULL,
     n_funds                 INTEGER NOT NULL,
+    dv01_usd_per_bp         DECIMAL(20,2),
+    spread_dv01_usd_per_bp  DECIMAL(20,2),
+    -- SPEC.md §6.5: "a proxied spread DV01 is an estimate, and the column
+    -- should make that visible rather than laundering it into the
+    -- aggregate" — TRUE if any constituent ticker's spread_dv01 for this
+    -- cut/day used the effective-duration proxy.
+    has_proxied_spread_dv01 BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (cut, asof_date)
 );
 
@@ -112,6 +124,18 @@ CREATE TABLE IF NOT EXISTS mbs_implied_flows (
     implied_mbs_flow_usd    DECIMAL(18,2),
     PRIMARY KEY (ticker, flow_date)
 );
+
+-- Migrations for databases created before a column existed on an
+-- already-existing table — CREATE TABLE IF NOT EXISTS is a no-op in that
+-- case, so a pre-existing data/bondflows.duckdb needs these added
+-- explicitly. Safe to run every connect(): IF NOT EXISTS makes each ADD
+-- COLUMN a no-op once applied. `flow_usd_net` was a latent gap from §6.2
+-- (step 6) that only surfaced once fund_flows had rows to aggregate.
+ALTER TABLE flow_aggregates ADD COLUMN IF NOT EXISTS flow_usd_net DECIMAL(18,2);
+ALTER TABLE fund_flows ADD COLUMN IF NOT EXISTS spread_dv01_is_proxied BOOLEAN;
+ALTER TABLE flow_aggregates ADD COLUMN IF NOT EXISTS dv01_usd_per_bp DECIMAL(20,2);
+ALTER TABLE flow_aggregates ADD COLUMN IF NOT EXISTS spread_dv01_usd_per_bp DECIMAL(20,2);
+ALTER TABLE flow_aggregates ADD COLUMN IF NOT EXISTS has_proxied_spread_dv01 BOOLEAN DEFAULT FALSE;
 
 CREATE TABLE IF NOT EXISTS universe (
     ticker          VARCHAR NOT NULL,
@@ -185,8 +209,9 @@ def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
         """
         INSERT INTO flow_aggregates (
             cut, asof_date, flow_usd, flow_usd_net, ogr, flow_5d, flow_20d, flow_mtd,
-            flow_qtd, zscore_252d, has_imputed_or_suspect, n_funds
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            flow_qtd, zscore_252d, has_imputed_or_suspect, n_funds,
+            dv01_usd_per_bp, spread_dv01_usd_per_bp, has_proxied_spread_dv01
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (cut, asof_date) DO UPDATE SET
             flow_usd = excluded.flow_usd,
             flow_usd_net = excluded.flow_usd_net,
@@ -197,7 +222,10 @@ def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             flow_qtd = excluded.flow_qtd,
             zscore_252d = excluded.zscore_252d,
             has_imputed_or_suspect = excluded.has_imputed_or_suspect,
-            n_funds = excluded.n_funds
+            n_funds = excluded.n_funds,
+            dv01_usd_per_bp = excluded.dv01_usd_per_bp,
+            spread_dv01_usd_per_bp = excluded.spread_dv01_usd_per_bp,
+            has_proxied_spread_dv01 = excluded.has_proxied_spread_dv01
         """,
         [
             row["cut"],
@@ -212,6 +240,9 @@ def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
             row["zscore_252d"],
             row["has_imputed_or_suspect"],
             row["n_funds"],
+            row["dv01_usd_per_bp"],
+            row["spread_dv01_usd_per_bp"],
+            row["has_proxied_spread_dv01"],
         ],
     )
 

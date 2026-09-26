@@ -12,6 +12,14 @@ for every cut that doesn't include TLTW/HYGW/LQDW, and for `credit`/`rates`
 specifically, which exclude the `overlay` sleeve entirely (see
 `MIXED_OTHER_SLEEVES` below).
 
+Also aggregates `dv01_usd_per_bp` and `spread_dv01_usd_per_bp` (§6.4/§6.5,
+build order step 10) by summing `fund_flows`' per-ticker values (computed in
+`flows.py`, where duration data actually lives) — no rolling window or
+z-score on these two, just the daily sum SPEC.md asks for. `has_proxied_
+spread_dv01` surfaces whenever any constituent ticker's spread DV01 used the
+effective-duration stand-in, per §6.5's explicit instruction not to launder
+a proxied estimate into the aggregate invisibly.
+
 Scope: every cut is computed over `in_core = TRUE` tickers only, matching
 §6.1's "all core funds" wording for the headline and applied consistently to
 every other cut for the same reason.
@@ -126,6 +134,7 @@ overlay_lag AS (
 flow_with_tna AS (
     SELECT
         f.ticker, f.flow_date, f.flow_usd, f.flag, t.prior_tna,
+        f.dv01_usd_per_bp, f.spread_dv01_usd_per_bp, f.spread_dv01_is_proxied,
         COALESCE(f.flow_usd * o.prior_weight_pct / 100, 0) AS overlay_adjustment
     FROM fund_flows f
     LEFT JOIN tna_lag t ON t.ticker = f.ticker AND t.asof_date = f.flow_date
@@ -139,7 +148,15 @@ cut_daily AS (
         SUM(f.flow_usd) - SUM(f.overlay_adjustment) AS flow_usd_net,
         SUM(f.prior_tna) AS total_prior_tna,
         BOOL_OR(f.flag IN ('imputed', 'suspect')) AS has_imputed_or_suspect,
-        COUNT(*) AS n_funds
+        COUNT(*) AS n_funds,
+        -- SPEC.md §6.4/§6.5: aggregated by sleeve/cut, no rolling window or
+        -- z-score asked for on these two, unlike flow_usd.
+        SUM(f.dv01_usd_per_bp) AS dv01_usd_per_bp,
+        SUM(f.spread_dv01_usd_per_bp) AS spread_dv01_usd_per_bp,
+        -- §6.5: "a proxied spread DV01 is an estimate, and the column
+        -- should make that visible rather than laundering it into the
+        -- aggregate" — surfaced here rather than silently blended in.
+        BOOL_OR(COALESCE(f.spread_dv01_is_proxied, FALSE)) AS has_proxied_spread_dv01
     FROM flow_with_tna f
     JOIN ticker_cuts c ON c.ticker = f.ticker
     GROUP BY c.cut, f.flow_date
@@ -147,6 +164,7 @@ cut_daily AS (
 windowed AS (
     SELECT
         cut, asof_date, flow_usd, flow_usd_net, has_imputed_or_suspect, n_funds,
+        dv01_usd_per_bp, spread_dv01_usd_per_bp, has_proxied_spread_dv01,
         CASE WHEN total_prior_tna IS NOT NULL AND total_prior_tna != 0
              THEN flow_usd / total_prior_tna ELSE NULL END AS ogr,
         SUM(flow_usd) OVER (
@@ -181,7 +199,8 @@ SELECT
     cut, asof_date, flow_usd, flow_usd_net, ogr, flow_5d, flow_20d, flow_mtd, flow_qtd,
     CASE WHEN calib_n >= {min_clean_days} AND calib_stdev IS NOT NULL AND calib_stdev != 0
          THEN (flow_usd - calib_mean) / calib_stdev ELSE NULL END AS zscore_252d,
-    has_imputed_or_suspect, n_funds
+    has_imputed_or_suspect, n_funds,
+    dv01_usd_per_bp, spread_dv01_usd_per_bp, has_proxied_spread_dv01
 FROM windowed
 ORDER BY cut, asof_date
 """.format(
