@@ -47,6 +47,7 @@ STEPS: list[tuple[str, str]] = [
     ("fetch_mbs_weights", "scripts/fetch_mbs_weights.py"),
     ("compute_mbs_flows", "scripts/compute_mbs_flows.py"),
     ("fetch_ici_weekly", "scripts/fetch_ici_weekly.py"),
+    ("export_dashboard_snapshot", "scripts/export_dashboard_snapshot.py"),
 ]
 
 _COVERAGE_RE = re.compile(r"Coverage:\s*(\d+)/(\d+)\s*\(([\d.]+)%\)")
@@ -110,6 +111,30 @@ def _check_alerts(con, run_date: date, daily_output: str) -> list[str]:
     return alerts
 
 
+def _push_snapshot(run_date: date, log_lines: list[str]) -> None:
+    """Pushes dashboard/snapshot.json to GitHub so the cloud dashboard-
+    refresh routine (which has no local file access) can read it. No-ops
+    cleanly if nothing changed since the last push."""
+    subprocess.run(["git", "add", "dashboard/snapshot.json"], cwd=PROJECT_ROOT, check=True)
+    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=PROJECT_ROOT)
+    if diff.returncode == 0:
+        log_lines.append("\n===== push_snapshot — no changes to push =====")
+        print("[push_snapshot] no changes")
+        return
+
+    subprocess.run(
+        ["git", "commit", "-m", f"Automated: refresh dashboard snapshot ({run_date.isoformat()})"],
+        cwd=PROJECT_ROOT,
+        check=True,
+    )
+    push = subprocess.run(["git", "push"], cwd=PROJECT_ROOT, capture_output=True, text=True)
+    status = "OK" if push.returncode == 0 else f"FAILED (exit {push.returncode})"
+    log_lines.append(f"\n===== push_snapshot — {status} =====\n{(push.stdout + push.stderr).rstrip()}")
+    print(f"[push_snapshot] {status}")
+    if push.returncode != 0:
+        raise RuntimeError("git push failed — see logs/")
+
+
 def main() -> None:
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     run_date = datetime.now(timezone.utc).date()
@@ -131,6 +156,12 @@ def main() -> None:
 
     for name in failed_steps:
         alerts.insert(0, f"Step '{name}' exited non-zero — see logs/ for its output")
+
+    if "export_dashboard_snapshot" not in failed_steps:
+        try:
+            _push_snapshot(run_date, log_lines)
+        except Exception as exc:  # noqa: BLE001 - a push failure is an alert, not a crash
+            alerts.append(f"Failed to push dashboard snapshot to GitHub: {exc}")
 
     log_path = LOG_DIR / f"pipeline_{run_date:%Y%m%d}.log"
     log_path.write_text("\n".join(log_lines), encoding="utf-8")

@@ -1,0 +1,236 @@
+{
+  "generated_at": "2026-09-26T20:34:33.953059+00:00",
+  "coverage": {
+    "total_expected": 106,
+    "total_covered": 92,
+    "total_covered_today": 87,
+    "by_issuer": {
+      "iShares": {
+        "expected": 32,
+        "covered": 32,
+        "covered_today": 32
+      },
+      "SSGA": {
+        "expected": 19,
+        "covered": 19,
+        "covered_today": 19
+      },
+      "Goldman": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "Global X": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "BondBloxx": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "Vanguard": {
+        "expected": 16,
+        "covered": 16,
+        "covered_today": 16
+      },
+      "WisdomTree": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "JPMorgan": {
+        "expected": 3,
+        "covered": 3,
+        "covered_today": 3
+      },
+      "PIMCO": {
+        "expected": 6,
+        "covered": 6,
+        "covered_today": 6
+      },
+      "Invesco": {
+        "expected": 5,
+        "covered": 5,
+        "covered_today": 0
+      },
+      "Schwab": {
+        "expected": 7,
+        "covered": 7,
+        "covered_today": 7
+      },
+      "Janus Henderson": {
+        "expected": 3,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "Simplify": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "DWS/Xtrackers": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "VanEck": {
+        "expected": 4,
+        "covered": 4,
+        "covered_today": 4
+      },
+      "iShares/BlackRock": {
+        "expected": 2,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "First Trust": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "Fidelity": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      },
+      "Dimensional": {
+        "expected": 1,
+        "covered": 0,
+        "covered_today": 0
+      }
+    },
+    "latest_fund_daily_asof_date": "2026-09-25",
+    "latest_fund_daily_retrieved_at": "2026-09-26T15:57:27.992294"
+  },
+  "flows": {
+    "available": false,
+    "as_of_date": null,
+    "aggregates": []
+  },
+  "ici_weekly": [
+    {
+      "week_ended": "2026-08-05",
+      "total_ltf_and_etf": 27913000000.0,
+      "bond_total": 19678000000.0,
+      "bond_taxable": 18186000000.0,
+      "bond_municipal": 1492000000.0
+    },
+    {
+      "week_ended": "2026-08-12",
+      "total_ltf_and_etf": 17403000000.0,
+      "bond_total": 19650000000.0,
+      "bond_taxable": 17633000000.0,
+      "bond_municipal": 2017000000.0
+    },
+    {
+      "week_ended": "2026-08-19",
+      "total_ltf_and_etf": 32249000000.0,
+      "bond_total": 20679000000.0,
+      "bond_taxable": 18319000000.0,
+      "bond_municipal": 2360000000.0
+    },
+    {
+      "week_ended": "2026-08-26",
+      "total_ltf_and_etf": -1686000000.0,
+      "bond_total": 13463000000.0,
+      "bond_taxable": 10980000000.0,
+      "bond_municipal": 2483000000.0
+    },
+    {
+      "week_ended": "2026-09-02",
+      "total_ltf_and_etf": 8136000000.0,
+      "bond_total": 12684000000.0,
+      "bond_taxable": 12924000000.0,
+      "bond_municipal": -240000000.0
+    },
+    {
+      "week_ended": "2026-09-09",
+      "total_ltf_and_etf": 1631000000.0,
+      "bond_total": 11546000000.0,
+      "bond_taxable": 10270000000.0,
+      "bond_municipal": 1276000000.0
+    },
+    {
+      "week_ended": "2026-09-16",
+      "total_ltf_and_etf": -10098000000.0,
+      "bond_total": 3244000000.0,
+      "bond_taxable": 3796000000.0,
+      "bond_municipal": -552000000.0
+    }
+  ],
+  "overlay_holdings": [
+    {
+      "ticker": "HYGW",
+      "asof_date": "2026-09-23",
+      "underlying_ticker": "HYG",
+      "weight_pct": 100.28
+    },
+    {
+      "ticker": "HYGW",
+      "asof_date": "2026-09-24",
+      "underlying_ticker": "HYG",
+      "weight_pct": 100.15
+    },
+    {
+      "ticker": "LQDW",
+      "asof_date": "2026-09-23",
+      "underlying_ticker": "LQD",
+      "weight_pct": 100.44
+    },
+    {
+      "ticker": "LQDW",
+      "asof_date": "2026-09-24",
+      "underlying_ticker": "LQD",
+      "weight_pct": 100.22
+    },
+    {
+      "ticker": "TLTW",
+      "asof_date": "2026-09-24",
+      "underlying_ticker": "TLT",
+      "weight_pct": 100.17
+    }
+  ],
+  "mbs_weights": [
+    {
+      "ticker": "SPMB",
+      "asof_date": "2026-09-24",
+      "source": "SSGA",
+      "mbs_weight_pct": 98.6114
+    },
+    {
+      "ticker": "GNMA",
+      "asof_date": "2026-09-24",
+      "source": "iShares",
+      "mbs_weight_pct": 98.61
+    },
+    {
+      "ticker": "MBB",
+      "asof_date": "2026-09-24",
+      "source": "iShares",
+      "mbs_weight_pct": 94.09
+    },
+    {
+      "ticker": "SPAB",
+      "asof_date": "2026-09-24",
+      "source": "SSGA",
+      "mbs_weight_pct": 23.3721
+    },
+    {
+      "ticker": "AGG",
+      "asof_date": "2026-09-24",
+      "source": "iShares",
+      "mbs_weight_pct": 21.9
+    },
+    {
+      "ticker": "IUSB",
+      "asof_date": "2026-09-24",
+      "source": "iShares",
+      "mbs_weight_pct": 19.4
+    }
+  ],
+  "notable": [
+    "Today's coverage 87/106 (82.1%) is below the 90.0% threshold"
+  ]
+}

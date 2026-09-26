@@ -1,0 +1,393 @@
+<title>Bondflows Monitor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#f5f7f9; --surface:#ffffff; --surface-2:#eef1f4;
+    --text:#182028; --text-muted:#5b6675; --border:#dde3e9;
+    --accent:#1f6f76; --accent-soft:#e3eeee;
+    --pos:#2f7d4f; --pos-soft:#e6f2ea;
+    --neg:#b23a2f; --neg-soft:#faeae8;
+    --warn:#b8791a; --warn-soft:#f8eedb;
+    --shadow: 0 1px 2px rgba(24,32,40,.06), 0 1px 0 rgba(24,32,40,.03);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#11151b; --surface:#171d25; --surface-2:#1e2530;
+      --text:#e7ebf0; --text-muted:#93a0b0; --border:#2a323d;
+      --accent:#4fb3ba; --accent-soft:#1c3538;
+      --pos:#6fce93; --pos-soft:#173226;
+      --neg:#e2766a; --neg-soft:#3a2220;
+      --warn:#e0ac52; --warn-soft:#3a2f18;
+      --shadow: 0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#11151b; --surface:#171d25; --surface-2:#1e2530;
+    --text:#e7ebf0; --text-muted:#93a0b0; --border:#2a323d;
+    --accent:#4fb3ba; --accent-soft:#1c3538;
+    --pos:#6fce93; --pos-soft:#173226;
+    --neg:#e2766a; --neg-soft:#3a2220;
+    --warn:#e0ac52; --warn-soft:#3a2f18;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"IBM Plex Sans", system-ui, sans-serif;
+    padding-inline:16px; padding-block:28px;
+    display:flex; justify-content:center;
+  }
+  .page{ width:100%; max-width:960px; display:flex; flex-direction:column; gap:22px; }
+  .num{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; }
+
+  header.mast{
+    display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:10px 20px;
+    border-bottom:2px solid var(--text); padding-bottom:14px;
+  }
+  .wordmark{ font-family:"Fraunces", serif; font-weight:600; font-size:clamp(28px,5vw,38px); letter-spacing:-.01em; text-wrap:balance; }
+  .wordmark em{ font-style:normal; color:var(--accent); }
+  .mast-meta{ font-size:12.5px; color:var(--text-muted); text-align:right; line-height:1.5; }
+  .status-chip{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--warn-soft); color:var(--warn); border:1px solid var(--warn);
+    padding:3px 10px; border-radius:999px; font-size:12px; font-weight:500; letter-spacing:.01em;
+  }
+  .status-chip.ok{ background:var(--pos-soft); color:var(--pos); border-color:var(--pos); }
+  .status-chip .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+  section{ display:flex; flex-direction:column; gap:12px; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .section-title{ font-family:"Fraunces", serif; font-weight:600; font-size:20px; }
+  .section-sub{ font-size:12.5px; color:var(--text-muted); }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    box-shadow:var(--shadow); padding:18px 20px;
+  }
+
+  .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
+  .stat{ display:flex; flex-direction:column; gap:4px; }
+  .stat .value{ font-size:30px; font-weight:500; }
+  .stat .label{ font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th{ text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:500; padding:0 10px 8px; border-bottom:1px solid var(--border); }
+  td{ padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  tr:last-child td{ border-bottom:none; }
+  td.num, th.num{ text-align:right; }
+  .issuer-table-wrap, .table-wrap{ overflow-x:auto; }
+
+  .badge{ display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:500; padding:2px 8px; border-radius:999px; }
+  .badge.ok{ background:var(--pos-soft); color:var(--pos); }
+  .badge.gap{ background:var(--neg-soft); color:var(--neg); }
+  .badge.partial{ background:var(--warn-soft); color:var(--warn); }
+
+  .empty-state{
+    border:1px dashed var(--border); border-radius:8px; padding:22px;
+    display:flex; flex-direction:column; gap:8px; align-items:flex-start;
+    background:var(--surface-2);
+  }
+  .empty-state .kicker{ font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--warn); font-weight:600; }
+  .empty-state p{ margin:0; font-size:13.5px; color:var(--text-muted); max-width:60ch; }
+  .empty-state code{ font-family:"IBM Plex Mono", monospace; font-size:12.5px; background:var(--surface); border:1px solid var(--border); padding:1px 5px; border-radius:4px; }
+
+  .callout{
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:8px;
+    padding:12px 14px; font-size:13px; color:var(--text);
+  }
+  .callout b{ color:var(--accent); }
+
+  .chart-legend{ display:flex; gap:16px; font-size:12px; color:var(--text-muted); flex-wrap:wrap; }
+  .chart-legend .sw{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:-1px; }
+
+  .roadmap{ display:flex; flex-direction:column; gap:6px; }
+  .roadmap-item{ display:flex; gap:10px; align-items:baseline; font-size:13px; }
+  .roadmap-item .step-num{ font-family:"IBM Plex Mono",monospace; color:var(--text-muted); width:18px; flex-shrink:0; }
+  .roadmap-item.current .step-num{ color:var(--accent); font-weight:600; }
+  .roadmap-item.done .step-num{ color:var(--pos); }
+  .roadmap-item .step-text{ color:var(--text-muted); }
+  .roadmap-item.current .step-text{ color:var(--text); font-weight:500; }
+  .roadmap-item.done .step-text{ color:var(--text); }
+  .roadmap-item.pending .step-text{ color:var(--text-muted); }
+
+  .gap-list{ display:flex; flex-direction:column; gap:8px; font-size:13px; }
+  .gap-list .g{ display:flex; gap:8px; }
+  .gap-list .g .tag{ font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--neg); flex-shrink:0; padding-top:2px; }
+
+  footer{ font-size:11.5px; color:var(--text-muted); text-align:center; padding-top:6px; border-top:1px solid var(--border); }
+
+  @media (max-width:560px){
+    .stat .value{ font-size:24px; }
+    header.mast{ flex-direction:column; align-items:flex-start; }
+    .mast-meta{ text-align:left; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="mast">
+    <div class="wordmark">bond<em>flows</em></div>
+    <div class="mast-meta">
+      Daily US bond ETF flow model · Dynex Capital<br>
+      Last pipeline run: <span class="num">2026-09-25/26</span>
+    </div>
+  </header>
+
+  <section id="todays-read">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Today's read</div>
+        <div class="section-sub">Written fresh each day against the latest snapshot — not a substitute for the sections below, a pointer into them.</div>
+      </div>
+    </div>
+    <div class="card">
+      <p style="font-size:13.5px;margin:0">
+        Commentary hasn't run yet — this card fills in once the daily dashboard-refresh routine has read a snapshot and written a read on it.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">Coverage</div>
+        <div class="section-sub">Tickers with a live NAV/shares-outstanding adapter, vs. universe.csv's 124-ticker core+extended list.</div>
+      </div>
+      <span class="status-chip ok"><span class="dot"></span>8 issuers, 102 tickers live</span>
+    </div>
+    <div class="card">
+      <div class="stat-row" style="margin-bottom:16px">
+        <div class="stat"><span class="value num">102 / 124</span><span class="label">Tickers covered</span></div>
+        <div class="stat"><span class="value num">82%</span><span class="label">Overall coverage</span></div>
+        <div class="stat"><span class="value num">8 / 21</span><span class="label">Issuers with an adapter</span></div>
+        <div class="stat"><span class="value num">106</span><span class="label">In-core tickers (of 124)</span></div>
+      </div>
+      <div class="issuer-table-wrap">
+        <table>
+          <thead><tr><th>Issuer</th><th class="num">Covered</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>iShares</td><td class="num">40 / 40</td><td><span class="badge ok">live</span></td></tr>
+            <tr><td>SSGA</td><td class="num">21 / 21</td><td><span class="badge ok">live</span></td></tr>
+            <tr><td>Vanguard</td><td class="num">16 / 16</td><td><span class="badge ok">live — monthly shares o/s</span></td></tr>
+            <tr><td>Schwab</td><td class="num">7 / 7</td><td><span class="badge ok">live</span></td></tr>
+            <tr><td>PIMCO</td><td class="num">6 / 6</td><td><span class="badge ok">live</span></td></tr>
+            <tr><td>Invesco</td><td class="num">5 / 5</td><td><span class="badge ok">live</span></td></tr>
+            <tr><td>VanEck</td><td class="num">4 / 4</td><td><span class="badge ok">live</span></td></tr>
+            <tr><td>JPMorgan</td><td class="num">3 / 3</td><td><span class="badge ok">live</span></td></tr>
+            <tr><td>Janus Henderson</td><td class="num">0 / 3</td><td><span class="badge gap">dead end</span></td></tr>
+            <tr><td>iShares/BlackRock</td><td class="num">0 / 2</td><td><span class="badge gap">registry bug</span></td></tr>
+            <tr><td>Direxion, F/m, Global X</td><td class="num">0 / 6</td><td><span class="badge gap">not discovered</span></td></tr>
+            <tr><td>BondBloxx, Dimensional, DWS/Xtrackers, Fidelity, First Trust, Goldman, ProShares, Simplify, WisdomTree</td><td class="num">0 / 9</td><td><span class="badge gap">not discovered</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--text-muted);margin:14px 0 0">
+        Janus Henderson: NAV, TNA, and shares outstanding confirmed permanently absent from the live site across two independent checks — no adapter is possible without a different source. iShares/BlackRock: BINC and CLOA use an issuer label that doesn't match the adapter registry's "iShares" key, so both get zero coverage today despite iShares itself being fully live — a naming bug, not a data gap. Everything else in this row is simply outside the original 9-issuer discovery pass.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">Fund flows &amp; aggregates</div>
+        <div class="section-sub">ΔShares × NAV, by sleeve, ex-bills, credit vs. rates, with OGR and a 252-day z-score.</div>
+      </div>
+      <span class="status-chip"><span class="dot"></span>accumulating</span>
+    </div>
+    <div class="empty-state">
+      <span class="kicker">No flow data yet</span>
+      <p>
+        The pipeline's first snapshot covers <span class="num">2026-09-17</span> and <span class="num">2026-09-18</span> — one day per ticker.
+        Flow calculation needs two observed days for the same ticker to produce a ΔShares, so <code>fund_flows</code> and
+        <code>flow_aggregates</code> are both still empty. This panel fills in once <code>scripts/daily.py</code> has run again
+        on a later date and <code>scripts/compute_flows.py</code> / <code>scripts/compute_analytics.py</code> pick up the second day.
+      </p>
+      <p>Once populated, this section shows: total flow, ex-bills, ex-bills-ex-muni, credit vs. rates, and one line per sleeve — each with a 5-day/20-day rolling sum and a z-score calibrated against its own trailing 252 clean days, plus aggregate DV01 and spread DV01 (dollars of P&amp;L per 1bp) for the eligible credit sleeves.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">ICI weekly overlay</div>
+        <div class="section-sub">Combined Estimated Long-Term Flows and ETF Net Issuance — the mutual-fund-complex read the ETF tape alone can't give you.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div id="ici-chart"></div>
+      <div class="chart-legend" style="margin-top:10px">
+        <span><span class="sw" style="background:var(--accent)"></span>Bond, taxable</span>
+        <span><span class="sw" style="background:var(--warn)"></span>Bond, municipal</span>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <span>&#9888;</span>
+        <span><b>Estimate, not actual — and it lags.</b> Most recent week ended <span class="num">2026-09-16</span>, posted by ICI on
+        <span class="num">2026-09-23</span> (7-day lag; the lag runs 6&ndash;12 days depending on the week). Never read this against a
+        same-day ETF-flow figure — align by week-ended date only.</span>
+      </div>
+    </div>
+  </section>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px;" id="two-col">
+    <section>
+      <div class="section-head">
+        <div>
+          <div class="section-title">Double-counting control</div>
+          <div class="section-sub">§6.2 — option-overlay funds hold their underlying ETF.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fund</th><th>Holds</th><th class="num">Weight</th></tr></thead>
+            <tbody>
+              <tr><td class="num">TLTW</td><td class="num">TLT</td><td class="num">100.17%</td></tr>
+              <tr><td class="num">HYGW</td><td class="num">HYG</td><td class="num">100.28%</td></tr>
+              <tr><td class="num">LQDW</td><td class="num">LQD</td><td class="num">100.44%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0">
+          As of 2026-09-23/24, direct from iShares. A dollar into any of these three is netted out of <code>flow_usd_net</code> almost
+          in full. Active multisector funds that opportunistically hold ETF positions (BOND, TOTL, PYLD, JCPB — 1,700&ndash;2,000+
+          holdings each) are not covered; detecting one would need full holdings-file parsing across four issuer formats for an
+          effect SPEC.md itself calls "opportunistic."
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <div class="section-title">Agency MBS look-through</div>
+          <div class="section-sub">§6.6 — MBS share of portfolio value, 6 of 16 named tickers.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fund</th><th>Issuer</th><th class="num">MBS wt.</th></tr></thead>
+            <tbody>
+              <tr><td class="num">GNMA</td><td>iShares</td><td class="num">98.61%</td></tr>
+              <tr><td class="num">SPMB</td><td>SSGA</td><td class="num">98.61%</td></tr>
+              <tr><td class="num">MBB</td><td>iShares</td><td class="num">94.09%</td></tr>
+              <tr><td class="num">SPAB</td><td>SSGA</td><td class="num">23.37%</td></tr>
+              <tr><td class="num">AGG</td><td>iShares</td><td class="num">21.90%</td></tr>
+              <tr><td class="num">IUSB</td><td>iShares</td><td class="num">19.40%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0">
+          As of 2026-09-24. GNMA and SPMB — different issuers, independent classification logic — land within 0.001pp of each
+          other for pure-play agency MBS funds, a good cross-check. Vanguard (VMBS, BND), PIMCO, JPMorgan, Schwab, and three
+          undiscovered issuers aren't covered — see CLAUDE.md for why each one is out of scope.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <section>
+    <div class="section-head">
+      <div><div class="section-title">Build status</div></div>
+    </div>
+    <div class="card" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div class="roadmap">
+        <div class="roadmap-item done"><span class="step-num">1</span><span class="step-text">Universe &amp; sleeve taxonomy</span></div>
+        <div class="roadmap-item done"><span class="step-num">2</span><span class="step-text">Endpoint discovery, 9 issuers</span></div>
+        <div class="roadmap-item done"><span class="step-num">3</span><span class="step-text">Ingest, raw storage, validation harness</span></div>
+        <div class="roadmap-item done"><span class="step-num">4</span><span class="step-text">Flow calculation + split/staleness handling</span></div>
+        <div class="roadmap-item done"><span class="step-num">5</span><span class="step-text">Dollar aggregates, OGR, z-scores</span></div>
+        <div class="roadmap-item done"><span class="step-num">6</span><span class="step-text">Double-counting control (overlay funds)</span></div>
+        <div class="roadmap-item done"><span class="step-num">7</span><span class="step-text">ICI weekly loader</span></div>
+        <div class="roadmap-item done"><span class="step-num">8</span><span class="step-text">Agency MBS look-through</span></div>
+        <div class="roadmap-item done"><span class="step-num">9</span><span class="step-text">Dashboard — this page</span></div>
+        <div class="roadmap-item current"><span class="step-num">10</span><span class="step-text">DV01 / spread-DV01 layer — built, awaiting flow history</span></div>
+      </div>
+      <div class="gap-list">
+        <div class="g"><span class="tag">OPEN</span><span>Settlement-date vs. trade-date attribution — undetermined for every issuer, needs more accumulated history to resolve empirically.</span></div>
+        <div class="g"><span class="tag">OPEN</span><span>Launch/closure suppression not implemented — <code>inception_date</code>/<code>delisting_date</code> aren't populated anywhere yet.</span></div>
+        <div class="g"><span class="tag">OPEN</span><span>Double-counting for active multisector funds (BOND, TOTL, PYLD, JCPB) — not covered, see above.</span></div>
+        <div class="g"><span class="tag">OPEN</span><span>BINC/CLOA get zero coverage from a fixable issuer-name mismatch, unrelated to any real data gap.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Rebuilt entirely from <code style="font-family:inherit">data/raw/</code> · DuckDB at <code style="font-family:inherit">data/bondflows.duckdb</code> · See CLAUDE.md for every scoping decision behind this page.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var weeks = [
+    {label:'08/05', taxable:18.186, muni:1.492},
+    {label:'08/12', taxable:17.633, muni:2.017},
+    {label:'08/19', taxable:18.319, muni:2.360},
+    {label:'08/26', taxable:10.980, muni:2.483},
+    {label:'09/02', taxable:12.924, muni:-0.240},
+    {label:'09/09', taxable:10.270, muni:1.276},
+    {label:'09/16', taxable:3.796,  muni:-0.552}
+  ];
+
+  var styles = getComputedStyle(document.documentElement);
+  var col = function(name){ return styles.getPropertyValue(name).trim(); };
+
+  var W = 640, H = 260, padL = 46, padR = 12, padT = 12, padB = 28;
+  var plotW = W - padL - padR, plotH = H - padT - padB;
+
+  var maxAbs = 0;
+  weeks.forEach(function(w){
+    maxAbs = Math.max(maxAbs, Math.abs(w.taxable), Math.abs(w.muni));
+  });
+  var yMax = Math.ceil(maxAbs / 5) * 5; // round headroom, billions
+  var yScale = function(v){ return (v / yMax) * (plotH / 2); };
+  var zeroY = padT + plotH / 2;
+
+  var groupW = plotW / weeks.length;
+  var barW = groupW * 0.30;
+  var gap = groupW * 0.06;
+
+  var svg = ['<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="ICI weekly bond flows, taxable and municipal, in billions of dollars" style="font-family:\'IBM Plex Mono\',monospace">'];
+
+  // gridlines + y labels
+  [yMax, yMax/2, 0, -yMax/2, -yMax].forEach(function(v){
+    var y = zeroY - yScale(v);
+    svg.push('<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="' + col('--border') + '" stroke-width="1" />');
+    svg.push('<text x="' + (padL - 8) + '" y="' + (y + 3) + '" text-anchor="end" font-size="9.5" fill="' + col('--text-muted') + '">' + v + 'B</text>');
+  });
+
+  weeks.forEach(function(w, i){
+    var gx = padL + i * groupW;
+    var xTax = gx + groupW/2 - barW - gap/2;
+    var xMun = gx + groupW/2 + gap/2;
+
+    [['taxable', xTax, col('--accent')], ['muni', xMun, col('--warn')]].forEach(function(pair){
+      var v = w[pair[0]];
+      var h = Math.abs(yScale(v));
+      var y = v >= 0 ? zeroY - h : zeroY;
+      svg.push('<rect x="' + pair[1] + '" y="' + y + '" width="' + barW + '" height="' + Math.max(h,0.5) + '" fill="' + pair[2] + '" rx="1.5" />');
+    });
+
+    svg.push('<text x="' + (gx + groupW/2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10" fill="' + col('--text-muted') + '">' + w.label + '</text>');
+  });
+
+  svg.push('</svg>');
+  document.getElementById('ici-chart').innerHTML = svg.join('');
+})();
+</script>
+
+<script>
+  (function(){
+    var mq = window.matchMedia('(max-width: 700px)');
+    var col = document.getElementById('two-col');
+    function apply(){ col.style.gridTemplateColumns = mq.matches ? '1fr' : '1fr 1fr'; }
+    apply();
+    mq.addEventListener('change', apply);
+  })();
+</script>
