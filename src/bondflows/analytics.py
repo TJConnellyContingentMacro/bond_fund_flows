@@ -122,23 +122,16 @@ WITH tna_lag AS (
            LAG(total_net_assets) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_tna
     FROM fund_daily
 ),
--- SPEC.md §6.2, narrowly scoped (see overlay.py): the prior day's weight is
--- used, not the current day's, matching §6.6's "computed from the prior day
--- to avoid look-ahead" principle for the same kind of holdings-weight
--- calculation.
-overlay_lag AS (
-    SELECT ticker, asof_date,
-           LAG(weight_pct) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_weight_pct
-    FROM overlay_holdings
-),
+-- SPEC.md §6.2 (see overlay.py): the most recent holdings weight strictly
+-- before the flow date, per §6.6's prior-day rule to avoid look-ahead.
 flow_with_tna AS (
     SELECT
         f.ticker, f.flow_date, f.flow_usd, f.flag, t.prior_tna,
         f.dv01_usd_per_bp, f.spread_dv01_usd_per_bp, f.spread_dv01_is_proxied,
-        COALESCE(f.flow_usd * o.prior_weight_pct / 100, 0) AS overlay_adjustment
+        COALESCE(f.flow_usd * o.weight_pct / 100, 0) AS overlay_adjustment
     FROM fund_flows f
     LEFT JOIN tna_lag t ON t.ticker = f.ticker AND t.asof_date = f.flow_date
-    LEFT JOIN overlay_lag o ON o.ticker = f.ticker AND o.asof_date = f.flow_date
+    ASOF LEFT JOIN overlay_holdings o ON o.ticker = f.ticker AND f.flow_date > o.asof_date
 ),
 cut_daily AS (
     SELECT

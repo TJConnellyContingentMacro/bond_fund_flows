@@ -106,43 +106,55 @@ def test_no_silent_zeros(tmp_path):
 
 
 def test_staleness_fixture(tmp_path):
-    """Two identical consecutive payloads (same bytes, same issuer-labeled
-    asof_date) must produce a stale flag on the second day, not a fresh
-    (and phantom-flow-inducing) observation."""
+    """An unchanged file relabeled with a new asof_date (byte-identical
+    payload) must be flagged stale on the new date, not treated as a fresh
+    (and phantom-zero-flow-inducing) observation."""
     funds = [make_fund("BBB", "good_issuer")]
-    same_content = b'{"nav": 100.0, "asof": "2026-09-18"}'
-    unchanged_asof = date(2026, 9, 18)  # the issuer's file didn't move forward
+    same_content = b'{"nav": 100.0}'
     raw_dir = tmp_path / "raw"
     db_path = tmp_path / "db.duckdb"
 
-    ingest.run_daily(
-        {"good_issuer": GoodAdapter(same_content, asof_date=unchanged_asof)},
-        run_date=date(2026, 9, 18),
-        funds=funds,
-        raw_dir=raw_dir,
-        db_path=db_path,
-    )
-    con = db.connect(db_path)
-    day1_stale = con.execute(
-        "SELECT source_is_stale FROM fund_daily WHERE ticker = 'BBB' AND asof_date = ?", [unchanged_asof]
-    ).fetchone()[0]
-    con.close()
-    assert day1_stale is False  # nothing to compare against yet
+    for run_date in (date(2026, 9, 18), date(2026, 9, 19)):
+        ingest.run_daily(
+            {"good_issuer": GoodAdapter(same_content, asof_date=run_date)},
+            run_date=run_date,
+            funds=funds,
+            raw_dir=raw_dir,
+            db_path=db_path,
+        )
 
-    ingest.run_daily(
-        {"good_issuer": GoodAdapter(same_content, asof_date=unchanged_asof)},
-        run_date=date(2026, 9, 19),
-        funds=funds,
-        raw_dir=raw_dir,
-        db_path=db_path,
-    )
+    con = db.connect(db_path)
+    rows = con.execute(
+        "SELECT asof_date, source_is_stale FROM fund_daily WHERE ticker = 'BBB' ORDER BY asof_date"
+    ).fetchall()
+    con.close()
+    assert rows == [(date(2026, 9, 18), False), (date(2026, 9, 19), True)]
+
+
+def test_rereading_an_unadvanced_date_does_not_poison_the_original_row(tmp_path):
+    """If the issuer hasn't posted a newer date yet, a later run re-reads the
+    same asof_date. That adds no new row (so no flow), and must not flip the
+    earlier, genuinely fresh capture to stale — otherwise it can never anchor
+    a flow once a newer date does arrive."""
+    funds = [make_fund("BBB", "good_issuer")]
+    content = b'{"nav": 100.0, "asof": "2026-09-18"}'
+    unchanged_asof = date(2026, 9, 18)
+    raw_dir = tmp_path / "raw"
+    db_path = tmp_path / "db.duckdb"
+
+    for run_date in (date(2026, 9, 18), date(2026, 9, 19), date(2026, 9, 20)):
+        ingest.run_daily(
+            {"good_issuer": GoodAdapter(content, asof_date=unchanged_asof)},
+            run_date=run_date,
+            funds=funds,
+            raw_dir=raw_dir,
+            db_path=db_path,
+        )
+
     con = db.connect(db_path)
     rows = con.execute("SELECT asof_date, source_is_stale FROM fund_daily WHERE ticker = 'BBB'").fetchall()
     con.close()
-
-    # The issuer's file never advanced past 2026-09-18, so there's still only
-    # one row for it (the upsert re-confirms the same day) — now flagged stale.
-    assert rows == [(unchanged_asof, True)]
+    assert rows == [(unchanged_asof, False)]
 
 
 def test_adapter_isolation(tmp_path):

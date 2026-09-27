@@ -51,19 +51,21 @@ def _prior_raw_path(raw_dir: Path, run_date: date, issuer: str, ticker: str, con
 
 
 def _is_stale(raw_dir: Path, result: FetchResult, run_date: date, issuer: str, con) -> bool:
-    """SPEC.md §5.2: identical payload hash, or asof_date didn't advance."""
-    prior_path = _prior_raw_path(raw_dir, run_date, issuer, result.ticker, result.raw.content_type)
-    if prior_path is not None:
-        prior_hash = hashlib.sha256(prior_path.read_bytes()).hexdigest()
-        this_hash = hashlib.sha256(result.raw.content).hexdigest()
-        if prior_hash == this_hash:
-            return True
+    """SPEC.md §5.2 staleness, judged per (ticker, asof_date) row."""
+    # A re-read of an asof_date already captured adds no new row and so no flow; keep the
+    # existing flag rather than retroactively marking a real earlier observation stale.
+    existing = con.execute(
+        "SELECT source_is_stale FROM fund_daily WHERE ticker = ? AND asof_date = ?",
+        [result.ticker, result.observation.asof_date],
+    ).fetchone()
+    if existing is not None:
+        return existing[0]
 
-    prior_asof = con.execute(
-        "SELECT MAX(asof_date) FROM fund_daily WHERE ticker = ? AND asof_date < ?",
-        [result.ticker, run_date],
-    ).fetchone()[0]
-    return prior_asof is not None and prior_asof == result.observation.asof_date
+    prior_path = _prior_raw_path(raw_dir, run_date, issuer, result.ticker, result.raw.content_type)
+    if prior_path is None:
+        return False
+    prior_hash = hashlib.sha256(prior_path.read_bytes()).hexdigest()
+    return prior_hash == hashlib.sha256(result.raw.content).hexdigest()
 
 
 def _run_issuer(

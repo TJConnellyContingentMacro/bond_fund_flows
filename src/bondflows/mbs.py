@@ -233,15 +233,9 @@ def compute_mbs_implied_flows(con: duckdb.DuckDBPyConnection) -> int:
     ticker with mbs_weights data. Safe to rerun in full."""
     rows = con.execute(
         """
-        WITH mbs_lag AS (
-            SELECT ticker, asof_date,
-                   LAG(mbs_weight_pct) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_weight_pct
-            FROM mbs_weights
-        )
-        SELECT f.ticker, f.flow_date, f.flow_usd * m.prior_weight_pct / 100 AS implied_mbs_flow_usd
+        SELECT f.ticker, f.flow_date, f.flow_usd * m.mbs_weight_pct / 100 AS implied_mbs_flow_usd
         FROM fund_flows f
-        JOIN mbs_lag m ON m.ticker = f.ticker AND m.asof_date = f.flow_date
-        WHERE m.prior_weight_pct IS NOT NULL
+        ASOF JOIN mbs_weights m ON m.ticker = f.ticker AND f.flow_date > m.asof_date
         """
     ).fetchall()
 

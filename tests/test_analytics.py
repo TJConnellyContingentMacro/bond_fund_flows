@@ -212,9 +212,8 @@ def test_flow_usd_net_backs_out_overlay_funds_underlying_etf_flow(tmp_path):
     ]
     day0, day1 = date(2026, 9, 17), date(2026, 9, 18)
     seed_overlay_holding(con, "TLTW", day0, "TLT", Decimal("100.00"))
-    # fetch_overlay_holdings.py writes a row every day it runs (including
-    # day1) — the LAG in analytics.py's SQL reads *that* row's predecessor,
-    # same reason the OGR test needs a fund_daily row on the flow's own date.
+    # Same-day weight exists but must be ignored — only a strictly-prior weight
+    # avoids look-ahead.
     seed_overlay_holding(con, "TLTW", day1, "TLT", Decimal("99.50"))
     seed_fund_flow(con, "TLTW", day1, Decimal("1000000"))
     seed_fund_flow(con, "AAA", day1, Decimal("500"))

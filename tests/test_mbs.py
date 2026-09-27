@@ -12,9 +12,37 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from bondflows.mbs import is_agency_mbs_by_name, parse_ishares_holdings, parse_ssga_holdings
+from bondflows import db
+from bondflows.mbs import (
+    compute_mbs_implied_flows,
+    is_agency_mbs_by_name,
+    parse_ishares_holdings,
+    parse_ssga_holdings,
+)
 
 NA = np.nan
+
+
+def test_implied_mbs_flow_uses_most_recent_weight_strictly_before_flow_date(tmp_path):
+    """Holdings files are fetched on their own cadence, so a weight usually
+    won't be dated exactly on a flow date. Use the latest one strictly before
+    it (SPEC.md §6.6's prior-day rule) — never a same-day or later weight."""
+    con = db.connect(tmp_path / "db.duckdb")
+    con.execute(
+        "INSERT INTO mbs_weights (ticker, asof_date, mbs_weight_pct, source) VALUES "
+        "('MBB', '2026-09-20', 90.0, 'test'), ('MBB', '2026-09-24', 94.0, 'test'), "
+        "('MBB', '2026-09-25', 50.0, 'test')"
+    )
+    con.execute(
+        "INSERT INTO fund_flows (ticker, flow_date, flow_usd, flag) VALUES ('MBB', '2026-09-25', -1000000, 'clean')"
+    )
+
+    written = compute_mbs_implied_flows(con)
+    implied = con.execute("SELECT implied_mbs_flow_usd FROM mbs_implied_flows WHERE ticker = 'MBB'").fetchone()[0]
+    con.close()
+
+    assert written == 1
+    assert implied == Decimal("-940000.00")  # 94% (9/24), not 50% (same-day) or 90% (older)
 
 
 @pytest.mark.parametrize(
