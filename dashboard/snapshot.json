@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-27T00:33:46.654797+00:00",
+  "generated_at": "2026-09-27T10:07:59.654507+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
-    "total_covered_today": 87,
+    "total_covered_today": 77,
     "by_issuer": {
       "iShares": {
         "expected": 32,
@@ -48,7 +48,7 @@
       "PIMCO": {
         "expected": 6,
         "covered": 6,
-        "covered_today": 6
+        "covered_today": 0
       },
       "Invesco": {
         "expected": 5,
@@ -78,7 +78,7 @@
       "VanEck": {
         "expected": 4,
         "covered": 4,
-        "covered_today": 4
+        "covered_today": 0
       },
       "iShares/BlackRock": {
         "expected": 2,
@@ -102,7 +102,7 @@
       }
     },
     "latest_fund_daily_asof_date": "2026-09-25",
-    "latest_fund_daily_retrieved_at": "2026-09-26T20:30:25.940203"
+    "latest_fund_daily_retrieved_at": "2026-09-27T06:07:03.799774"
   },
   "flows": {
     "available": true,
@@ -834,8 +834,8 @@
         }
       ],
       "last_date_by_issuer": {
-        "iShares": "2026-09-25",
-        "SSGA": "2026-09-24"
+        "SSGA": "2026-09-24",
+        "iShares": "2026-09-25"
       },
       "largest_contributor": {
         "ticker": "IUSB",
@@ -1373,6 +1373,6 @@
     }
   ],
   "notable": [
-    "Today's coverage 87/106 (82.1%) is below the 90.0% threshold"
+    "Today's coverage 77/106 (72.6%) is below the 90.0% threshold"
   ]
 }
