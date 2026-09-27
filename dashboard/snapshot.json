@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T10:07:59.654507+00:00",
+  "generated_at": "2026-09-27T15:07:54.497642+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
@@ -102,7 +102,7 @@
       }
     },
     "latest_fund_daily_asof_date": "2026-09-25",
-    "latest_fund_daily_retrieved_at": "2026-09-27T06:07:03.799774"
+    "latest_fund_daily_retrieved_at": "2026-09-27T11:06:58.011288"
   },
   "flows": {
     "available": true,
