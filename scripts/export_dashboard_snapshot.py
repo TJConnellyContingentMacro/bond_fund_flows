@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 import sys
 from dataclasses import asdict, is_dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
 
@@ -27,6 +27,9 @@ from bondflows.analytics import _build_ticker_cuts  # noqa: E402
 from bondflows.universe import load_universe  # noqa: E402
 
 HEADLINE_CUTS = ("total", "ex_bills", "ex_bills_ex_muni", "credit", "rates", "mixed_other")
+# Longest ordinary gap between trading days: a weekend plus a Monday or Friday holiday.
+PANEL_MAX_GAP_DAYS = 4
+SLEEVE_WINDOW_WEEKS = 4
 
 OUTPUT_PATH = Path(__file__).resolve().parents[1] / "dashboard" / "snapshot.json"
 
@@ -48,68 +51,131 @@ def _json_default(value):
     raise TypeError(f"not JSON serializable: {value!r}")
 
 
-def _latest_period_flows(con, funds, covered_tickers: set[str]) -> dict:
-    """Each in-core fund's most recent flow. Issuers report on different lags,
-    so the latest period is per fund, not one shared date."""
+def _sum(rows, key) -> Decimal:
+    return sum((r[key] or 0 for r in rows), Decimal(0))
+
+
+def _flow_views(con, funds, covered_tickers: set[str]) -> dict:
+    """Weekly view over in-core funds. A flow spanning more than
+    PANEL_MAX_GAP_DAYS is a catch-up across missed observations: it's listed
+    separately rather than landing in one week's bar."""
     in_core = {f.ticker: f for f in funds if f.in_core}
+    cuts_by_ticker: dict[str, set[str]] = {}
+    for ticker, cut in _build_ticker_cuts(funds):
+        cuts_by_ticker.setdefault(ticker, set()).add(cut)
+
     cols = [
-        "ticker", "prior_date", "flow_date", "flow_usd", "organic_growth_rate",
-        "dv01_usd_per_bp", "spread_dv01_usd_per_bp", "spread_dv01_is_proxied", "flag",
+        "ticker", "prior_date", "flow_date", "flow_usd", "organic_growth_rate", "dv01_usd_per_bp",
+        "spread_dv01_usd_per_bp", "spread_dv01_is_proxied", "flag", "prior_tna",
     ]
     rows = con.execute(
         """
         WITH usable AS (
             SELECT ticker, asof_date,
-                   LAG(asof_date) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_date
+                   LAG(asof_date) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_date,
+                   LAG(total_net_assets) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_tna
             FROM fund_daily
             WHERE NOT source_is_stale AND shares_outstanding IS NOT NULL AND nav_per_share IS NOT NULL
         )
-        SELECT f.ticker, u.prior_date, f.flow_date, f.flow_usd, f.organic_growth_rate,
-               f.dv01_usd_per_bp, f.spread_dv01_usd_per_bp, f.spread_dv01_is_proxied, f.flag
+        SELECT f.ticker, u.prior_date, f.flow_date, f.flow_usd, f.organic_growth_rate, f.dv01_usd_per_bp,
+               f.spread_dv01_usd_per_bp, f.spread_dv01_is_proxied, f.flag, u.prior_tna
         FROM fund_flows f
         LEFT JOIN usable u ON u.ticker = f.ticker AND u.asof_date = f.flow_date
-        QUALIFY ROW_NUMBER() OVER (PARTITION BY f.ticker ORDER BY f.flow_date DESC) = 1
+        WHERE f.flow_usd IS NOT NULL
+        ORDER BY f.flow_date
         """
     ).fetchall()
 
-    by_fund = []
+    panel: list[dict] = []
+    latest_by_ticker: dict[str, dict] = {}
     for values in rows:
-        row = dict(zip(cols, values))
-        fund = in_core.get(row["ticker"])
+        r = dict(zip(cols, values))
+        fund = in_core.get(r["ticker"])
         if fund is None:
             continue
-        row["issuer"] = fund.issuer
-        row["sleeve"] = fund.sleeve
-        by_fund.append(row)
-    by_fund.sort(key=lambda r: abs(r["flow_usd"] or 0), reverse=True)
+        r["issuer"], r["sleeve"] = fund.issuer, fund.sleeve
+        r["in_panel"] = r["prior_date"] is not None and (r["flow_date"] - r["prior_date"]).days <= PANEL_MAX_GAP_DAYS
+        if r["in_panel"]:
+            r["week_start"] = r["flow_date"] - timedelta(days=r["flow_date"].weekday())
+            panel.append(r)
+        latest_by_ticker[r["ticker"]] = r
 
-    flow_by_ticker = {r["ticker"]: r for r in by_fund if r["flow_usd"] is not None}
-    totals: dict[str, dict] = {}
-    for ticker, cut in _build_ticker_cuts(funds):
-        row = flow_by_ticker.get(ticker)
-        if row is None:
-            continue
-        t = totals.setdefault(cut, {
-            "cut": cut, "flow_usd": Decimal(0), "dv01_usd_per_bp": Decimal(0),
-            "spread_dv01_usd_per_bp": Decimal(0), "has_proxied_spread_dv01": False, "n_funds": 0,
-        })
-        t["flow_usd"] += row["flow_usd"]
-        t["dv01_usd_per_bp"] += row["dv01_usd_per_bp"] or 0
-        t["spread_dv01_usd_per_bp"] += row["spread_dv01_usd_per_bp"] or 0
-        t["has_proxied_spread_dv01"] = t["has_proxied_spread_dv01"] or bool(row["spread_dv01_is_proxied"])
-        t["n_funds"] += 1
-    headline = [totals[c] for c in HEADLINE_CUTS if c in totals]
+    week_starts = sorted({r["week_start"] for r in panel})
+    weekly = []
+    for ws in week_starts:
+        week_rows = [r for r in panel if r["week_start"] == ws]
+        entry = {"week_start": ws, "week_end": ws + timedelta(days=4), "n_funds": len({r["ticker"] for r in week_rows})}
+        for cut in HEADLINE_CUTS:
+            entry[cut] = _sum((r for r in week_rows if cut in cuts_by_ticker.get(r["ticker"], ())), "flow_usd")
+        weekly.append(entry)
+
+    latest_week = None
+    if weekly:
+        ws = week_starts[-1]
+        lw = [r for r in panel if r["week_start"] == ws]
+        prior = weekly[-2] if len(weekly) >= 2 else None
+        headline = []
+        for cut in HEADLINE_CUTS:
+            members = [r for r in lw if cut in cuts_by_ticker.get(r["ticker"], ())]
+            if members:
+                headline.append({
+                    "cut": cut,
+                    "flow_usd": _sum(members, "flow_usd"),
+                    "prior_week_flow_usd": prior[cut] if prior else None,
+                    "dv01_usd_per_bp": _sum(members, "dv01_usd_per_bp"),
+                    "spread_dv01_usd_per_bp": _sum(members, "spread_dv01_usd_per_bp"),
+                    "has_proxied_spread_dv01": any(bool(r["spread_dv01_is_proxied"]) for r in members),
+                    "n_funds": len({r["ticker"] for r in members}),
+                })
+        per_fund: dict[str, dict] = {}
+        for r in lw:
+            p = per_fund.setdefault(r["ticker"], {
+                "ticker": r["ticker"], "issuer": r["issuer"], "sleeve": r["sleeve"], "flow_usd": Decimal(0),
+                "days": 0, "start_tna": r["prior_tna"], "from_date": r["prior_date"], "to_date": r["flow_date"],
+            })
+            p["flow_usd"] += r["flow_usd"]
+            p["days"] += 1
+            p["to_date"] = r["flow_date"]
+        for p in per_fund.values():
+            p["ogr"] = p["flow_usd"] / p["start_tna"] if p["start_tna"] else None
+        by_fund = sorted(per_fund.values(), key=lambda p: abs(p["flow_usd"]), reverse=True)
+        total = next((h["flow_usd"] for h in headline if h["cut"] == "total"), None)
+        latest_week = {
+            "week_start": ws,
+            "week_end": ws + timedelta(days=4),
+            "headline": headline,
+            "by_fund": by_fund,
+            "last_date_by_issuer": {
+                issuer: max(r["flow_date"] for r in lw if r["issuer"] == issuer) for issuer in {r["issuer"] for r in lw}
+            },
+            "largest_contributor": (
+                {"ticker": by_fund[0]["ticker"], "flow_usd": by_fund[0]["flow_usd"],
+                 "total_ex_largest": total - by_fund[0]["flow_usd"]}
+                if by_fund and total is not None else None
+            ),
+        }
+
+    recent = set(week_starts[-SLEEVE_WINDOW_WEEKS:])
+    sleeve_rows: dict[str, list[dict]] = {}
+    for r in panel:
+        if r["week_start"] in recent:
+            sleeve_rows.setdefault(r["sleeve"], []).append(r)
     by_sleeve = sorted(
-        (t for c, t in totals.items() if c not in HEADLINE_CUTS), key=lambda t: t["flow_usd"], reverse=True
+        ({"cut": s, "flow_usd": _sum(rs, "flow_usd"), "n_funds": len({r["ticker"] for r in rs})}
+         for s, rs in sleeve_rows.items()),
+        key=lambda t: t["flow_usd"], reverse=True,
     )
 
-    largest = None
-    if by_fund and "total" in totals and by_fund[0]["flow_usd"] is not None:
-        largest = {
-            "ticker": by_fund[0]["ticker"],
-            "flow_usd": by_fund[0]["flow_usd"],
-            "total_ex_largest": totals["total"]["flow_usd"] - by_fund[0]["flow_usd"],
-        }
+    catch_up = sorted(
+        (r for r in latest_by_ticker.values() if not r["in_panel"]),
+        key=lambda r: abs(r["flow_usd"]), reverse=True,
+    )
+    latest_ws = week_starts[-1] if week_starts else None
+    large_ogr = [
+        r for r in panel + catch_up
+        if r["organic_growth_rate"] is not None and abs(r["organic_growth_rate"]) > OGR_ALERT_THRESHOLD
+        and (not r["in_panel"] or r["week_start"] == latest_ws)
+    ]
 
     implied_mbs = [
         dict(zip(["ticker", "flow_date", "implied_mbs_flow_usd", "flow_usd", "mbs_weight_pct", "weight_date"], r))
@@ -139,7 +205,7 @@ def _latest_period_flows(con, funds, covered_tickers: set[str]) -> dict:
     }
     missing: dict[tuple[str, str], list[str]] = {}
     for ticker, fund in sorted(in_core.items()):
-        if ticker not in covered_tickers or ticker in flow_by_ticker:
+        if ticker not in covered_tickers or ticker in latest_by_ticker:
             continue
         clean_obs, usable_obs = obs.get(ticker, (0, 0))
         if clean_obs >= 2 and usable_obs < 2:
@@ -148,20 +214,24 @@ def _latest_period_flows(con, funds, covered_tickers: set[str]) -> dict:
             reason = "only one clean observation so far"
         missing.setdefault((fund.issuer, reason), []).append(ticker)
 
-    flow_dates = [r["flow_date"] for r in by_fund]
-    prior_dates = [r["prior_date"] for r in by_fund if r["prior_date"] is not None]
+    strip = ("in_panel", "week_start", "prior_tna")
     return {
-        "available": bool(by_fund),
-        "window_start": min(prior_dates) if prior_dates else None,
-        "window_end": max(flow_dates) if flow_dates else None,
-        "n_funds": len(flow_by_ticker),
-        "all_imputed": bool(by_fund) and all(r["flag"] == "imputed" for r in by_fund),
-        "headline": headline,
-        "by_sleeve": by_sleeve,
-        "by_fund": by_fund,
-        "largest_contributor": largest,
+        "available": bool(latest_by_ticker),
+        "panel_max_gap_days": PANEL_MAX_GAP_DAYS,
+        "history_start": panel[0]["flow_date"] if panel else None,
+        "history_end": panel[-1]["flow_date"] if panel else None,
+        "n_funds_weekly": len({r["ticker"] for r in panel}),
+        "weekly": weekly,
+        "latest_week": latest_week,
+        "sleeves_recent": {"weeks": len(recent), "start": min(recent) if recent else None, "by_sleeve": by_sleeve},
+        "catch_up": [{k: v for k, v in r.items() if k not in strip} for r in catch_up],
+        "large_ogr": [
+            {"ticker": r["ticker"], "ogr": r["organic_growth_rate"], "prior_date": r["prior_date"],
+             "flow_date": r["flow_date"], "catch_up": not r["in_panel"]}
+            for r in large_ogr
+        ],
         "implied_mbs": implied_mbs,
-        "implied_mbs_total": sum((r["implied_mbs_flow_usd"] or 0 for r in implied_mbs), Decimal(0)),
+        "implied_mbs_total": _sum(implied_mbs, "implied_mbs_flow_usd"),
         "missing": [
             {"issuer": issuer, "reason": reason, "tickers": tickers}
             for (issuer, reason), tickers in sorted(missing.items(), key=lambda kv: -len(kv[1]))
@@ -200,7 +270,7 @@ def build_snapshot(con) -> dict:
 
     latest_fund_daily = con.execute("SELECT MAX(asof_date), MAX(retrieved_at) FROM fund_daily").fetchone()
 
-    flows = _latest_period_flows(con, funds, covered_tickers)
+    flows = _flow_views(con, funds, covered_tickers)
 
     ici_weekly = [
         dict(zip(
@@ -249,19 +319,15 @@ def build_snapshot(con) -> dict:
             f"({100 * total_covered_today / total_expected:.1f}%) is below the "
             f"{COVERAGE_ALERT_THRESHOLD_PCT}% threshold"
         )
-    for fund in flows["by_fund"]:
-        ogr = fund["organic_growth_rate"]
-        if ogr is not None and abs(ogr) > OGR_ALERT_THRESHOLD:
-            period = (
-                f"over {fund['prior_date']} to {fund['flow_date']}"
-                if fund["prior_date"] else f"on {fund['flow_date']}"
-            )
-            notable.append(f"{fund['ticker']}: OGR {float(ogr) * 100:+.1f}% {period} ({fund['flag']})")
+    for r in flows["large_ogr"]:
+        period = f"over {r['prior_date']} to {r['flow_date']} (catch-up)" if r["catch_up"] else f"on {r['flow_date']}"
+        notable.append(f"{r['ticker']}: OGR {float(r['ogr']) * 100:+.1f}% {period}")
     latest_agg_date = con.execute("SELECT MAX(asof_date) FROM flow_aggregates").fetchone()[0]
     if latest_agg_date is not None:
         for cut, z in con.execute(
             "SELECT cut, zscore_252d FROM flow_aggregates WHERE asof_date = ? "
-            "AND zscore_252d IS NOT NULL AND ABS(zscore_252d) > ? ORDER BY ABS(zscore_252d) DESC",
+            "AND NOT has_imputed_or_suspect AND zscore_252d IS NOT NULL AND ABS(zscore_252d) > ? "
+            "ORDER BY ABS(zscore_252d) DESC",
             [latest_agg_date, ZSCORE_ALERT_THRESHOLD],
         ).fetchall():
             notable.append(f"{cut}: z-score {float(z):.2f} on {latest_agg_date}")

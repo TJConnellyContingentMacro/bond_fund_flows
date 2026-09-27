@@ -372,6 +372,32 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   `get_run_log` shows nothing new during that time. Check `list_runs`
   `worker_status` before assuming a run is stuck.
 
+## History backfill (sources/history.py, scripts/backfill_history.py)
+
+- **Only iShares and SSGA publish daily history** (NAV and shares outstanding
+  back to inception). Checked 2026-09-27: Vanguard's shares endpoint returns
+  only the latest monthly figure; the other issuers weren't found to publish
+  any. Everyone else accumulates history only as the daily pipeline runs.
+- iShares: the product page's "Data Download" workbook (~28 MB, SpreadsheetML
+  that isn't well-formed XML, so it's scanned with regexes), "Historical"
+  sheet. Matched the live adapter to the last digit on every date checked. No
+  TNA column; TNA is set to shares x NAV, which equals iShares' published TNA
+  exactly. Only the Historical sheet is kept under `data/raw/.../iShares-history/`.
+- SSGA: `navhist-us-en-<ticker>.xlsx`. Share counts are exact where the live
+  page rounds to 10,000, so history overrides shares/NAV/TNA on live rows
+  (`db.apply_history_row`), keeping live-only fields like durations.
+- Backfilled 62 days on 2026-09-27: 2,541 daily flows for 61 funds (51 core),
+  Jul 28 to Sep 25. `run_pipeline.py` refreshes SSGA's last 10 days every run.
+  iShares is manual (`python scripts/backfill_history.py --issuers iShares`),
+  since its live values already match and the downloads are large.
+- **The dashboard's unit is the week.** A flow spanning more than 4 calendar
+  days (longer than a weekend plus a holiday) is a catch-up across missed
+  observations and is listed separately, not added to a week. The issuers
+  without history (PIMCO, Schwab, JPMorgan, VanEck) entered with one such
+  catch-up and join the weekly series once they have consecutive daily data.
+- MBS look-through still starts Sep 24: holdings files have no history, and
+  using a later weight for earlier flows would be look-ahead.
+
 ## Staleness bug, fixed 2026-09-26 (why the first flows were late)
 
 - `ingest.py` used to re-upsert an existing `(ticker, asof_date)` row with

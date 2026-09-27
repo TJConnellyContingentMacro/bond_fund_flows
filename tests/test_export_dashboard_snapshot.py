@@ -61,8 +61,8 @@ def test_flows_not_available_when_fund_flows_empty(tmp_path, monkeypatch):
     con.close()
 
     assert snapshot["flows"]["available"] is False
-    assert snapshot["flows"]["by_fund"] == []
-    assert snapshot["flows"]["headline"] == []
+    assert snapshot["flows"]["weekly"] == []
+    assert snapshot["flows"]["latest_week"] is None
 
 
 def _seed_daily(con, ticker: str, asof: str, shares: int | None, nav: str = "100") -> None:
@@ -73,51 +73,64 @@ def _seed_daily(con, ticker: str, asof: str, shares: int | None, nav: str = "100
     )
 
 
-def test_latest_period_flows_use_each_funds_own_latest_date(tmp_path, monkeypatch):
-    """Issuers report on different lags, so each fund's latest flow can land
-    on a different date — the headline totals sum each fund's own latest
-    period rather than whatever single date happens to be newest."""
+def _fund(ticker: str, issuer: str, sleeve: str) -> Fund:
+    return Fund(ticker=ticker, name=ticker, issuer=issuer, sleeve=sleeve, sub_sleeve="broad", in_core=True,
+                confidence="high", issuer_id=None, product_url=None, notes="")
+
+
+def test_weekly_view_separates_catch_ups_and_sums_each_week(tmp_path, monkeypatch):
+    """Daily flows (including one across a holiday weekend) land in their
+    week; a flow spanning a week of missed observations is a catch-up, listed
+    on its own instead of inflating the week it happens to end in."""
     con = db.connect(tmp_path / "db.duckdb")
     funds = [
-        Fund(ticker="AAA", name="a", issuer="issuer_a", sleeve="ig_corp", sub_sleeve="broad", in_core=True,
-             confidence="high", issuer_id=None, product_url=None, notes=""),
-        Fund(ticker="BBB", name="b", issuer="issuer_b", sleeve="ust_long", sub_sleeve="long", in_core=True,
-             confidence="high", issuer_id=None, product_url=None, notes=""),
-        Fund(ticker="CCC", name="c", issuer="issuer_c", sleeve="ig_corp", sub_sleeve="broad", in_core=True,
-             confidence="high", issuer_id=None, product_url=None, notes=""),
-        Fund(ticker="DDD", name="d", issuer="issuer_c", sleeve="ig_corp", sub_sleeve="broad", in_core=True,
-             confidence="high", issuer_id=None, product_url=None, notes=""),
+        _fund("AAA", "issuer_a", "ig_corp"),
+        _fund("BBB", "issuer_a", "ust_long"),
+        _fund("CCC", "issuer_b", "ig_corp"),
+        _fund("DDD", "issuer_c", "ig_corp"),
+        _fund("EEE", "issuer_c", "ig_corp"),
     ]
     monkeypatch.setattr("export_dashboard_snapshot.load_universe", lambda: funds)
-    for asof in ("2026-09-11", "2026-09-18", "2026-09-25"):
+    # AAA daily across Labor Day (Fri 9/4 -> Tue 9/8 is 4 days, still a daily flow) and into the next week.
+    for asof in ("2026-09-03", "2026-09-04", "2026-09-08", "2026-09-14", "2026-09-15"):
         _seed_daily(con, "AAA", asof, 1_000_000)
-    for asof in ("2026-09-17", "2026-09-24"):
+    for asof in ("2026-09-11", "2026-09-14", "2026-09-15"):
         _seed_daily(con, "BBB", asof, 1_000_000)
-        _seed_daily(con, "CCC", asof, None)  # e.g. Vanguard: shares only published monthly
-    _seed_daily(con, "DDD", "2026-09-18", 1_000_000)
+    for asof in ("2026-09-08", "2026-09-15"):  # one reading a week apart: a catch-up
+        _seed_daily(con, "CCC", asof, 1_000_000)
+    for asof in ("2026-09-08", "2026-09-15"):
+        _seed_daily(con, "DDD", asof, None)  # e.g. Vanguard: shares only published monthly
+    _seed_daily(con, "EEE", "2026-09-15", 1_000_000)
     con.execute(
         "INSERT INTO fund_flows (ticker, flow_date, flow_usd, flag) VALUES "
-        "('AAA', '2026-09-18', 100, 'clean'), ('AAA', '2026-09-25', 300, 'imputed'), "
-        "('BBB', '2026-09-24', -50, 'imputed')"
+        "('AAA', '2026-09-04', 10, 'clean'), ('AAA', '2026-09-08', 20, 'imputed'), "
+        "('AAA', '2026-09-14', 30, 'imputed'), ('AAA', '2026-09-15', 40, 'clean'), "
+        "('BBB', '2026-09-14', -5, 'clean'), ('BBB', '2026-09-15', -7, 'clean'), "
+        "('CCC', '2026-09-15', 999, 'imputed')"
     )
 
     flows = build_snapshot(con)["flows"]
     con.close()
 
-    headline = {t["cut"]: t["flow_usd"] for t in flows["headline"]}
-    assert headline["total"] == Decimal("250")  # AAA's 9/25 flow + BBB's 9/24 flow
-    assert headline["credit"] == Decimal("300")
-    assert headline["rates"] == Decimal("-50")
-    assert flows["window_start"] == date(2026, 9, 17)
-    assert flows["window_end"] == date(2026, 9, 25)
-    aaa = next(r for r in flows["by_fund"] if r["ticker"] == "AAA")
-    assert aaa["prior_date"] == date(2026, 9, 18)
-    assert flows["largest_contributor"] == {
-        "ticker": "AAA", "flow_usd": Decimal("300"), "total_ex_largest": Decimal("-50"),
-    }
+    weeks = {w["week_start"]: w for w in flows["weekly"]}
+    assert weeks[date(2026, 8, 31)]["total"] == Decimal("10")
+    assert weeks[date(2026, 9, 7)]["total"] == Decimal("20")  # the Labor Day Tuesday
+    # AAA's 9/8 -> 9/14 flow spans 6 days, so it's out of the weekly series.
+    assert weeks[date(2026, 9, 14)]["total"] == Decimal("28")  # 40 - 5 - 7, CCC's 999 excluded
+    assert weeks[date(2026, 9, 14)]["credit"] == Decimal("40")
+    assert weeks[date(2026, 9, 14)]["rates"] == Decimal("-12")
+
+    lw = flows["latest_week"]
+    assert lw["week_start"] == date(2026, 9, 14)
+    headline = {h["cut"]: h for h in lw["headline"]}
+    assert headline["total"]["prior_week_flow_usd"] == Decimal("20")
+    bbb = next(f for f in lw["by_fund"] if f["ticker"] == "BBB")
+    assert (bbb["flow_usd"], bbb["days"]) == (Decimal("-12"), 2)
+    assert [c["ticker"] for c in flows["catch_up"]] == ["CCC"]
+
     reasons = {m["reason"]: m["tickers"] for m in flows["missing"]}
-    assert reasons["no shares outstanding published on two dates yet"] == ["CCC"]
-    assert reasons["only one clean observation so far"] == ["DDD"]
+    assert reasons["no shares outstanding published on two dates yet"] == ["DDD"]
+    assert reasons["only one clean observation so far"] == ["EEE"]
 
 
 def test_overlay_and_mbs_tables_show_only_the_latest_date_per_ticker(tmp_path, monkeypatch):
@@ -151,8 +164,10 @@ def test_large_ogr_and_suspect_flows_are_flagged_notable(tmp_path, monkeypatch):
     con = db.connect(tmp_path / "db.duckdb")
     day = date.today()
     monkeypatch.setattr("export_dashboard_snapshot.load_universe", lambda: [make_fund("AAA", "issuer_a")])
+    _seed_daily(con, "AAA", str(day - timedelta(days=1)), 1_000_000)
+    _seed_daily(con, "AAA", str(day), 1_200_000)
     con.execute(
-        "INSERT INTO fund_flows (ticker, flow_date, organic_growth_rate, flag) VALUES (?, ?, ?, 'clean')",
+        "INSERT INTO fund_flows (ticker, flow_date, flow_usd, organic_growth_rate, flag) VALUES (?, ?, 1, ?, 'clean')",
         ["AAA", day, Decimal("0.20")],
     )
     con.execute(
