@@ -204,6 +204,39 @@ def upsert_fund_daily(
     )
 
 
+def apply_history_row(con: duckdb.DuckDBPyConnection, ticker: str, row, *, source: str, retrieved_at) -> bool:
+    """Writes one issuer-history row (sources/history.py). History is the
+    authority for shares/NAV/TNA on its dates, so it overrides those on an
+    existing live row, keeping fields only the live adapter captures (durations,
+    market close). Returns True if a new row was inserted."""
+    exists = con.execute(
+        "SELECT 1 FROM fund_daily WHERE ticker = ? AND asof_date = ?", [ticker, row.asof_date]
+    ).fetchone()
+    if exists:
+        con.execute(
+            """
+            UPDATE fund_daily SET
+                shares_outstanding = COALESCE(?, shares_outstanding),
+                nav_per_share = COALESCE(?, nav_per_share),
+                total_net_assets = COALESCE(?, total_net_assets),
+                source_is_stale = FALSE
+            WHERE ticker = ? AND asof_date = ?
+            """,
+            [row.shares_outstanding, row.nav_per_share, row.total_net_assets, ticker, row.asof_date],
+        )
+        return False
+    con.execute(
+        """
+        INSERT INTO fund_daily (
+            ticker, asof_date, retrieved_at, shares_outstanding, nav_per_share,
+            total_net_assets, source, source_is_stale
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, FALSE)
+        """,
+        [ticker, row.asof_date, retrieved_at, row.shares_outstanding, row.nav_per_share, row.total_net_assets, source],
+    )
+    return True
+
+
 def upsert_flow_aggregate(con: duckdb.DuckDBPyConnection, row: dict) -> None:
     con.execute(
         """

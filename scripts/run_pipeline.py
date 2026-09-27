@@ -41,6 +41,8 @@ ZSCORE_ALERT_THRESHOLD = Decimal("4")
 STEPS: list[tuple[str, str]] = [
     ("backfill_gaps", "scripts/backfill_gaps.py"),
     ("daily", "scripts/daily.py"),
+    # SSGA's live page rounds shares to 10,000; its history file is exact and refills missed days.
+    ("ssga_history", "scripts/backfill_history.py --issuers SSGA --days 10"),
     ("compute_flows", "scripts/compute_flows.py"),
     ("compute_analytics", "scripts/compute_analytics.py"),
     ("fetch_overlay_holdings", "scripts/fetch_overlay_holdings.py"),
@@ -55,7 +57,7 @@ _COVERAGE_RE = re.compile(r"Coverage:\s*(\d+)/(\d+)\s*\(([\d.]+)%\)")
 
 def _run_step(name: str, script_path: str, log_lines: list[str]) -> tuple[int, str]:
     result = subprocess.run(
-        [sys.executable, str(PROJECT_ROOT / script_path)],
+        [sys.executable, str(PROJECT_ROOT / script_path.split()[0]), *script_path.split()[1:]],
         cwd=PROJECT_ROOT,
         capture_output=True,
         text=True,
