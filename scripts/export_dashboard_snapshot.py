@@ -23,7 +23,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from bondflows import db  # noqa: E402
+from bondflows.analytics import _build_ticker_cuts  # noqa: E402
 from bondflows.universe import load_universe  # noqa: E402
+
+HEADLINE_CUTS = ("total", "ex_bills", "ex_bills_ex_muni", "credit", "rates", "mixed_other")
 
 OUTPUT_PATH = Path(__file__).resolve().parents[1] / "dashboard" / "snapshot.json"
 
@@ -43,6 +46,127 @@ def _json_default(value):
     if is_dataclass(value):
         return asdict(value)
     raise TypeError(f"not JSON serializable: {value!r}")
+
+
+def _latest_period_flows(con, funds, covered_tickers: set[str]) -> dict:
+    """Each in-core fund's most recent flow. Issuers report on different lags,
+    so the latest period is per fund, not one shared date."""
+    in_core = {f.ticker: f for f in funds if f.in_core}
+    cols = [
+        "ticker", "prior_date", "flow_date", "flow_usd", "organic_growth_rate",
+        "dv01_usd_per_bp", "spread_dv01_usd_per_bp", "spread_dv01_is_proxied", "flag",
+    ]
+    rows = con.execute(
+        """
+        WITH usable AS (
+            SELECT ticker, asof_date,
+                   LAG(asof_date) OVER (PARTITION BY ticker ORDER BY asof_date) AS prior_date
+            FROM fund_daily
+            WHERE NOT source_is_stale AND shares_outstanding IS NOT NULL AND nav_per_share IS NOT NULL
+        )
+        SELECT f.ticker, u.prior_date, f.flow_date, f.flow_usd, f.organic_growth_rate,
+               f.dv01_usd_per_bp, f.spread_dv01_usd_per_bp, f.spread_dv01_is_proxied, f.flag
+        FROM fund_flows f
+        LEFT JOIN usable u ON u.ticker = f.ticker AND u.asof_date = f.flow_date
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY f.ticker ORDER BY f.flow_date DESC) = 1
+        """
+    ).fetchall()
+
+    by_fund = []
+    for values in rows:
+        row = dict(zip(cols, values))
+        fund = in_core.get(row["ticker"])
+        if fund is None:
+            continue
+        row["issuer"] = fund.issuer
+        row["sleeve"] = fund.sleeve
+        by_fund.append(row)
+    by_fund.sort(key=lambda r: abs(r["flow_usd"] or 0), reverse=True)
+
+    flow_by_ticker = {r["ticker"]: r for r in by_fund if r["flow_usd"] is not None}
+    totals: dict[str, dict] = {}
+    for ticker, cut in _build_ticker_cuts(funds):
+        row = flow_by_ticker.get(ticker)
+        if row is None:
+            continue
+        t = totals.setdefault(cut, {
+            "cut": cut, "flow_usd": Decimal(0), "dv01_usd_per_bp": Decimal(0),
+            "spread_dv01_usd_per_bp": Decimal(0), "has_proxied_spread_dv01": False, "n_funds": 0,
+        })
+        t["flow_usd"] += row["flow_usd"]
+        t["dv01_usd_per_bp"] += row["dv01_usd_per_bp"] or 0
+        t["spread_dv01_usd_per_bp"] += row["spread_dv01_usd_per_bp"] or 0
+        t["has_proxied_spread_dv01"] = t["has_proxied_spread_dv01"] or bool(row["spread_dv01_is_proxied"])
+        t["n_funds"] += 1
+    headline = [totals[c] for c in HEADLINE_CUTS if c in totals]
+    by_sleeve = sorted(
+        (t for c, t in totals.items() if c not in HEADLINE_CUTS), key=lambda t: t["flow_usd"], reverse=True
+    )
+
+    largest = None
+    if by_fund and "total" in totals and by_fund[0]["flow_usd"] is not None:
+        largest = {
+            "ticker": by_fund[0]["ticker"],
+            "flow_usd": by_fund[0]["flow_usd"],
+            "total_ex_largest": totals["total"]["flow_usd"] - by_fund[0]["flow_usd"],
+        }
+
+    implied_mbs = [
+        dict(zip(["ticker", "flow_date", "implied_mbs_flow_usd", "flow_usd", "mbs_weight_pct", "weight_date"], r))
+        for r in con.execute(
+            """
+            SELECT m.ticker, m.flow_date, m.implied_mbs_flow_usd, f.flow_usd, w.mbs_weight_pct, w.asof_date
+            FROM mbs_implied_flows m
+            JOIN fund_flows f ON f.ticker = m.ticker AND f.flow_date = m.flow_date
+            ASOF JOIN mbs_weights w ON w.ticker = m.ticker AND m.flow_date > w.asof_date
+            QUALIFY ROW_NUMBER() OVER (PARTITION BY m.ticker ORDER BY m.flow_date DESC) = 1
+            ORDER BY ABS(m.implied_mbs_flow_usd) DESC
+            """
+        ).fetchall()
+    ]
+
+    obs = {
+        r[0]: (r[1], r[2])
+        for r in con.execute(
+            """
+            SELECT ticker,
+                   COUNT(*) FILTER (WHERE NOT source_is_stale),
+                   COUNT(*) FILTER (WHERE NOT source_is_stale AND shares_outstanding IS NOT NULL
+                                    AND nav_per_share IS NOT NULL)
+            FROM fund_daily GROUP BY ticker
+            """
+        ).fetchall()
+    }
+    missing: dict[tuple[str, str], list[str]] = {}
+    for ticker, fund in sorted(in_core.items()):
+        if ticker not in covered_tickers or ticker in flow_by_ticker:
+            continue
+        clean_obs, usable_obs = obs.get(ticker, (0, 0))
+        if clean_obs >= 2 and usable_obs < 2:
+            reason = "no shares outstanding published on two dates yet"
+        else:
+            reason = "only one clean observation so far"
+        missing.setdefault((fund.issuer, reason), []).append(ticker)
+
+    flow_dates = [r["flow_date"] for r in by_fund]
+    prior_dates = [r["prior_date"] for r in by_fund if r["prior_date"] is not None]
+    return {
+        "available": bool(by_fund),
+        "window_start": min(prior_dates) if prior_dates else None,
+        "window_end": max(flow_dates) if flow_dates else None,
+        "n_funds": len(flow_by_ticker),
+        "all_imputed": bool(by_fund) and all(r["flag"] == "imputed" for r in by_fund),
+        "headline": headline,
+        "by_sleeve": by_sleeve,
+        "by_fund": by_fund,
+        "largest_contributor": largest,
+        "implied_mbs": implied_mbs,
+        "implied_mbs_total": sum((r["implied_mbs_flow_usd"] or 0 for r in implied_mbs), Decimal(0)),
+        "missing": [
+            {"issuer": issuer, "reason": reason, "tickers": tickers}
+            for (issuer, reason), tickers in sorted(missing.items(), key=lambda kv: -len(kv[1]))
+        ],
+    }
 
 
 def build_snapshot(con) -> dict:
@@ -76,22 +200,7 @@ def build_snapshot(con) -> dict:
 
     latest_fund_daily = con.execute("SELECT MAX(asof_date), MAX(retrieved_at) FROM fund_daily").fetchone()
 
-    flow_row_count = con.execute("SELECT COUNT(*) FROM fund_flows").fetchone()[0]
-    latest_aggregates = []
-    latest_flow_date = None
-    if flow_row_count > 0:
-        latest_flow_date = con.execute("SELECT MAX(asof_date) FROM flow_aggregates").fetchone()[0]
-        if latest_flow_date is not None:
-            cols = [
-                "cut", "flow_usd", "flow_usd_net", "ogr", "flow_5d", "flow_20d",
-                "zscore_252d", "has_imputed_or_suspect", "n_funds",
-            ]
-            rows = con.execute(
-                f"SELECT {', '.join(cols)} FROM flow_aggregates WHERE asof_date = ? "
-                "AND cut IN ('total','ex_bills','ex_bills_ex_muni','credit','rates') ORDER BY cut",
-                [latest_flow_date],
-            ).fetchall()
-            latest_aggregates = [dict(zip(cols, r)) for r in rows]
+    flows = _latest_period_flows(con, funds, covered_tickers)
 
     ici_weekly = [
         dict(zip(
@@ -104,17 +213,32 @@ def build_snapshot(con) -> dict:
         ).fetchall()
     ]
 
+    # Only the most recent row per ticker — both tables accumulate history
+    # over time (e.g. overlay_holdings now has 2 dates for HYGW/LQDW), but
+    # the dashboard's tables show a current snapshot, not a time series.
     overlay_holdings = [
         dict(zip(["ticker", "asof_date", "underlying_ticker", "weight_pct"], r))
         for r in con.execute(
-            "SELECT ticker, asof_date, underlying_ticker, weight_pct FROM overlay_holdings ORDER BY ticker"
+            """
+            SELECT o.ticker, o.asof_date, o.underlying_ticker, o.weight_pct
+            FROM overlay_holdings o
+            INNER JOIN (SELECT ticker, MAX(asof_date) AS max_date FROM overlay_holdings GROUP BY ticker) latest
+              ON latest.ticker = o.ticker AND latest.max_date = o.asof_date
+            ORDER BY o.ticker
+            """
         ).fetchall()
     ]
 
     mbs_weights = [
         dict(zip(["ticker", "asof_date", "source", "mbs_weight_pct"], r))
         for r in con.execute(
-            "SELECT ticker, asof_date, source, mbs_weight_pct FROM mbs_weights ORDER BY mbs_weight_pct DESC"
+            """
+            SELECT m.ticker, m.asof_date, m.source, m.mbs_weight_pct
+            FROM mbs_weights m
+            INNER JOIN (SELECT ticker, MAX(asof_date) AS max_date FROM mbs_weights GROUP BY ticker) latest
+              ON latest.ticker = m.ticker AND latest.max_date = m.asof_date
+            ORDER BY m.mbs_weight_pct DESC
+            """
         ).fetchall()
     ]
 
@@ -125,20 +249,22 @@ def build_snapshot(con) -> dict:
             f"({100 * total_covered_today / total_expected:.1f}%) is below the "
             f"{COVERAGE_ALERT_THRESHOLD_PCT}% threshold"
         )
-    if latest_flow_date is not None:
-        for ticker, ogr in con.execute(
-            "SELECT ticker, organic_growth_rate FROM fund_flows WHERE flow_date = ? "
-            "AND organic_growth_rate IS NOT NULL AND ABS(organic_growth_rate) > ? "
-            "ORDER BY ABS(organic_growth_rate) DESC",
-            [latest_flow_date, OGR_ALERT_THRESHOLD],
-        ).fetchall():
-            notable.append(f"{ticker}: |OGR| = {float(ogr) * 100:.1f}% on {latest_flow_date}")
+    for fund in flows["by_fund"]:
+        ogr = fund["organic_growth_rate"]
+        if ogr is not None and abs(ogr) > OGR_ALERT_THRESHOLD:
+            period = (
+                f"over {fund['prior_date']} to {fund['flow_date']}"
+                if fund["prior_date"] else f"on {fund['flow_date']}"
+            )
+            notable.append(f"{fund['ticker']}: OGR {float(ogr) * 100:+.1f}% {period} ({fund['flag']})")
+    latest_agg_date = con.execute("SELECT MAX(asof_date) FROM flow_aggregates").fetchone()[0]
+    if latest_agg_date is not None:
         for cut, z in con.execute(
             "SELECT cut, zscore_252d FROM flow_aggregates WHERE asof_date = ? "
             "AND zscore_252d IS NOT NULL AND ABS(zscore_252d) > ? ORDER BY ABS(zscore_252d) DESC",
-            [latest_flow_date, ZSCORE_ALERT_THRESHOLD],
+            [latest_agg_date, ZSCORE_ALERT_THRESHOLD],
         ).fetchall():
-            notable.append(f"{cut}: z-score {float(z):.2f} on {latest_flow_date}")
+            notable.append(f"{cut}: z-score {float(z):.2f} on {latest_agg_date}")
     suspect_count = con.execute("SELECT COUNT(*) FROM fund_flows WHERE flag = 'suspect'").fetchone()[0]
     if suspect_count:
         notable.append(f"{suspect_count} split candidate(s) awaiting review in splits.csv")
@@ -153,11 +279,7 @@ def build_snapshot(con) -> dict:
             "latest_fund_daily_asof_date": latest_fund_daily[0],
             "latest_fund_daily_retrieved_at": latest_fund_daily[1],
         },
-        "flows": {
-            "available": flow_row_count > 0 and bool(latest_aggregates),
-            "as_of_date": latest_flow_date,
-            "aggregates": latest_aggregates,
-        },
+        "flows": flows,
         "ici_weekly": ici_weekly,
         "overlay_holdings": overlay_holdings,
         "mbs_weights": mbs_weights,

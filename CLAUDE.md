@@ -345,11 +345,51 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
     post times (SPEC.md §8 says to determine this empirically) — revisit
     once there's enough `retrieved_at`/`asof_date` history to see when each
     issuer's site actually updates.
-- **Not yet set up**: a scheduled Claude task to read the DuckDB output
-  after the ETL completes and republish the dashboard artifact with fresh
-  commentary. SPEC.md §10 is explicit this is a different job from the ETL
-  above — deterministic Python only there, no model in the loop; the
-  presentation/commentary layer is where a scheduled Claude task belongs.
+## Dashboard and the cloud refresh routine
+
+- **The page is generated, not hand-edited.** `dashboard/template.html` is
+  static; every figure is drawn by its own JS from a JSON snapshot embedded at
+  build time. `scripts/build_dashboard.py` (stdlib only) renders
+  `template.html` + `snapshot.json` + optional `commentary.json` into
+  `index.html`. The template must stay ASCII-only (a test enforces it):
+  literal `·` `−` `→` rendered as mojibake when served without a UTF-8 charset.
+- **Split of work, per SPEC.md §10**: `run_pipeline.py` (local, deterministic)
+  exports `dashboard/snapshot.json` and pushes it. The claude.ai routine
+  `bondflows-dashboard-refresh` (trig_014Gs5Rh7synQCeTnZzvYEiz, daily 17:00
+  UTC) clones the repo, writes only `dashboard/commentary.json`, runs the
+  build, and publishes to https://claude.ai/artifact/PHSxrwFLSEq9rhSpe51HQf.
+  The page flags commentary written for an older snapshot.
+- **The routine cannot push to GitHub** (403: the Claude GitHub App isn't
+  installed on the org), so it no longer tries; the published artifact is its
+  only output. The repo's `index.html`/`commentary.json` are whatever was last
+  built locally, not necessarily what's live.
+- **The snapshot's flow view is per fund.** Issuers publish on different lags,
+  so `flows.by_fund` holds each fund's latest flow and `flows.headline` /
+  `flows.by_sleeve` sum those, rather than taking one shared date from
+  `flow_aggregates` (which would drop whichever issuers report a day later).
+- Early cloud test runs looked stalled for minutes but finished: the model
+  spends a few minutes reasoning between reading files and its first edit, and
+  `get_run_log` shows nothing new during that time. Check `list_runs`
+  `worker_status` before assuming a run is stuck.
+
+## Staleness bug, fixed 2026-09-26 (why the first flows were late)
+
+- `ingest.py` used to re-upsert an existing `(ticker, asof_date)` row with
+  `source_is_stale = TRUE` whenever a later run re-read the same date (the
+  issuer hadn't posted a newer one yet). That retroactively poisoned real
+  observations: all 101 stale rows were each ticker's *first-ever*
+  observation, which by definition can't be stale. `flows.py` skips stale
+  rows, so no ticker had two usable points and `fund_flows` stayed empty
+  even though 9/17–18 and 9/24–25 data existed for 97 tickers.
+- Fix: a re-read of an already-captured date keeps the row's existing flag;
+  only a *new* asof_date is judged, stale when its payload is byte-identical
+  to the prior raw snapshot. Tests cover both cases.
+- The 101 poisoned rows were repaired in place (`source_is_stale = FALSE` on
+  each ticker's earliest row) and flows recomputed: 81 flows, all `imputed`
+  (7-day gap). The DB is derived, so this was a data repair, not a raw edit.
+- Same session: overlay and MBS weights now use an as-of join (latest weight
+  strictly before the flow date) instead of requiring a holdings row dated
+  exactly on the flow date, which silently produced zero MBS implied flows.
 
 ## Discovered issuer conventions
 

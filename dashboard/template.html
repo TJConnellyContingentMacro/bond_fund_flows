@@ -1,0 +1,527 @@
+<title>Bondflows Monitor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#f5f7f9; --surface:#ffffff; --surface-2:#eef1f4;
+    --text:#182028; --text-muted:#5b6675; --border:#dde3e9; --grid:#e8ecf0;
+    --accent:#1f6f76; --accent-soft:#e3eeee;
+    --pos:#2f7d4f; --pos-soft:#e6f2ea;
+    --neg:#b23a2f; --neg-soft:#faeae8;
+    --warn:#b8791a; --warn-soft:#f8eedb;
+    --shadow:0 1px 2px rgba(24,32,40,.06), 0 1px 0 rgba(24,32,40,.03);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --bg:#11151b; --surface:#171d25; --surface-2:#1e2530;
+      --text:#e7ebf0; --text-muted:#93a0b0; --border:#2a323d; --grid:#232a34;
+      --accent:#4fb3ba; --accent-soft:#1c3538;
+      --pos:#6fce93; --pos-soft:#173226;
+      --neg:#e2766a; --neg-soft:#3a2220;
+      --warn:#e0ac52; --warn-soft:#3a2f18;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#11151b; --surface:#171d25; --surface-2:#1e2530;
+    --text:#e7ebf0; --text-muted:#93a0b0; --border:#2a323d; --grid:#232a34;
+    --accent:#4fb3ba; --accent-soft:#1c3538;
+    --pos:#6fce93; --pos-soft:#173226;
+    --neg:#e2766a; --neg-soft:#3a2220;
+    --warn:#e0ac52; --warn-soft:#3a2f18;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"IBM Plex Sans", system-ui, sans-serif; font-size:14px; line-height:1.5;
+    padding-inline:16px; padding-block:28px 40px;
+    display:flex; justify-content:center;
+  }
+  .page{ width:100%; max-width:980px; display:flex; flex-direction:column; gap:26px; }
+  .num{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; }
+  .pos{ color:var(--pos); } .neg{ color:var(--neg); } .muted{ color:var(--text-muted); }
+
+  header.mast{
+    display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 20px;
+    border-bottom:2px solid var(--text); padding-bottom:14px;
+  }
+  .wordmark{ font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:clamp(28px,5vw,38px); letter-spacing:-.01em; }
+  .wordmark em{ font-style:normal; color:var(--accent); }
+  .mast-meta{ font-size:12.5px; color:var(--text-muted); text-align:right; line-height:1.55; }
+
+  section{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .section-title{ font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:20px; text-wrap:balance; }
+  .section-sub{ font-size:12.5px; color:var(--text-muted); max-width:70ch; }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow); padding:18px 20px; min-width:0; }
+
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:500; border:1px solid currentColor; white-space:nowrap; }
+  .chip .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .chip.warn{ color:var(--warn); background:var(--warn-soft); }
+  .chip.ok{ color:var(--pos); background:var(--pos-soft); }
+
+  .read p{ margin:0; font-size:15px; line-height:1.6; max-width:72ch; }
+  .read p + p{ margin-top:10px; }
+  .read .meta{ margin-top:12px; font-size:12px; color:var(--text-muted); }
+
+  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .tile{ background:var(--surface); padding:14px 16px; display:flex; flex-direction:column; gap:3px; }
+  .tile .label{ font-size:11.5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; }
+  .tile .value{ font-size:24px; font-weight:500; }
+  .tile .foot{ font-size:12px; color:var(--text-muted); }
+
+  .note{ font-size:12.5px; color:var(--text-muted); max-width:78ch; margin:0; }
+  .callout{ display:flex; gap:10px; background:var(--accent-soft); border:1px solid var(--accent); border-radius:8px; padding:11px 14px; font-size:13px; }
+  .callout b{ color:var(--accent); }
+
+  .table-wrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th{ text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:500; padding:0 10px 8px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  td{ padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:baseline; }
+  tr:last-child td{ border-bottom:none; }
+  th.r, td.r{ text-align:right; }
+  tr.total td{ font-weight:600; border-top:1px solid var(--text); }
+  .flag{ display:inline-block; font-size:11px; font-weight:500; padding:1px 7px; border-radius:999px; background:var(--warn-soft); color:var(--warn); }
+  .badge{ display:inline-block; font-size:12px; font-weight:500; padding:1px 8px; border-radius:999px; }
+  .badge.ok{ background:var(--pos-soft); color:var(--pos); }
+  .badge.gap{ background:var(--neg-soft); color:var(--neg); }
+  .badge.partial{ background:var(--warn-soft); color:var(--warn); }
+
+  .grid-2{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:26px; }
+  .legend{ display:flex; gap:16px; font-size:12px; color:var(--text-muted); flex-wrap:wrap; margin-top:8px; }
+  .legend .sw{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:-1px; }
+  .empty{ border:1px dashed var(--border); border-radius:8px; padding:20px; background:var(--surface-2); color:var(--text-muted); }
+  ul.plain{ margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:13px; max-width:78ch; }
+  footer{ font-size:11.5px; color:var(--text-muted); border-top:1px solid var(--border); padding-top:10px; }
+  code{ font-family:"IBM Plex Mono", monospace; font-size:.92em; }
+
+  @media (max-width:560px){
+    .tile .value{ font-size:20px; }
+    header.mast{ flex-direction:column; align-items:flex-start; }
+    .mast-meta{ text-align:left; }
+  }
+</style>
+
+<div class="page">
+  <header class="mast">
+    <div class="wordmark">bond<em>flows</em></div>
+    <div class="mast-meta" id="mast-meta"></div>
+  </header>
+
+  <section>
+    <div class="section-head"><div class="section-title">Today's read</div></div>
+    <div class="card read" id="read"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">Fund flows</div>
+        <div class="section-sub" id="flows-sub"></div>
+      </div>
+      <span id="flows-chip"></span>
+    </div>
+    <div id="flows-tiles"></div>
+    <div id="flows-callout"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">By sleeve</div>
+        <div class="section-sub">Net flow for each sleeve over the same period. Core funds only.</div>
+      </div>
+    </div>
+    <div class="card"><div id="sleeve-chart"></div></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">Largest movers</div>
+        <div class="section-sub">Ranked by absolute dollar flow. OGR is flow as a share of the fund's assets at the start of the period.</div>
+      </div>
+    </div>
+    <div class="card table-wrap" id="movers"></div>
+  </section>
+
+  <div class="grid-2">
+    <section>
+      <div class="section-head">
+        <div>
+          <div class="section-title">Duration bought and sold</div>
+          <div class="section-sub">DV01 of the flows: dollars of P&amp;L per 1bp parallel move, added (+) or removed (&#x2212;).</div>
+        </div>
+      </div>
+      <div id="duration"></div>
+    </section>
+    <section>
+      <div class="section-head">
+        <div>
+          <div class="section-title">Agency MBS look-through</div>
+          <div class="section-sub">Each fund's flow times its agency MBS weight from the prior holdings file.</div>
+        </div>
+      </div>
+      <div class="card table-wrap" id="mbs"></div>
+    </section>
+  </div>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">Coverage</div>
+        <div class="section-sub">Which of the 106 core funds this report can see, and why the rest are missing.</div>
+      </div>
+      <span id="coverage-chip"></span>
+    </div>
+    <div id="coverage-tiles"></div>
+    <div class="card" id="coverage-body"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="section-title">ICI weekly estimate</div>
+        <div class="section-sub">Long-term mutual fund plus ETF bond flows. The only free read on the mutual fund complex, which is far larger than ETFs.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div id="ici-chart"></div>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--accent)"></span>Taxable bond</span>
+        <span><span class="sw" style="background:var(--warn)"></span>Municipal bond</span>
+      </div>
+      <div class="callout" style="margin-top:14px" id="ici-callout"></div>
+    </div>
+  </section>
+
+  <div class="grid-2">
+    <section>
+      <div class="section-head">
+        <div>
+          <div class="section-title">Option-overlay funds</div>
+          <div class="section-sub">Weight of the underlying ETF each one holds.</div>
+        </div>
+      </div>
+      <div class="card table-wrap" id="overlay"></div>
+    </section>
+    <section>
+      <div class="section-head"><div class="section-title">Method and caveats</div></div>
+      <div class="card">
+        <ul class="plain">
+          <li>Flow = (shares outstanding(t) &#x2212; shares(t&#x2212;1)) &#xd7; NAV(t). NAV only, never market price.</li>
+          <li>Each fund's period runs between its own two most recent clean observations. Issuers publish on different lags, so periods end on different dates.</li>
+          <li>A period longer than three calendar days is flagged <span class="flag">imputed</span> and is excluded from z-score calibration.</li>
+          <li>Spread DV01 uses effective duration as a stand-in wherever a fund doesn't publish spread duration, which is most of them.</li>
+          <li>Totals are gross of fund-of-fund holdings. The overlay funds netted in the pipeline sit outside the core universe, and active multisector funds' ETF holdings are not netted.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script type="application/json" id="snapshot-data">__SNAPSHOT_JSON__</script>
+<script type="application/json" id="commentary-data">__COMMENTARY_JSON__</script>
+<script>
+(function(){
+  var S = JSON.parse(document.getElementById('snapshot-data').textContent);
+  var C = JSON.parse(document.getElementById('commentary-data').textContent);
+  var F = S.flows || {};
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var MINUS = '\u2212';
+  var NAMES = {
+    total:'Total', ex_bills:'Ex-bills', ex_bills_ex_muni:'Ex-bills, ex-muni', credit:'Credit', rates:'Rates',
+    mixed_other:'Mixed', ig_corp:'IG corporate', hy_corp:'High yield', loans_clo:'Loans & CLOs', em_debt:'EM debt',
+    muni:'Municipal', ust_ultrashort:'UST bills & ultrashort', ust_short:'UST short', ust_intermediate:'UST intermediate',
+    ust_long:'UST long', ust_broad:'UST broad', tips:'TIPS', agency_mbs:'Agency MBS', aggregate:'Aggregate',
+    active_multisector:'Active multisector', ultrashort_credit:'Ultrashort credit', intl_bond:'International',
+    hybrid_credit:'Hybrid credit', levered_inverse:'Levered & inverse', overlay:'Option overlay'
+  };
+  var TILE_FOOT = {
+    total:'all core funds', ex_bills:'without bills & FRNs', ex_bills_ex_muni:'also without munis',
+    credit:'IG, HY, loans, EM, munis', rates:'Treasuries, TIPS, MBS', mixed_other:'aggregate & multisector'
+  };
+  var ISSUER_NOTE = { 'Janus Henderson':'dead end', 'iShares/BlackRock':'registry bug' };
+
+  function el(tag, attrs){
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs){ if (k === 'class') n.className = attrs[k]; else n.setAttribute(k, attrs[k]); }
+    for (var i = 2; i < arguments.length; i++){
+      var c = arguments[i];
+      if (c == null) continue;
+      if (Array.isArray(c)) c.forEach(function(x){ if (x != null) n.append(x instanceof Node ? x : document.createTextNode(String(x))); });
+      else n.append(c instanceof Node ? c : document.createTextNode(String(c)));
+    }
+    return n;
+  }
+  function sign(v){ return v < 0 ? MINUS : '+'; }
+  function usd(v){
+    if (v == null) return '\u2014';
+    var a = Math.abs(v);
+    if (a >= 1e9) return sign(v) + '$' + (a/1e9).toFixed(2) + 'B';
+    if (a >= 1e8) return sign(v) + '$' + Math.round(a/1e6) + 'M';
+    if (a >= 1e6) return sign(v) + '$' + (a/1e6).toFixed(1) + 'M';
+    return sign(v) + '$' + Math.round(a/1e3) + 'K';
+  }
+  function dv01(v){
+    if (v == null) return '\u2014';
+    var a = Math.abs(v);
+    if (a >= 1e6) return sign(v) + '$' + (a/1e6).toFixed(2) + 'M/bp';
+    if (a >= 1e3) return sign(v) + '$' + Math.round(a/1e3) + 'K/bp';
+    return sign(v) + '$' + Math.round(a) + '/bp';
+  }
+  function pct(v, dp){ return v == null ? '\u2014' : sign(v) + Math.abs(v*100).toFixed(dp == null ? 2 : dp) + '%'; }
+  function day(iso){ if (!iso) return '\u2014'; var p = iso.slice(0,10).split('-').map(Number); return MONTHS[p[1]-1] + ' ' + p[2]; }
+  function tone(v){ return v == null ? '' : (v < 0 ? 'neg' : 'pos'); }
+  function chip(cls, text){ return el('span', {'class':'chip ' + cls}, el('span', {'class':'dot'}), text); }
+  function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  // Masthead
+  var gen = S.generated_at ? S.generated_at.slice(0,16).replace('T',' ') + ' UTC' : '\u2014';
+  document.getElementById('mast-meta').append(el('span', null,
+    'Daily US bond ETF flow model', el('br'),
+    'Snapshot ', el('span', {'class':'num'}, gen),
+    F.available ? [' \u00b7 flows through ', el('span', {'class':'num'}, day(F.window_end))] : null
+  ));
+
+  // Today's read
+  var read = document.getElementById('read');
+  if (C && C.text){
+    C.text.split(/\n\s*\n/).forEach(function(p){ read.append(el('p', null, p.trim())); });
+    var stale = C.snapshot_generated_at && C.snapshot_generated_at !== S.generated_at;
+    read.append(el('div', {'class':'meta'}, stale
+      ? 'Written for the snapshot of ' + day(C.snapshot_generated_at) + '. The figures below are newer.'
+      : 'Written against this snapshot.'));
+  } else {
+    read.append(el('p', {'class':'muted'}, 'No commentary has been written for this snapshot yet.'));
+  }
+
+  // Flows headline
+  var tilesBox = document.getElementById('flows-tiles');
+  if (!F.available){
+    document.getElementById('flows-sub').textContent = 'Shares outstanding change times NAV.';
+    document.getElementById('flows-chip').append(chip('warn', 'accumulating'));
+    tilesBox.append(el('div', {'class':'empty'}, 'No fund yet has two clean observations, so there are no flows to show.'));
+  } else {
+    document.getElementById('flows-sub').textContent =
+      F.n_funds + ' core funds, each over its latest reported period: ' + day(F.window_start) + ' to ' + day(F.window_end) + '.';
+    document.getElementById('flows-chip').append(F.all_imputed ? chip('warn', 'multi-day catch-up') : chip('ok', 'daily'));
+    var tiles = el('div', {'class':'tiles'});
+    (F.headline || []).forEach(function(t){
+      tiles.append(el('div', {'class':'tile'},
+        el('span', {'class':'label'}, NAMES[t.cut] || t.cut),
+        el('span', {'class':'value num ' + tone(t.flow_usd)}, usd(t.flow_usd)),
+        el('span', {'class':'foot'}, (TILE_FOOT[t.cut] || '') + ' \u00b7 ' + t.n_funds + ' funds')));
+    });
+    tilesBox.append(tiles);
+    var L = F.largest_contributor;
+    var total = (F.headline || []).filter(function(t){ return t.cut === 'total'; })[0];
+    if (L && total && Math.abs(L.flow_usd) > 0.5 * Math.abs(total.flow_usd)){
+      document.getElementById('flows-callout').append(el('div', {'class':'callout'},
+        el('span', null, el('b', null, L.ticker + ' is ' + usd(L.flow_usd) + ' of the ' + usd(total.flow_usd) + ' total.'),
+          ' Excluding it, core funds netted ', el('span', {'class':'num'}, usd(L.total_ex_largest)), '.')));
+    }
+    if (F.all_imputed){
+      document.getElementById('flows-callout').append(el('p', {'class':'note', 'style':'margin-top:10px'},
+        'Every flow here spans more than one trading day, so it is a catch-up total rather than a daily print. Z-scores need 20 clean days and are not shown yet.'));
+    }
+  }
+
+  // Sleeve chart: diverging bars
+  (function(){
+    var box = document.getElementById('sleeve-chart');
+    var rows = F.by_sleeve || [];
+    if (!rows.length){ box.append(el('div', {'class':'empty'}, 'No sleeve totals yet.')); return; }
+    var W = 760, rowH = 26, padT = 6, labelW = 170, valW = 78;
+    var H = padT * 2 + rows.length * rowH;
+    var plotL = labelW, plotR = W - valW, mid = (plotL + plotR) / 2, half = (plotR - plotL) / 2;
+    var max = Math.max.apply(null, rows.map(function(r){ return Math.abs(r.flow_usd); })) || 1;
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Net flow by sleeve, diverging bar chart');
+    function add(tag, a, text){ var n = document.createElementNS(ns, tag); for (var k in a) n.setAttribute(k, a[k]); if (text != null) n.textContent = text; svg.append(n); return n; }
+    add('line', {x1:mid, x2:mid, y1:0, y2:H, stroke:css('--text-muted'), 'stroke-width':1});
+    rows.forEach(function(r, i){
+      var y = padT + i * rowH, cy = y + rowH / 2;
+      if (i % 2 === 0) add('rect', {x:0, y:y, width:W, height:rowH, fill:css('--surface-2'), opacity:.55});
+      var w = Math.max(1, Math.abs(r.flow_usd) / max * half);
+      var x = r.flow_usd >= 0 ? mid : mid - w;
+      add('rect', {x:x, y:cy - 7, width:w, height:14, rx:2, fill: r.flow_usd >= 0 ? css('--pos') : css('--neg')});
+      add('text', {x:8, y:cy + 4, 'font-size':12.5, fill:css('--text'), 'font-family':'IBM Plex Sans, sans-serif'}, (NAMES[r.cut] || r.cut) + '  (' + r.n_funds + ')');
+      var vx = r.flow_usd >= 0 ? mid + w + 6 : mid - w - 6;
+      add('text', {x:vx, y:cy + 4, 'font-size':12, 'text-anchor': r.flow_usd >= 0 ? 'start' : 'end', fill:css('--text'), 'font-family':'IBM Plex Mono, monospace'}, usd(r.flow_usd));
+    });
+    box.append(svg);
+  })();
+
+  // Movers
+  (function(){
+    var box = document.getElementById('movers');
+    var rows = (F.by_fund || []).slice(0, 12);
+    if (!rows.length){ box.append(el('div', {'class':'empty'}, 'No fund flows yet.')); return; }
+    var tbody = el('tbody');
+    rows.forEach(function(r){
+      var big = r.organic_growth_rate != null && Math.abs(r.organic_growth_rate) > 0.10;
+      tbody.append(el('tr', null,
+        el('td', {'class':'num'}, el('b', null, r.ticker)),
+        el('td', null, NAMES[r.sleeve] || r.sleeve, el('span', {'class':'muted'}, ' \u00b7 ' + r.issuer)),
+        el('td', {'class':'num muted'}, day(r.prior_date) + ' \u2192 ' + day(r.flow_date)),
+        el('td', {'class':'num r ' + tone(r.flow_usd)}, usd(r.flow_usd)),
+        el('td', {'class':'num r'}, pct(r.organic_growth_rate), big ? [' ', el('span', {'class':'flag'}, '>10%')] : null)));
+    });
+    box.append(el('table', null,
+      el('thead', null, el('tr', null, el('th', null, 'Fund'), el('th', null, 'Sleeve'), el('th', null, 'Period'), el('th', {'class':'r'}, 'Flow'), el('th', {'class':'r'}, 'OGR'))),
+      tbody));
+  })();
+
+  // Duration
+  (function(){
+    var box = document.getElementById('duration');
+    var H = {}; (F.headline || []).forEach(function(t){ H[t.cut] = t; });
+    if (!H.total){ box.append(el('div', {'class':'empty'}, 'No flows yet.')); return; }
+    var tiles = el('div', {'class':'tiles'});
+    function tile(label, v, foot){ tiles.append(el('div', {'class':'tile'}, el('span', {'class':'label'}, label), el('span', {'class':'value num ' + tone(v)}, dv01(v)), el('span', {'class':'foot'}, foot))); }
+    tile('Total DV01', H.total.dv01_usd_per_bp, 'all core flows');
+    if (H.rates) tile('Rates DV01', H.rates.dv01_usd_per_bp, 'Treasuries, TIPS, MBS');
+    if (H.mixed_other) tile('Mixed DV01', H.mixed_other.dv01_usd_per_bp, 'aggregate & multisector');
+    if (H.credit) tile('Credit spread DV01', H.credit.spread_dv01_usd_per_bp, H.credit.has_proxied_spread_dv01 ? 'mostly proxied by eff. duration' : 'published spread duration');
+    box.append(tiles);
+  })();
+
+  // MBS look-through
+  (function(){
+    var box = document.getElementById('mbs');
+    var rows = F.implied_mbs || [];
+    if (!rows.length){ box.append(el('div', {'class':'empty'}, 'No look-through flows yet: each needs a holdings file dated before the flow.')); return; }
+    var tbody = el('tbody');
+    rows.forEach(function(r){
+      tbody.append(el('tr', null,
+        el('td', {'class':'num'}, el('b', null, r.ticker)),
+        el('td', {'class':'num r ' + tone(r.flow_usd)}, usd(r.flow_usd)),
+        el('td', {'class':'num r muted'}, (+r.mbs_weight_pct).toFixed(1) + '%'),
+        el('td', {'class':'num r ' + tone(r.implied_mbs_flow_usd)}, usd(r.implied_mbs_flow_usd))));
+    });
+    tbody.append(el('tr', {'class':'total'}, el('td', null, 'Total'), el('td'), el('td'),
+      el('td', {'class':'num r ' + tone(F.implied_mbs_total)}, usd(F.implied_mbs_total))));
+    box.append(el('table', null,
+      el('thead', null, el('tr', null, el('th', null, 'Fund'), el('th', {'class':'r'}, 'Flow'), el('th', {'class':'r'}, 'MBS weight'), el('th', {'class':'r'}, 'Implied MBS'))),
+      tbody));
+    var wd = rows[0].weight_date;
+    box.append(el('p', {'class':'note', 'style':'margin-top:10px'},
+      'Weights from holdings files dated ' + day(wd) + '. Covers iShares and SSGA funds only; Vanguard, PIMCO, JPMorgan and Schwab funds are not looked through.'));
+  })();
+
+  // Coverage
+  (function(){
+    var cov = S.coverage || {};
+    var by = cov.by_issuer || {};
+    var issuers = Object.keys(by);
+    var live = issuers.filter(function(k){ return by[k].covered > 0; });
+    var todayPct = cov.total_expected ? 100 * cov.total_covered_today / cov.total_expected : 0;
+    document.getElementById('coverage-chip').append(todayPct >= 90 ? chip('ok', 'coverage OK') : chip('warn', 'latest run below 90%'));
+    var tiles = el('div', {'class':'tiles'});
+    function tile(label, value, foot){ tiles.append(el('div', {'class':'tile'}, el('span', {'class':'label'}, label), el('span', {'class':'value num'}, value), el('span', {'class':'foot'}, foot))); }
+    tile('With a flow', (F.n_funds || 0) + ' / ' + cov.total_expected, 'core funds in this report');
+    tile('Latest run', cov.total_covered_today + ' / ' + cov.total_expected, todayPct.toFixed(0) + '% fetched');
+    tile('Ever fetched', cov.total_covered + ' / ' + cov.total_expected, 'have a working adapter');
+    tile('Issuers live', live.length + ' / ' + issuers.length, 'core-universe issuers');
+    document.getElementById('coverage-tiles').append(tiles);
+
+    var body = document.getElementById('coverage-body');
+    var tbody = el('tbody');
+    live.sort(function(a, b){ return by[b].expected - by[a].expected; }).forEach(function(k){
+      var r = by[k];
+      var status = r.covered_today === r.expected ? el('span', {'class':'badge ok'}, 'live')
+        : el('span', {'class':'badge partial'}, r.covered_today + ' fetched on latest run');
+      tbody.append(el('tr', null, el('td', null, k), el('td', {'class':'num r'}, r.covered + ' / ' + r.expected), el('td', null, status)));
+    });
+    var dark = issuers.filter(function(k){ return by[k].covered === 0; });
+    var named = dark.filter(function(k){ return ISSUER_NOTE[k]; });
+    var rest = dark.filter(function(k){ return !ISSUER_NOTE[k]; });
+    named.forEach(function(k){
+      tbody.append(el('tr', null, el('td', null, k), el('td', {'class':'num r'}, '0 / ' + by[k].expected), el('td', null, el('span', {'class':'badge gap'}, ISSUER_NOTE[k]))));
+    });
+    if (rest.length){
+      var n = rest.reduce(function(s, k){ return s + by[k].expected; }, 0);
+      tbody.append(el('tr', null, el('td', null, rest.sort().join(', ')), el('td', {'class':'num r'}, '0 / ' + n), el('td', null, el('span', {'class':'badge gap'}, 'no adapter'))));
+    }
+    body.append(el('div', {'class':'table-wrap'}, el('table', null,
+      el('thead', null, el('tr', null, el('th', null, 'Issuer'), el('th', {'class':'r'}, 'Core funds fetched'), el('th', null, 'Status'))), tbody)));
+
+    var missing = F.missing || [];
+    if (missing.length){
+      var ul = el('ul', {'class':'plain', 'style':'margin-top:14px'});
+      missing.forEach(function(m){
+        var why = m.issuer === 'Vanguard' ? 'Vanguard publishes shares outstanding monthly, so its funds get a flow only after two month-end figures are captured.' : m.reason.charAt(0).toUpperCase() + m.reason.slice(1) + '.';
+        ul.append(el('li', null, el('b', null, m.issuer + ' (' + m.tickers.length + '): '), m.tickers.join(', ') + '. ' + why));
+      });
+      body.append(el('p', {'class':'note', 'style':'margin-top:16px'}, 'Fetched, but no flow this period:'), ul);
+    }
+  })();
+
+  // ICI weekly chart
+  (function(){
+    var weeks = S.ici_weekly || [];
+    var box = document.getElementById('ici-chart');
+    if (!weeks.length){ box.append(el('div', {'class':'empty'}, 'No ICI data yet.')); return; }
+    var data = weeks.map(function(w){ return {label: day(w.week_ended), tax: w.bond_taxable / 1e9, muni: w.bond_municipal / 1e9}; });
+    var W = 700, H = 250, padL = 44, padR = 10, padT = 12, padB = 26;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var max = Math.max.apply(null, data.map(function(d){ return Math.max(Math.abs(d.tax), Math.abs(d.muni)); }));
+    var yMax = Math.max(5, Math.ceil(max / 5) * 5);
+    var minV = Math.min.apply(null, data.map(function(d){ return Math.min(d.tax, d.muni); }));
+    var yMin = minV < 0 ? -Math.max(5, Math.ceil(-minV / 5) * 5) : 0;
+    function y(v){ return padT + (yMax - v) / (yMax - yMin) * plotH; }
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'ICI weekly taxable and municipal bond flows, billions of dollars');
+    function add(tag, a, text){ var n = document.createElementNS(ns, tag); for (var k in a) n.setAttribute(k, a[k]); if (text != null) n.textContent = text; svg.append(n); return n; }
+    for (var v = yMin; v <= yMax; v += 5){
+      add('line', {x1:padL, x2:W - padR, y1:y(v), y2:y(v), stroke: v === 0 ? css('--text-muted') : css('--grid'), 'stroke-width':1});
+      add('text', {x:padL - 8, y:y(v) + 4, 'font-size':10.5, 'text-anchor':'end', fill:css('--text-muted'), 'font-family':'IBM Plex Mono, monospace'}, (v < 0 ? MINUS + Math.abs(v) : v) + 'B');
+    }
+    var gw = plotW / data.length, bw = gw * 0.3;
+    data.forEach(function(d, i){
+      var gx = padL + i * gw + gw / 2;
+      [[d.tax, gx - bw - 1, css('--accent')], [d.muni, gx + 1, css('--warn')]].forEach(function(b){
+        var top = y(Math.max(0, b[0])), bot = y(Math.min(0, b[0]));
+        add('rect', {x:b[1], y:top, width:bw, height:Math.max(1, bot - top), rx:1.5, fill:b[2]});
+      });
+      add('text', {x:gx, y:H - 8, 'font-size':10.5, 'text-anchor':'middle', fill:css('--text-muted'), 'font-family':'IBM Plex Mono, monospace'}, d.label);
+    });
+    box.append(svg);
+    var last = weeks[weeks.length - 1];
+    document.getElementById('ici-callout').append(el('span', null,
+      el('b', null, 'An estimate, and it lags. '),
+      'Latest week ended ' + day(last.week_ended) + ': taxable bond ' + usd(last.bond_taxable) + ', municipal ' + usd(last.bond_municipal) +
+      '. ICI publishes six to twelve days after week end, so compare it with ETF flows week against week, never against a single day.'));
+  })();
+
+  // Overlay
+  (function(){
+    var box = document.getElementById('overlay');
+    var rows = S.overlay_holdings || [];
+    if (!rows.length){ box.append(el('div', {'class':'empty'}, 'No overlay holdings yet.')); return; }
+    var tbody = el('tbody');
+    rows.forEach(function(r){
+      tbody.append(el('tr', null, el('td', {'class':'num'}, el('b', null, r.ticker)), el('td', {'class':'num'}, r.underlying_ticker),
+        el('td', {'class':'num r'}, (+r.weight_pct).toFixed(2) + '%'), el('td', {'class':'num r muted'}, day(r.asof_date))));
+    });
+    box.append(el('table', null, el('thead', null, el('tr', null, el('th', null, 'Fund'), el('th', null, 'Holds'), el('th', {'class':'r'}, 'Weight'), el('th', {'class':'r'}, 'As of'))), tbody));
+    box.append(el('p', {'class':'note', 'style':'margin-top:10px'}, 'A dollar into one of these is a dollar into its underlying ETF. They sit outside the core universe, so netting them does not change the totals above.'));
+  })();
+
+  document.getElementById('footer').append('Source: issuer websites and ICI, via the bondflows pipeline. Figures are computed in tested Python; only the read at the top is written by a model. Snapshot ' + gen + '.');
+})();
+</script>
