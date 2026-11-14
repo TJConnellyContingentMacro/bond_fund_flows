@@ -345,7 +345,8 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
     post times (SPEC.md §8 says to determine this empirically) — revisit
     once there's enough `retrieved_at`/`asof_date` history to see when each
     issuer's site actually updates.
-  - **Superseded 2026-11-13 by the GitHub Actions run below.** The PC was
+  - **Superseded 2026-11-13 by the GitHub Actions run below; both tasks are
+    disabled** (`Enable-ScheduledTask` to restore). The PC was
     off for most of Sep 28 – Nov 13, and by then Windows Application Control
     was blocking numpy's `_bounded_integers` DLL in the venv, so every step
     that imports pandas failed locally.
@@ -371,7 +372,8 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   `scripts/seed_raw_fingerprints.py` seeded fingerprints from the local raw
   archive once, before the move.
 - **First run seeds itself**: with no `pipeline-state` release yet, the
-  workflow takes `state.tar.gz` from the `state-seed` branch, creates the
+  workflow takes `state.tar.gz` from the `state-seed` branch (deleted after
+  the first run; commit a932c9d), creates the
   release, and refills 62 days of iShares/SSGA history. `workflow_dispatch`
   takes a `backfill_days` input to do that refill again on demand; a push
   that changes `pipeline.yml` also starts a run (the only trigger that needs
