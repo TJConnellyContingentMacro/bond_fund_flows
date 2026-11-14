@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-27T15:07:54.497642+00:00",
+  "generated_at": "2026-11-14T00:43:04.705571+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
-    "total_covered_today": 77,
+    "total_covered_today": 0,
     "by_issuer": {
       "iShares": {
         "expected": 32,
         "covered": 32,
-        "covered_today": 32
+        "covered_today": 0
       },
       "SSGA": {
         "expected": 19,
         "covered": 19,
-        "covered_today": 19
+        "covered_today": 0
       },
       "Goldman": {
         "expected": 1,
@@ -33,7 +33,7 @@
       "Vanguard": {
         "expected": 16,
         "covered": 16,
-        "covered_today": 16
+        "covered_today": 0
       },
       "WisdomTree": {
         "expected": 1,
@@ -43,7 +43,7 @@
       "JPMorgan": {
         "expected": 3,
         "covered": 3,
-        "covered_today": 3
+        "covered_today": 0
       },
       "PIMCO": {
         "expected": 6,
@@ -58,7 +58,7 @@
       "Schwab": {
         "expected": 7,
         "covered": 7,
-        "covered_today": 7
+        "covered_today": 0
       },
       "Janus Henderson": {
         "expected": 3,
@@ -1317,21 +1317,21 @@
   "overlay_holdings": [
     {
       "ticker": "HYGW",
-      "asof_date": "2026-09-24",
+      "asof_date": "2026-11-12",
       "underlying_ticker": "HYG",
-      "weight_pct": 100.15
+      "weight_pct": 100.07
     },
     {
       "ticker": "LQDW",
-      "asof_date": "2026-09-24",
+      "asof_date": "2026-11-12",
       "underlying_ticker": "LQD",
-      "weight_pct": 100.22
+      "weight_pct": 100.01
     },
     {
       "ticker": "TLTW",
-      "asof_date": "2026-09-24",
+      "asof_date": "2026-11-12",
       "underlying_ticker": "TLT",
-      "weight_pct": 100.17
+      "weight_pct": 99.9
     }
   ],
   "mbs_weights": [
@@ -1373,6 +1373,6 @@
     }
   ],
   "notable": [
-    "Today's coverage 77/106 (72.6%) is below the 90.0% threshold"
+    "Today's coverage 0/106 (0.0%) is below the 90.0% threshold"
   ]
 }
