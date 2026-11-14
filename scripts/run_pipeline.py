@@ -135,6 +135,8 @@ def _push_snapshot(run_date: date, log_lines: list[str]) -> None:
         cwd=PROJECT_ROOT,
         check=True,
     )
+    # Someone may have pushed while the pipeline ran (the cloud checkout is from its start).
+    subprocess.run(["git", "pull", "--rebase", "--quiet"], cwd=PROJECT_ROOT, capture_output=True, text=True)
     push = subprocess.run(["git", "push"], cwd=PROJECT_ROOT, capture_output=True, text=True)
     status = "OK" if push.returncode == 0 else f"FAILED (exit {push.returncode})"
     log_lines.append(f"\n===== push_snapshot — {status} =====\n{(push.stdout + push.stderr).rstrip()}")
