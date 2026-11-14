@@ -363,7 +363,7 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   work locally, download `state.tar.gz` from that release and untar it in the
   repo root; a local run then diverges from the cloud copy, so don't upload it
   back unless you mean to replace the cloud state.
-- **Raw files are archived per run** to monthly `raw-YYYY-MM` releases
+- **Raw files are archived per run** (private repo only) to monthly `raw-YYYY-MM` releases
   (~15 MB a run compressed). The runner starts each day with no `data/raw/`,
   so staleness now compares against `raw_fingerprints` (a SHA-256 per raw
   adapter file per run date) in the database; `ingest._is_stale` falls back
