@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-14T01:09:12.418972+00:00",
+  "generated_at": "2026-11-14T17:02:00.655697+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
-    "total_covered_today": 91,
+    "total_covered_today": 92,
     "by_issuer": {
       "iShares": {
         "expected": 32,
@@ -58,7 +58,7 @@
       "Schwab": {
         "expected": 7,
         "covered": 7,
-        "covered_today": 6
+        "covered_today": 7
       },
       "Janus Henderson": {
         "expected": 3,
@@ -102,14 +102,14 @@
       }
     },
     "latest_fund_daily_asof_date": "2026-11-13",
-    "latest_fund_daily_retrieved_at": "2026-11-14T01:08:11.313228"
+    "latest_fund_daily_retrieved_at": "2026-11-14T17:00:50.602684"
   },
   "flows": {
     "available": true,
     "panel_max_gap_days": 4,
     "history_start": "2026-07-28",
     "history_end": "2026-11-13",
-    "n_funds_weekly": 52,
+    "n_funds_weekly": 67,
     "weekly": [
       {
         "week_start": "2026-07-27",
@@ -279,13 +279,13 @@
       {
         "week_start": "2026-11-09",
         "week_end": "2026-11-13",
-        "n_funds": 52,
-        "total": 1352423331.28,
-        "ex_bills": -90478822.4,
-        "ex_bills_ex_muni": -17242496.3,
-        "credit": 648024705.3,
-        "rates": 216313181.78,
-        "mixed_other": 488085444.2
+        "n_funds": 67,
+        "total": -3293443396.32,
+        "ex_bills": -4982389126.28,
+        "ex_bills_ex_muni": -4722722214.48,
+        "credit": 468609524.62,
+        "rates": -3218184789.14,
+        "mixed_other": -543868131.8
       }
     ],
     "latest_week": {
@@ -294,81 +294,136 @@
       "headline": [
         {
           "cut": "total",
-          "flow_usd": 1352423331.28,
+          "flow_usd": -3293443396.32,
           "prior_week_flow_usd": 5369106343.21,
-          "dv01_usd_per_bp": -1036645.63,
-          "spread_dv01_usd_per_bp": -412661.09,
+          "dv01_usd_per_bp": -2451728.82,
+          "spread_dv01_usd_per_bp": -416915.2,
           "has_proxied_spread_dv01": true,
-          "n_funds": 52
+          "n_funds": 67
         },
         {
           "cut": "ex_bills",
-          "flow_usd": -90478822.4,
+          "flow_usd": -4982389126.28,
           "prior_week_flow_usd": 5190937973.5,
-          "dv01_usd_per_bp": -1038782.03,
-          "spread_dv01_usd_per_bp": -412661.09,
+          "dv01_usd_per_bp": -2459462.6,
+          "spread_dv01_usd_per_bp": -416915.2,
           "has_proxied_spread_dv01": true,
-          "n_funds": 48
+          "n_funds": 63
         },
         {
           "cut": "ex_bills_ex_muni",
-          "flow_usd": -17242496.3,
+          "flow_usd": -4722722214.48,
           "prior_week_flow_usd": 5004194782.75,
-          "dv01_usd_per_bp": -1038782.03,
-          "spread_dv01_usd_per_bp": -412661.09,
+          "dv01_usd_per_bp": -2334305.05,
+          "spread_dv01_usd_per_bp": -416915.2,
           "has_proxied_spread_dv01": true,
-          "n_funds": 42
+          "n_funds": 55
         },
         {
           "cut": "credit",
-          "flow_usd": 648024705.3,
+          "flow_usd": 468609524.62,
           "prior_week_flow_usd": 2741841340.45,
-          "dv01_usd_per_bp": -413284.94,
-          "spread_dv01_usd_per_bp": -412661.09,
+          "dv01_usd_per_bp": -542582.45,
+          "spread_dv01_usd_per_bp": -416915.2,
           "has_proxied_spread_dv01": true,
-          "n_funds": 26
+          "n_funds": 37
         },
         {
           "cut": "rates",
-          "flow_usd": 216313181.78,
+          "flow_usd": -3218184789.14,
           "prior_week_flow_usd": 3356698772.06,
-          "dv01_usd_per_bp": -623360.69,
+          "dv01_usd_per_bp": -1340067.69,
           "spread_dv01_usd_per_bp": 0.0,
           "has_proxied_spread_dv01": false,
-          "n_funds": 22
+          "n_funds": 25
         },
         {
           "cut": "mixed_other",
-          "flow_usd": 488085444.2,
+          "flow_usd": -543868131.8,
           "prior_week_flow_usd": -729433769.3,
-          "dv01_usd_per_bp": 0.0,
+          "dv01_usd_per_bp": -569078.68,
           "spread_dv01_usd_per_bp": 0.0,
           "has_proxied_spread_dv01": false,
-          "n_funds": 4
+          "n_funds": 5
         }
       ],
       "by_fund": [
         {
+          "ticker": "GOVT",
+          "issuer": "iShares",
+          "sleeve": "ust_broad",
+          "flow_usd": -3838883956.2,
+          "days": 5,
+          "start_tna": 43253164691.8,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": -0.08875382838582864
+        },
+        {
+          "ticker": "TLH",
+          "issuer": "iShares",
+          "sleeve": "ust_long",
+          "flow_usd": 1746673881.8,
+          "days": 5,
+          "start_tna": 12348442526.5,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": 0.1414489218418925
+        },
+        {
           "ticker": "TLT",
           "issuer": "iShares",
           "sleeve": "ust_long",
-          "flow_usd": -947800502.0,
-          "days": 4,
+          "flow_usd": -1201604431.6,
+          "days": 5,
           "start_tna": 48863044163.2,
           "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": -0.019397082564778324
+          "to_date": "2026-11-13",
+          "ogr": -0.024591272446855834
         },
         {
           "ticker": "IEF",
           "issuer": "iShares",
           "sleeve": "ust_intermediate",
-          "flow_usd": -921302945.9,
-          "days": 4,
+          "flow_usd": -939304753.3,
+          "days": 5,
           "start_tna": 44637452659.8,
           "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": -0.020639684637060736
+          "to_date": "2026-11-13",
+          "ogr": -0.021042973945193954
+        },
+        {
+          "ticker": "IUSB",
+          "issuer": "iShares",
+          "sleeve": "aggregate",
+          "flow_usd": -825979317.2,
+          "days": 5,
+          "start_tna": 50428255768.8,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": -0.016379295785816848
+        },
+        {
+          "ticker": "SHY",
+          "issuer": "iShares",
+          "sleeve": "ust_short",
+          "flow_usd": -802304022.4,
+          "days": 5,
+          "start_tna": 27536515987.5,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": -0.029136003362378888
+        },
+        {
+          "ticker": "SGOV",
+          "issuer": "iShares",
+          "sleeve": "ust_ultrashort",
+          "flow_usd": 613213886.55,
+          "days": 5,
+          "start_tna": 116516433142.5,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": 0.005262896142727244
         },
         {
           "ticker": "BIL",
@@ -382,28 +437,6 @@
           "ogr": 0.01217123139239515
         },
         {
-          "ticker": "SGOV",
-          "issuer": "iShares",
-          "sleeve": "ust_ultrashort",
-          "flow_usd": 547851261.95,
-          "days": 4,
-          "start_tna": 116516433142.5,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.004701922700293923
-        },
-        {
-          "ticker": "SHY",
-          "issuer": "iShares",
-          "sleeve": "ust_short",
-          "flow_usd": 455547978.6,
-          "days": 4,
-          "start_tna": 27536515987.5,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.01654341380030766
-        },
-        {
           "ticker": "LQD",
           "issuer": "iShares",
           "sleeve": "ig_corp",
@@ -413,6 +446,17 @@
           "from_date": "2026-11-06",
           "to_date": "2026-11-13",
           "ogr": 0.011573849746391517
+        },
+        {
+          "ticker": "SHV",
+          "issuer": "iShares",
+          "sleeve": "ust_ultrashort",
+          "flow_usd": 376715683.6,
+          "days": 5,
+          "start_tna": 21175860236.96,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": 0.017789864467583075
         },
         {
           "ticker": "USHY",
@@ -437,15 +481,15 @@
           "ogr": 0.024288658700083877
         },
         {
-          "ticker": "IUSB",
+          "ticker": "MUB",
           "issuer": "iShares",
-          "sleeve": "aggregate",
-          "flow_usd": 237068258.8,
-          "days": 4,
-          "start_tna": 50428255768.8,
+          "sleeve": "muni",
+          "flow_usd": -239260433.3,
+          "days": 5,
+          "start_tna": 55049499225.0,
           "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.004701099714550792
+          "to_date": "2026-11-13",
+          "ogr": -0.004346278107310067
         },
         {
           "ticker": "EMB",
@@ -481,17 +525,6 @@
           "ogr": 0.010520123938036158
         },
         {
-          "ticker": "SHV",
-          "issuer": "iShares",
-          "sleeve": "ust_ultrashort",
-          "flow_usd": 196034731.92,
-          "days": 4,
-          "start_tna": 21175860236.96,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.00925746249391296
-        },
-        {
           "ticker": "HYG",
           "issuer": "iShares",
           "sleeve": "hy_corp",
@@ -514,6 +547,17 @@
           "ogr": -0.024884833775297772
         },
         {
+          "ticker": "IEI",
+          "issuer": "iShares",
+          "sleeve": "ust_intermediate",
+          "flow_usd": 170668404.5,
+          "days": 5,
+          "start_tna": 17046854315.4,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": 0.010011724236172971
+        },
+        {
           "ticker": "IGSB",
           "issuer": "iShares",
           "sleeve": "ig_corp",
@@ -523,6 +567,17 @@
           "from_date": "2026-11-06",
           "to_date": "2026-11-13",
           "ogr": 0.00627082402334029
+        },
+        {
+          "ticker": "TIP",
+          "issuer": "iShares",
+          "sleeve": "tips",
+          "flow_usd": -126326913.1,
+          "days": 5,
+          "start_tna": 14578204388.5,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": -0.008665464534140627
         },
         {
           "ticker": "JNK",
@@ -558,26 +613,15 @@
           "ogr": 0.00911182194376727
         },
         {
-          "ticker": "GOVT",
-          "issuer": "iShares",
-          "sleeve": "ust_broad",
-          "flow_usd": 88582856.8,
-          "days": 4,
-          "start_tna": 43253164691.8,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.002048008681704478
-        },
-        {
-          "ticker": "MUB",
-          "issuer": "iShares",
-          "sleeve": "muni",
-          "flow_usd": -73236326.1,
-          "days": 4,
-          "start_tna": 55049499225.0,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": -0.001330372249176441
+          "ticker": "SCHP",
+          "issuer": "Schwab",
+          "sleeve": "tips",
+          "flow_usd": -70532000.0,
+          "days": 1,
+          "start_tna": 17519094546.94,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": -0.004026007155279585
         },
         {
           "ticker": "NEAR",
@@ -611,28 +655,6 @@
           "from_date": "2026-11-06",
           "to_date": "2026-11-12",
           "ogr": 0.004789639383438681
-        },
-        {
-          "ticker": "TLH",
-          "issuer": "iShares",
-          "sleeve": "ust_long",
-          "flow_usd": -57793591.4,
-          "days": 4,
-          "start_tna": 12348442526.5,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": -0.0046802332582407714
-        },
-        {
-          "ticker": "IEI",
-          "issuer": "iShares",
-          "sleeve": "ust_intermediate",
-          "flow_usd": 56918643.5,
-          "days": 4,
-          "start_tna": 17046854315.4,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.003338952891066836
         },
         {
           "ticker": "FALN",
@@ -679,17 +701,6 @@
           "ogr": -0.008463339794975737
         },
         {
-          "ticker": "TIP",
-          "issuer": "iShares",
-          "sleeve": "tips",
-          "flow_usd": -42715682.7,
-          "days": 4,
-          "start_tna": 14578204388.5,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": -0.002930105900675684
-        },
-        {
           "ticker": "USIG",
           "issuer": "iShares",
           "sleeve": "ig_corp",
@@ -699,6 +710,28 @@
           "from_date": "2026-11-06",
           "to_date": "2026-11-13",
           "ogr": 0.002047659036358917
+        },
+        {
+          "ticker": "SCHZ",
+          "issuer": "Schwab",
+          "sleeve": "aggregate",
+          "flow_usd": 31094000.0,
+          "days": 1,
+          "start_tna": 10663124692.05,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.0029160307975374653
+        },
+        {
+          "ticker": "ANGL",
+          "issuer": "VanEck",
+          "sleeve": "hy_corp",
+          "flow_usd": -22829639.88,
+          "days": 1,
+          "start_tna": 2820000000.0,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": -0.008095616978723404
         },
         {
           "ticker": "SJNK",
@@ -734,6 +767,17 @@
           "ogr": -0.013636364231305318
         },
         {
+          "ticker": "SUB",
+          "issuer": "iShares",
+          "sleeve": "muni",
+          "flow_usd": -15833749.5,
+          "days": 5,
+          "start_tna": 13382256061.5,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": -0.0011831898468564511
+        },
+        {
           "ticker": "ICSH",
           "issuer": "iShares",
           "sleeve": "ultrashort_credit",
@@ -745,15 +789,59 @@
           "ogr": -0.0016956677552344035
         },
         {
+          "ticker": "SCHQ",
+          "issuer": "Schwab",
+          "sleeve": "ust_long",
+          "flow_usd": 10129000.0,
+          "days": 1,
+          "start_tna": 867548151.39,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.011675432635953576
+        },
+        {
+          "ticker": "GSY",
+          "issuer": "Invesco",
+          "sleeve": "ultrashort_credit",
+          "flow_usd": 10004220.4,
+          "days": 1,
+          "start_tna": 4076221514.84,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.0024542877180688955
+        },
+        {
           "ticker": "STIP",
           "issuer": "iShares",
           "sleeve": "tips",
           "flow_usd": 10000918.3,
-          "days": 4,
+          "days": 5,
           "start_tna": 16866133878.9,
           "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
+          "to_date": "2026-11-13",
           "ogr": 0.0005929585506558457
+        },
+        {
+          "ticker": "CLOI",
+          "issuer": "VanEck",
+          "sleeve": "loans_clo",
+          "flow_usd": 9307324.5,
+          "days": 1,
+          "start_tna": 1830000000.0,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.005085969672131148
+        },
+        {
+          "ticker": "SCHI",
+          "issuer": "Schwab",
+          "sleeve": "ig_corp",
+          "flow_usd": 8612000.0,
+          "days": 1,
+          "start_tna": 11196202046.45,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.000769189405860233
         },
         {
           "ticker": "SPMB",
@@ -778,6 +866,17 @@
           "ogr": 0.0027308858391283035
         },
         {
+          "ticker": "HYD",
+          "issuer": "VanEck",
+          "sleeve": "muni",
+          "flow_usd": -4572729.0,
+          "days": 1,
+          "start_tna": 4640000000.0,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": -0.0009855019396551724
+        },
+        {
           "ticker": "SPIP",
           "issuer": "SSGA",
           "sleeve": "tips",
@@ -787,6 +886,28 @@
           "from_date": "2026-11-06",
           "to_date": "2026-11-12",
           "ogr": 0.0023037634920675277
+        },
+        {
+          "ticker": "SCHR",
+          "issuer": "Schwab",
+          "sleeve": "ust_intermediate",
+          "flow_usd": 2380000.0,
+          "days": 1,
+          "start_tna": 13593405045.33,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.00017508490272035603
+        },
+        {
+          "ticker": "EMLC",
+          "issuer": "VanEck",
+          "sleeve": "em_debt",
+          "flow_usd": 1921500.0,
+          "days": 1,
+          "start_tna": 4860000000.0,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.00039537037037037036
         },
         {
           "ticker": "SHYG",
@@ -844,28 +965,6 @@
           "ogr": 0.0
         },
         {
-          "ticker": "SUB",
-          "issuer": "iShares",
-          "sleeve": "muni",
-          "flow_usd": 0.0,
-          "days": 4,
-          "start_tna": 13382256061.5,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.0
-        },
-        {
-          "ticker": "SPLB",
-          "issuer": "SSGA",
-          "sleeve": "ig_corp",
-          "flow_usd": 0.0,
-          "days": 4,
-          "start_tna": 1191566535.64,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.0
-        },
-        {
           "ticker": "GNMA",
           "issuer": "iShares",
           "sleeve": "agency_mbs",
@@ -888,17 +987,6 @@
           "ogr": 0.0
         },
         {
-          "ticker": "GOVZ",
-          "issuer": "iShares",
-          "sleeve": "ust_long",
-          "flow_usd": 0.0,
-          "days": 4,
-          "start_tna": 370222618.38,
-          "from_date": "2026-11-06",
-          "to_date": "2026-11-12",
-          "ogr": 0.0
-        },
-        {
           "ticker": "AGG",
           "issuer": "iShares",
           "sleeve": "aggregate",
@@ -907,6 +995,28 @@
           "start_tna": 139076382781.7,
           "from_date": "2026-11-06",
           "to_date": "2026-11-13",
+          "ogr": 0.0
+        },
+        {
+          "ticker": "GOVZ",
+          "issuer": "iShares",
+          "sleeve": "ust_long",
+          "flow_usd": 0.0,
+          "days": 5,
+          "start_tna": 370222618.38,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-13",
+          "ogr": 0.0
+        },
+        {
+          "ticker": "SPLB",
+          "issuer": "SSGA",
+          "sleeve": "ig_corp",
+          "flow_usd": 0.0,
+          "days": 4,
+          "start_tna": 1191566535.64,
+          "from_date": "2026-11-06",
+          "to_date": "2026-11-12",
           "ogr": 0.0
         },
         {
@@ -919,17 +1029,75 @@
           "from_date": "2026-11-12",
           "to_date": "2026-11-13",
           "ogr": 0.0
+        },
+        {
+          "ticker": "PZA",
+          "issuer": "Invesco",
+          "sleeve": "muni",
+          "flow_usd": 0.0,
+          "days": 1,
+          "start_tna": 4089776727.05,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.0
+        },
+        {
+          "ticker": "BKLN",
+          "issuer": "Invesco",
+          "sleeve": "loans_clo",
+          "flow_usd": 0.0,
+          "days": 1,
+          "start_tna": 5797173561.01,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.0
+        },
+        {
+          "ticker": "ICLO",
+          "issuer": "Invesco",
+          "sleeve": "loans_clo",
+          "flow_usd": 0.0,
+          "days": 1,
+          "start_tna": null,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": null
+        },
+        {
+          "ticker": "SCHJ",
+          "issuer": "Schwab",
+          "sleeve": "ig_corp",
+          "flow_usd": 0.0,
+          "days": 1,
+          "start_tna": 910991445.79,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.0
+        },
+        {
+          "ticker": "PCY",
+          "issuer": "Invesco",
+          "sleeve": "em_debt",
+          "flow_usd": 0.0,
+          "days": 1,
+          "start_tna": 1171592467.72,
+          "from_date": "2026-11-12",
+          "to_date": "2026-11-13",
+          "ogr": 0.0
         }
       ],
       "last_date_by_issuer": {
+        "iShares": "2026-11-13",
         "JPMorgan": "2026-11-13",
+        "Schwab": "2026-11-13",
+        "VanEck": "2026-11-13",
         "SSGA": "2026-11-12",
-        "iShares": "2026-11-13"
+        "Invesco": "2026-11-13"
       },
       "largest_contributor": {
-        "ticker": "TLT",
-        "flow_usd": -947800502.0,
-        "total_ex_largest": 2300223833.28
+        "ticker": "GOVT",
+        "flow_usd": -3838883956.2,
+        "total_ex_largest": 545440559.88
       }
     },
     "sleeves_recent": {
@@ -938,38 +1106,33 @@
       "by_sleeve": [
         {
           "cut": "ig_corp",
-          "flow_usd": 5202038339.4,
-          "n_funds": 9
+          "flow_usd": 5210650339.4,
+          "n_funds": 11
         },
         {
           "cut": "hy_corp",
-          "flow_usd": 3789344914.05,
-          "n_funds": 6
-        },
-        {
-          "cut": "muni",
-          "flow_usd": 2924991036.0,
-          "n_funds": 6
+          "flow_usd": 3766515274.17,
+          "n_funds": 7
         },
         {
           "cut": "ust_intermediate",
-          "flow_usd": 2897526008.5,
-          "n_funds": 3
+          "flow_usd": 2995653962.1,
+          "n_funds": 4
+        },
+        {
+          "cut": "muni",
+          "flow_usd": 2738560450.3,
+          "n_funds": 8
+        },
+        {
+          "cut": "ust_long",
+          "flow_usd": 1821253420.55,
+          "n_funds": 5
         },
         {
           "cut": "em_debt",
-          "flow_usd": 887582106.3,
-          "n_funds": 2
-        },
-        {
-          "cut": "ust_short",
-          "flow_usd": 769521818.6,
-          "n_funds": 2
-        },
-        {
-          "cut": "ust_broad",
-          "flow_usd": 541099413.8,
-          "n_funds": 1
+          "flow_usd": 889503606.3,
+          "n_funds": 4
         },
         {
           "cut": "intl_bond",
@@ -977,19 +1140,14 @@
           "n_funds": 1
         },
         {
-          "cut": "tips",
-          "flow_usd": 297665634.0,
-          "n_funds": 4
-        },
-        {
-          "cut": "ust_long",
-          "flow_usd": 260460876.95,
-          "n_funds": 4
-        },
-        {
           "cut": "ultrashort_credit",
-          "flow_usd": 169934084.3,
-          "n_funds": 2
+          "flow_usd": 179938304.7,
+          "n_funds": 3
+        },
+        {
+          "cut": "tips",
+          "flow_usd": 143522403.6,
+          "n_funds": 5
         },
         {
           "cut": "agency_mbs",
@@ -1002,19 +1160,29 @@
           "n_funds": 1
         },
         {
-          "cut": "aggregate",
-          "flow_usd": -61667958.1,
-          "n_funds": 3
+          "cut": "loans_clo",
+          "flow_usd": -198750601.5,
+          "n_funds": 4
         },
         {
-          "cut": "loans_clo",
-          "flow_usd": -208057926.0,
-          "n_funds": 1
+          "cut": "ust_short",
+          "flow_usd": -488330182.4,
+          "n_funds": 2
+        },
+        {
+          "cut": "aggregate",
+          "flow_usd": -1093621534.1,
+          "n_funds": 4
         },
         {
           "cut": "ust_ultrashort",
-          "flow_usd": -2403124724.36,
+          "flow_usd": -2157081148.08,
           "n_funds": 4
+        },
+        {
+          "cut": "ust_broad",
+          "flow_usd": -3386367399.2,
+          "n_funds": 1
         }
       ]
     },
@@ -1023,27 +1191,14 @@
         "ticker": "JCPB",
         "prior_date": "2026-09-25",
         "flow_date": "2026-11-13",
-        "flow_usd": 2832141442.54,
-        "organic_growth_rate": 0.191457,
-        "dv01_usd_per_bp": 1665299.17,
+        "flow_usd": 2817036430.4,
+        "organic_growth_rate": 0.190436,
+        "dv01_usd_per_bp": 1656417.42,
         "spread_dv01_usd_per_bp": null,
         "spread_dv01_is_proxied": null,
         "flag": "imputed",
         "issuer": "JPMorgan",
         "sleeve": "active_multisector"
-      },
-      {
-        "ticker": "SCHP",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": 1539030000.0,
-        "organic_growth_rate": 0.096171,
-        "dv01_usd_per_bp": 969588.9,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Schwab",
-        "sleeve": "tips"
       },
       {
         "ticker": "PYLD",
@@ -1059,19 +1214,6 @@
         "sleeve": "active_multisector"
       },
       {
-        "ticker": "BKLN",
-        "prior_date": "2026-09-18",
-        "flow_date": "2026-11-12",
-        "flow_usd": -883966179.0,
-        "organic_growth_rate": -0.131401,
-        "dv01_usd_per_bp": null,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Invesco",
-        "sleeve": "loans_clo"
-      },
-      {
         "ticker": "MUNI",
         "prior_date": "2026-09-24",
         "flow_date": "2026-11-12",
@@ -1082,19 +1224,6 @@
         "spread_dv01_is_proxied": null,
         "flag": "imputed",
         "issuer": "PIMCO",
-        "sleeve": "muni"
-      },
-      {
-        "ticker": "HYD",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": 643201225.94,
-        "organic_growth_rate": 0.164502,
-        "dv01_usd_per_bp": 466320.89,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "VanEck",
         "sleeve": "muni"
       },
       {
@@ -1124,19 +1253,6 @@
         "sleeve": "ultrashort_credit"
       },
       {
-        "ticker": "SCHR",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": 431142000.0,
-        "organic_growth_rate": 0.032772,
-        "dv01_usd_per_bp": 206948.16,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Schwab",
-        "sleeve": "ust_intermediate"
-      },
-      {
         "ticker": "MINT",
         "prior_date": "2026-09-24",
         "flow_date": "2026-11-12",
@@ -1150,43 +1266,17 @@
         "sleeve": "ultrashort_credit"
       },
       {
-        "ticker": "SCHI",
+        "ticker": "SCHO",
         "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": 254408000.0,
-        "organic_growth_rate": 0.023205,
-        "dv01_usd_per_bp": 150100.72,
-        "spread_dv01_usd_per_bp": 150100.72,
-        "spread_dv01_is_proxied": true,
-        "flag": "imputed",
-        "issuer": "Schwab",
-        "sleeve": "ig_corp"
-      },
-      {
-        "ticker": "ANGL",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": -209570445.67,
-        "organic_growth_rate": -0.067603,
-        "dv01_usd_per_bp": -93677.99,
-        "spread_dv01_usd_per_bp": -94725.84,
-        "spread_dv01_is_proxied": false,
-        "flag": "imputed",
-        "issuer": "VanEck",
-        "sleeve": "hy_corp"
-      },
-      {
-        "ticker": "CLOI",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": 193406975.92,
-        "organic_growth_rate": 0.117931,
-        "dv01_usd_per_bp": null,
+        "flow_date": "2026-11-13",
+        "flow_usd": -183645000.0,
+        "organic_growth_rate": -0.012025,
+        "dv01_usd_per_bp": -33056.1,
         "spread_dv01_usd_per_bp": null,
         "spread_dv01_is_proxied": null,
         "flag": "imputed",
-        "issuer": "VanEck",
-        "sleeve": "loans_clo"
+        "issuer": "Schwab",
+        "sleeve": "ust_short"
       },
       {
         "ticker": "ZROZ",
@@ -1213,158 +1303,27 @@
         "flag": "imputed",
         "issuer": "PIMCO",
         "sleeve": "tips"
-      },
-      {
-        "ticker": "PZA",
-        "prior_date": "2026-09-18",
-        "flow_date": "2026-11-12",
-        "flow_usd": -137068813.8,
-        "organic_growth_rate": -0.032778,
-        "dv01_usd_per_bp": null,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Invesco",
-        "sleeve": "muni"
-      },
-      {
-        "ticker": "PCY",
-        "prior_date": "2026-09-18",
-        "flow_date": "2026-11-12",
-        "flow_usd": -83394602.7,
-        "organic_growth_rate": -0.064985,
-        "dv01_usd_per_bp": null,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Invesco",
-        "sleeve": "em_debt"
-      },
-      {
-        "ticker": "EMLC",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": -57468941.22,
-        "organic_growth_rate": -0.011448,
-        "dv01_usd_per_bp": -29424.1,
-        "spread_dv01_usd_per_bp": -29424.1,
-        "spread_dv01_is_proxied": true,
-        "flag": "imputed",
-        "issuer": "VanEck",
-        "sleeve": "em_debt"
-      },
-      {
-        "ticker": "SCHQ",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": -49402000.0,
-        "organic_growth_rate": -0.054127,
-        "dv01_usd_per_bp": -66198.68,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Schwab",
-        "sleeve": "ust_long"
-      },
-      {
-        "ticker": "SCHZ",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": 44480000.0,
-        "organic_growth_rate": 0.00419,
-        "dv01_usd_per_bp": 25353.6,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Schwab",
-        "sleeve": "aggregate"
-      },
-      {
-        "ticker": "SCHJ",
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "flow_usd": 43380000.0,
-        "organic_growth_rate": 0.049868,
-        "dv01_usd_per_bp": 11712.6,
-        "spread_dv01_usd_per_bp": 11712.6,
-        "spread_dv01_is_proxied": true,
-        "flag": "imputed",
-        "issuer": "Schwab",
-        "sleeve": "ig_corp"
-      },
-      {
-        "ticker": "ICLO",
-        "prior_date": "2026-09-18",
-        "flow_date": "2026-11-12",
-        "flow_usd": 37135686.1,
-        "organic_growth_rate": null,
-        "dv01_usd_per_bp": null,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Invesco",
-        "sleeve": "loans_clo"
-      },
-      {
-        "ticker": "GSY",
-        "prior_date": "2026-09-18",
-        "flow_date": "2026-11-12",
-        "flow_usd": 15004496.4,
-        "organic_growth_rate": 0.003688,
-        "dv01_usd_per_bp": null,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Invesco",
-        "sleeve": "ultrashort_credit"
-      },
-      {
-        "ticker": "SCHO",
-        "prior_date": "2026-09-18",
-        "flow_date": "2026-09-25",
-        "flow_usd": 0.0,
-        "organic_growth_rate": 0.0,
-        "dv01_usd_per_bp": 0.0,
-        "spread_dv01_usd_per_bp": null,
-        "spread_dv01_is_proxied": null,
-        "flag": "imputed",
-        "issuer": "Schwab",
-        "sleeve": "ust_short"
       }
     ],
     "large_ogr": [
       {
-        "ticker": "JCPB",
-        "ogr": 0.191457,
-        "prior_date": "2026-09-25",
+        "ticker": "TLH",
+        "ogr": 0.150297,
+        "prior_date": "2026-11-12",
         "flow_date": "2026-11-13",
-        "catch_up": true
+        "catch_up": false
       },
       {
-        "ticker": "BKLN",
-        "ogr": -0.131401,
-        "prior_date": "2026-09-18",
-        "flow_date": "2026-11-12",
+        "ticker": "JCPB",
+        "ogr": 0.190436,
+        "prior_date": "2026-09-25",
+        "flow_date": "2026-11-13",
         "catch_up": true
       },
       {
         "ticker": "MUNI",
         "ogr": 0.233744,
         "prior_date": "2026-09-24",
-        "flow_date": "2026-11-12",
-        "catch_up": true
-      },
-      {
-        "ticker": "HYD",
-        "ogr": 0.164502,
-        "prior_date": "2026-09-25",
-        "flow_date": "2026-11-12",
-        "catch_up": true
-      },
-      {
-        "ticker": "CLOI",
-        "ogr": 0.117931,
-        "prior_date": "2026-09-25",
         "flow_date": "2026-11-12",
         "catch_up": true
       },
@@ -1386,11 +1345,11 @@
     "implied_mbs": [
       {
         "ticker": "IUSB",
-        "flow_date": "2026-11-12",
-        "implied_mbs_flow_usd": 0.0,
-        "flow_usd": 0.0,
-        "mbs_weight_pct": 19.4,
-        "weight_date": "2026-09-24"
+        "flow_date": "2026-11-13",
+        "implied_mbs_flow_usd": -207506886.84,
+        "flow_usd": -1063047576.0,
+        "mbs_weight_pct": 19.52,
+        "weight_date": "2026-11-12"
       },
       {
         "ticker": "AGG",
@@ -1417,23 +1376,23 @@
         "weight_date": "2026-09-24"
       },
       {
-        "ticker": "SPAB",
-        "flow_date": "2026-11-12",
-        "implied_mbs_flow_usd": 0.0,
-        "flow_usd": 0.0,
-        "mbs_weight_pct": 23.3721,
-        "weight_date": "2026-09-24"
-      },
-      {
         "ticker": "MBB",
         "flow_date": "2026-11-13",
         "implied_mbs_flow_usd": 0.0,
         "flow_usd": 0.0,
         "mbs_weight_pct": 94.31,
         "weight_date": "2026-11-12"
+      },
+      {
+        "ticker": "SPAB",
+        "flow_date": "2026-11-12",
+        "implied_mbs_flow_usd": 0.0,
+        "flow_usd": 0.0,
+        "mbs_weight_pct": 23.3721,
+        "weight_date": "2026-09-24"
       }
     ],
-    "implied_mbs_total": 0.0,
+    "implied_mbs_total": -207506886.84,
     "missing": [
       {
         "issuer": "Vanguard",
@@ -1604,13 +1563,12 @@
     }
   ],
   "notable": [
-    "Today's coverage 91/106 (85.8%) is below the 90.0% threshold",
-    "JCPB: OGR +19.1% over 2026-09-25 to 2026-11-13 (catch-up)",
-    "BKLN: OGR -13.1% over 2026-09-18 to 2026-11-12 (catch-up)",
+    "Today's coverage 92/106 (86.8%) is below the 90.0% threshold",
+    "TLH: OGR +15.0% on 2026-11-13",
+    "JCPB: OGR +19.0% over 2026-09-25 to 2026-11-13 (catch-up)",
     "MUNI: OGR +23.4% over 2026-09-24 to 2026-11-12 (catch-up)",
-    "HYD: OGR +16.5% over 2026-09-25 to 2026-11-12 (catch-up)",
-    "CLOI: OGR +11.8% over 2026-09-25 to 2026-11-12 (catch-up)",
     "ZROZ: OGR +11.2% over 2026-09-24 to 2026-11-12 (catch-up)",
-    "LTPZ: OGR +18.9% over 2026-09-24 to 2026-11-12 (catch-up)"
+    "LTPZ: OGR +18.9% over 2026-09-24 to 2026-11-12 (catch-up)",
+    "ust_broad: z-score -7.48 on 2026-11-13"
   ]
 }
