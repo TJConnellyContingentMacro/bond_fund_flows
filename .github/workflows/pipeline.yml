@@ -2,8 +2,9 @@
 #
 # The database and data/.state/ live as state.tar.gz on the "pipeline-state"
 # release: restored at the start of each run, saved at the end, with 14 dated
-# backups. Each run's raw files go to a monthly "raw-YYYY-MM" release.
-# The first run seeds the release from the state-seed branch and refills
+# backups. Each run's raw files go to a monthly "raw-YYYY-MM" release, only
+# while the repo is private: release assets of a public repo are public, and
+# the raw files are the issuers' own downloads. The first run seeds the release from the state-seed branch and refills
 # 62 days of iShares/SSGA history to close any gap since the seed was taken.
 
 name: Daily pipeline
@@ -18,9 +19,6 @@ on:
         description: "Refill iShares/SSGA history for this many days first (blank = skip)"
         required: false
         default: ""
-  push:
-    branches: [master]
-    paths: [".github/workflows/pipeline.yml"]
 
 concurrency:
   group: pipeline
@@ -102,7 +100,7 @@ jobs:
             | xargs -r -I{} gh release delete-asset "$STATE_TAG" {} --yes
 
       - name: Archive raw files
-        if: ${{ !cancelled() && steps.restore.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.restore.outcome == 'success' && github.event.repository.private }}
         run: |
           [ -d data/raw ] || exit 0
           tag="raw-$(date -u +%Y-%m)"

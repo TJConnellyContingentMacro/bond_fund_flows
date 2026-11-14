@@ -373,8 +373,11 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
 - **First run seeds itself**: with no `pipeline-state` release yet, the
   workflow takes `state.tar.gz` from the `state-seed` branch, creates the
   release, and refills 62 days of iShares/SSGA history. `workflow_dispatch`
-  takes a `backfill_days` input to do that refill again on demand. A push
-  that changes `pipeline.yml` also triggers a run.
+  takes a `backfill_days` input to do that refill again on demand.
+- **The repo is public** (found 2026-11-13; earlier notes assumed private),
+  so release assets are public too. The raw archive step only runs while the
+  repo is private; the state release (derived figures, Vanguard seen-shares,
+  PIMCO's anonymous consent cookies) is published either way.
 - **Schwab runs under `xvfb-run`** (a virtual display) with the runner's
   preinstalled Google Chrome. Whether Akamai lets GitHub's IP ranges through
   is an empirical question; see the run log.
