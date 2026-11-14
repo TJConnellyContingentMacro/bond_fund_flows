@@ -1,0 +1,184 @@
+bondflows pipeline run — 2026-11-14T01:04:18.316628+00:00
+
+===== backfill_gaps — OK =====
+
+Historical coverage: 4899/6567 business-days (74.6%)
+  - AGG: 1 gap day(s) — 2026-09-07
+  - ANGL: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - BIL: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - BKLN: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
+  - BND: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - BNDX: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - BOND: 39 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+34 more)
+  - BWX: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - CLOI: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - CMF: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - CWB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - EBND: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - EDV: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - EMB: 1 gap day(s) — 2026-09-07
+  - EMLC: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - FALN: 1 gap day(s) — 2026-09-07
+  - GNMA: 1 gap day(s) — 2026-09-07
+  - GOVT: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - GOVZ: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - GSY: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
+  - HYD: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - HYG: 1 gap day(s) — 2026-09-07
+  - HYGW: 1 gap day(s) — 2026-09-07
+  - HYMB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - IAGG: 1 gap day(s) — 2026-09-07
+  - ICLO: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
+  - ICSH: 1 gap day(s) — 2026-09-07
+  - ICVT: 1 gap day(s) — 2026-09-07
+  - IEF: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - IEI: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - IGIB: 1 gap day(s) — 2026-09-07
+  - IGLB: 1 gap day(s) — 2026-09-07
+  - IGOV: 1 gap day(s) — 2026-09-07
+  - IGSB: 1 gap day(s) — 2026-09-07
+  - IUSB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - JCPB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - JMUB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - JNK: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - JPST: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - LQD: 1 gap day(s) — 2026-09-07
+  - LQDW: 1 gap day(s) — 2026-09-07
+  - LTPZ: 39 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+34 more)
+  - MBB: 1 gap day(s) — 2026-09-07
+  - MINT: 39 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+34 more)
+  - MUB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - MUNI: 39 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+34 more)
+  - NEAR: 1 gap day(s) — 2026-09-07
+  - NYF: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - PCY: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
+  - PFF: 1 gap day(s) — 2026-09-07
+  - PYLD: 39 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+34 more)
+  - PZA: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
+  - QLTA: 1 gap day(s) — 2026-09-07
+  - SCHI: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - SCHJ: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - SCHO: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - SCHP: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - SCHQ: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - SCHR: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - SCHZ: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - SGOV: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SHM: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SHV: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SHY: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SHYG: 1 gap day(s) — 2026-09-07
+  - SJNK: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPAB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPIB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPIP: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPLB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPMB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPSB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPTI: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPTL: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SPTS: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SRLN: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - STIP: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - SUB: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - TFI: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - TFLO: 1 gap day(s) — 2026-09-07
+  - TIP: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - TIPX: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - TLH: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - TLT: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - TLTW: 1 gap day(s) — 2026-09-07
+  - TOTL: 2 gap day(s) — 2026-09-07, 2026-11-13
+  - USHY: 1 gap day(s) — 2026-09-07
+  - USIG: 1 gap day(s) — 2026-09-07
+  - VBIL: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VCIT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VCLT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VCSH: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VGIT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VGLT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VGSH: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VMBS: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VTEB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VTES: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VTIP: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VUSB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VWOB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - ZROZ: 39 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+34 more)
+
+===== daily — OK =====
+
+Coverage: 101/124 (81.5%)
+  BondBloxx        0/1 (0%)
+    - XHLF: no adapter built yet
+  DWS/Xtrackers    0/1 (0%)
+    - HYLB: no adapter built yet
+  Dimensional      0/1 (0%)
+    - DFCF: no adapter built yet
+  Direxion         0/2 (0%)
+    - TMF: no adapter built yet
+    - TMV: no adapter built yet
+  F/m              0/2 (0%)
+    - UTEN: no adapter built yet
+    - UTWO: no adapter built yet
+  Fidelity         0/1 (0%)
+    - FBND: no adapter built yet
+  First Trust      0/1 (0%)
+    - FTSL: no adapter built yet
+  Global X         0/2 (0%)
+    - CLIP: no adapter built yet
+    - PFFD: no adapter built yet
+  Goldman          0/1 (0%)
+    - GBIL: no adapter built yet
+  Invesco          5/5 (100%)
+  JPMorgan         3/3 (100%)
+  Janus Henderson  0/3 (0%)
+    - JAAA: no adapter built yet
+    - JBBB: no adapter built yet
+    - JMBS: no adapter built yet
+  PIMCO            6/6 (100%)
+  ProShares        0/3 (0%)
+    - TBF: no adapter built yet
+    - TBT: no adapter built yet
+    - UBT: no adapter built yet
+  SSGA             21/21 (100%)
+  Schwab           6/7 (86%)
+    - SCHO: could not locate NAV/as-of-date on page
+  Simplify         0/1 (0%)
+    - MTBA: no adapter built yet
+  VanEck           4/4 (100%)
+  Vanguard         16/16 (100%)
+  WisdomTree       0/1 (0%)
+    - USFR: no adapter built yet
+  iShares          40/40 (100%)
+  iShares/BlackRock 0/2 (0%)
+    - BINC: no adapter built yet
+    - CLOA: no adapter built yet
+
+===== ssga_history — OK =====
+History since 2026-11-04: 0 rows inserted, 147 existing rows updated, 21/21 funds loaded.
+
+===== compute_flows — OK =====
+Wrote 4766 fund_flows rows.
+
+===== compute_analytics — OK =====
+Wrote 1710 flow_aggregates rows.
+
+===== fetch_overlay_holdings — OK =====
+Wrote 3/3 overlay_holdings rows.
+
+===== fetch_mbs_weights — OK =====
+Wrote 6/6 mbs_weights rows.
+
+===== compute_mbs_flows — OK =====
+Wrote 213 mbs_implied_flows rows.
+
+===== fetch_ici_weekly — OK =====
+Wrote 5 ici_weekly_flows rows.
+
+===== export_dashboard_snapshot — OK =====
+Wrote snapshot to /home/runner/work/bond_fund_flows/bond_fund_flows/dashboard/snapshot.json
+
+===== push_snapshot — OK =====
+To https://github.com/TJConnellyContingentMacro/bond_fund_flows
+   5496da0..968751a  master -> master
