@@ -1,8 +1,8 @@
-bondflows pipeline run — 2026-11-14T01:04:18.316628+00:00
+bondflows pipeline run — 2026-11-14T16:57:52.762273+00:00
 
 ===== backfill_gaps — OK =====
 
-Historical coverage: 4899/6567 business-days (74.6%)
+Historical coverage: 4902/6567 business-days (74.6%)
   - AGG: 1 gap day(s) — 2026-09-07
   - ANGL: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
   - BIL: 2 gap day(s) — 2026-09-07, 2026-11-13
@@ -39,7 +39,7 @@ Historical coverage: 4899/6567 business-days (74.6%)
   - IGSB: 1 gap day(s) — 2026-09-07
   - IUSB: 2 gap day(s) — 2026-09-07, 2026-11-13
   - JCPB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - JMUB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - JMUB: 37 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+32 more)
   - JNK: 2 gap day(s) — 2026-09-07, 2026-11-13
   - JPST: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
   - LQD: 1 gap day(s) — 2026-09-07
@@ -99,16 +99,16 @@ Historical coverage: 4899/6567 business-days (74.6%)
   - VGLT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
   - VGSH: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
   - VMBS: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VTEB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VTEB: 37 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+32 more)
   - VTES: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
   - VTIP: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VUSB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
+  - VUSB: 37 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+32 more)
   - VWOB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
   - ZROZ: 39 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+34 more)
 
 ===== daily — OK =====
 
-Coverage: 101/124 (81.5%)
+Coverage: 102/124 (82.3%)
   BondBloxx        0/1 (0%)
     - XHLF: no adapter built yet
   DWS/Xtrackers    0/1 (0%)
@@ -142,8 +142,7 @@ Coverage: 101/124 (81.5%)
     - TBT: no adapter built yet
     - UBT: no adapter built yet
   SSGA             21/21 (100%)
-  Schwab           6/7 (86%)
-    - SCHO: could not locate NAV/as-of-date on page
+  Schwab           7/7 (100%)
   Simplify         0/1 (0%)
     - MTBA: no adapter built yet
   VanEck           4/4 (100%)
@@ -159,10 +158,10 @@ Coverage: 101/124 (81.5%)
 History since 2026-11-04: 0 rows inserted, 147 existing rows updated, 21/21 funds loaded.
 
 ===== compute_flows — OK =====
-Wrote 4766 fund_flows rows.
+Wrote 4798 fund_flows rows.
 
 ===== compute_analytics — OK =====
-Wrote 1710 flow_aggregates rows.
+Wrote 1716 flow_aggregates rows.
 
 ===== fetch_overlay_holdings — OK =====
 Wrote 3/3 overlay_holdings rows.
@@ -171,7 +170,7 @@ Wrote 3/3 overlay_holdings rows.
 Wrote 6/6 mbs_weights rows.
 
 ===== compute_mbs_flows — OK =====
-Wrote 213 mbs_implied_flows rows.
+Wrote 214 mbs_implied_flows rows.
 
 ===== fetch_ici_weekly — OK =====
 Wrote 5 ici_weekly_flows rows.
@@ -181,4 +180,4 @@ Wrote snapshot to /home/runner/work/bond_fund_flows/bond_fund_flows/dashboard/sn
 
 ===== push_snapshot — OK =====
 To https://github.com/TJConnellyContingentMacro/bond_fund_flows
-   5496da0..968751a  master -> master
+   e162550..8d9ff41  master -> master
