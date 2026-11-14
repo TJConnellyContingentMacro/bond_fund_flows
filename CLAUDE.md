@@ -373,14 +373,21 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
 - **First run seeds itself**: with no `pipeline-state` release yet, the
   workflow takes `state.tar.gz` from the `state-seed` branch, creates the
   release, and refills 62 days of iShares/SSGA history. `workflow_dispatch`
-  takes a `backfill_days` input to do that refill again on demand.
+  takes a `backfill_days` input to do that refill again on demand; a push
+  that changes `pipeline.yml` also starts a run (the only trigger that needs
+  no GitHub login, so Claude can start one with git alone).
+- **Logs: the `pipeline-logs` branch.** Actions logs and artifacts need a
+  GitHub login to read, even on a public repo. Each run commits
+  `pipeline.log` and `console.txt` (the full stdout, including alerts) to
+  that branch: `git fetch origin pipeline-logs && git show
+  origin/pipeline-logs:console.txt`.
 - **The repo is public** (found 2026-11-13; earlier notes assumed private),
   so release assets are public too. The raw archive step only runs while the
   repo is private; the state release (derived figures, Vanguard seen-shares,
   PIMCO's anonymous consent cookies) is published either way.
 - **Schwab runs under `xvfb-run`** (a virtual display) with the runner's
-  preinstalled Google Chrome. Whether Akamai lets GitHub's IP ranges through
-  is an empirical question; see the run log.
+  preinstalled Google Chrome. The first cloud run (2026-11-14) got 6 of 7
+  Schwab tickers (SCHO missed), so Akamai lets GitHub's IP ranges through.
 - `tests.yml` runs pytest on pushes that touch code.
 
 ## Dashboard and the cloud refresh routine
