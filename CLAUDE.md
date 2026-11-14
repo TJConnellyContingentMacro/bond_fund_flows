@@ -345,6 +345,41 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
     post times (SPEC.md §8 says to determine this empirically) — revisit
     once there's enough `retrieved_at`/`asof_date` history to see when each
     issuer's site actually updates.
+  - **Superseded 2026-11-13 by the GitHub Actions run below.** The PC was
+    off for most of Sep 28 – Nov 13, and by then Windows Application Control
+    was blocking numpy's `_bounded_integers` DLL in the venv, so every step
+    that imports pandas failed locally.
+
+## Cloud run (GitHub Actions, .github/workflows/pipeline.yml), from 2026-11-13
+
+- **The pipeline runs in GitHub Actions now**: Mon–Sat 11:07 UTC and Mon–Fri
+  16:07 UTC (6:07/11:07am EST; an hour later in local time under EDT, since
+  cron is UTC). The same `run_pipeline.py`, with `--alerts-ok` so the chronic
+  coverage alert doesn't fail every run; alerts go to the run's summary page,
+  and the run fails (and GitHub emails) only when a step or the push fails.
+- **State lives on the `pipeline-state` release, not in git**: `state.tar.gz`
+  (`data/bondflows.duckdb` + `data/.state/`) is downloaded at the start and
+  re-uploaded at the end, plus 14 dated `state-YYYY-MM-DD.tar.gz` backups. To
+  work locally, download `state.tar.gz` from that release and untar it in the
+  repo root; a local run then diverges from the cloud copy, so don't upload it
+  back unless you mean to replace the cloud state.
+- **Raw files are archived per run** to monthly `raw-YYYY-MM` releases
+  (~15 MB a run compressed). The runner starts each day with no `data/raw/`,
+  so staleness now compares against `raw_fingerprints` (a SHA-256 per raw
+  adapter file per run date) in the database; `ingest._is_stale` falls back
+  to files on disk only when no fingerprint exists.
+  `scripts/seed_raw_fingerprints.py` seeded fingerprints from the local raw
+  archive once, before the move.
+- **First run seeds itself**: with no `pipeline-state` release yet, the
+  workflow takes `state.tar.gz` from the `state-seed` branch, creates the
+  release, and refills 62 days of iShares/SSGA history. `workflow_dispatch`
+  takes a `backfill_days` input to do that refill again on demand. A push
+  that changes `pipeline.yml` also triggers a run.
+- **Schwab runs under `xvfb-run`** (a virtual display) with the runner's
+  preinstalled Google Chrome. Whether Akamai lets GitHub's IP ranges through
+  is an empirical question; see the run log.
+- `tests.yml` runs pytest on pushes that touch code.
+
 ## Dashboard and the cloud refresh routine
 
 - **The page is generated, not hand-edited.** `dashboard/template.html` is
@@ -353,8 +388,8 @@ Python 3.11+, DuckDB, pandas, requests, pytest, Playwright (Schwab + PIMCO only 
   `template.html` + `snapshot.json` + optional `commentary.json` into
   `index.html`. The template must stay ASCII-only (a test enforces it):
   literal `·` `−` `→` rendered as mojibake when served without a UTF-8 charset.
-- **Split of work, per SPEC.md §10**: `run_pipeline.py` (local, deterministic)
-  exports `dashboard/snapshot.json` and pushes it. The claude.ai routine
+- **Split of work, per SPEC.md §10**: `run_pipeline.py` (deterministic, in GitHub
+  Actions) exports `dashboard/snapshot.json` and pushes it. The claude.ai routine
   `bondflows-dashboard-refresh` (trig_014Gs5Rh7synQCeTnZzvYEiz, daily 17:00
   UTC) clones the repo, writes only `dashboard/commentary.json`, runs the
   build, and publishes to https://claude.ai/artifact/PHSxrwFLSEq9rhSpe51HQf.

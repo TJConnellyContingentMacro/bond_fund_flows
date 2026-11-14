@@ -1,0 +1,113 @@
+# Runs scripts/run_pipeline.py in the cloud so no local PC needs to be on.
+#
+# The database and data/.state/ live as state.tar.gz on the "pipeline-state"
+# release: restored at the start of each run, saved at the end, with 14 dated
+# backups. Each run's raw files go to a monthly "raw-YYYY-MM" release.
+# The first run seeds the release from the state-seed branch and refills
+# 62 days of iShares/SSGA history to close any gap since the seed was taken.
+
+name: Daily pipeline
+
+on:
+  schedule:
+    - cron: "7 11 * * 1-6"   # 6:07am EST / 7:07am EDT, Mon-Sat
+    - cron: "7 16 * * 1-5"   # 11:07am EST / 12:07pm EDT catch-up, Mon-Fri
+  workflow_dispatch:
+    inputs:
+      backfill_days:
+        description: "Refill iShares/SSGA history for this many days first (blank = skip)"
+        required: false
+        default: ""
+  push:
+    branches: [master]
+    paths: [".github/workflows/pipeline.yml"]
+
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  STATE_TAG: pipeline-state
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          python -m playwright install --with-deps chromium
+
+      - name: Restore database and state
+        id: restore
+        run: |
+          if gh release view "$STATE_TAG" >/dev/null 2>&1; then
+            gh release download "$STATE_TAG" --pattern state.tar.gz --dir "$RUNNER_TEMP"
+            echo "seeded=false" >> "$GITHUB_OUTPUT"
+          else
+            git fetch --depth=1 origin state-seed
+            git show origin/state-seed:state.tar.gz > "$RUNNER_TEMP/state.tar.gz"
+            gh release create "$STATE_TAG" --prerelease --title "Pipeline state" \
+              --notes "Database and data/.state/ for the cloud pipeline run. Managed by .github/workflows/pipeline.yml."
+            echo "seeded=true" >> "$GITHUB_OUTPUT"
+          fi
+          tar xzf "$RUNNER_TEMP/state.tar.gz"
+          mkdir -p data/.state
+          python -c "import duckdb; print(duckdb.connect('data/bondflows.duckdb', read_only=True).execute('SELECT max(asof_date), count(*) FROM fund_daily').fetchone())"
+
+      - name: Refill history
+        if: steps.restore.outputs.seeded == 'true' || inputs.backfill_days != ''
+        continue-on-error: true
+        run: python scripts/backfill_history.py --issuers iShares SSGA --days "${BACKFILL_DAYS:-62}"
+        env:
+          BACKFILL_DAYS: ${{ inputs.backfill_days }}
+
+      - name: Run pipeline
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          xvfb-run -a python scripts/run_pipeline.py --alerts-ok
+
+      - name: Upload log
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-log-${{ github.run_id }}
+          path: logs/
+          retention-days: 30
+
+      - name: Save database and state
+        if: ${{ !cancelled() && steps.restore.outcome == 'success' }}
+        run: |
+          python -c "import duckdb; duckdb.connect('data/bondflows.duckdb', read_only=True).execute('SELECT count(*) FROM fund_daily').fetchone()"
+          tar czf "$RUNNER_TEMP/state.tar.gz" data/bondflows.duckdb* data/.state
+          dated="$RUNNER_TEMP/state-$(date -u +%F).tar.gz"
+          cp "$RUNNER_TEMP/state.tar.gz" "$dated"
+          gh release upload "$STATE_TAG" "$RUNNER_TEMP/state.tar.gz" "$dated" --clobber
+          gh release view "$STATE_TAG" --json assets --jq '.assets[].name' \
+            | grep -E '^state-[0-9-]+\.tar\.gz$' | sort | head -n -14 \
+            | xargs -r -I{} gh release delete-asset "$STATE_TAG" {} --yes
+
+      - name: Archive raw files
+        if: ${{ !cancelled() && steps.restore.outcome == 'success' }}
+        run: |
+          [ -d data/raw ] || exit 0
+          tag="raw-$(date -u +%Y-%m)"
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --prerelease \
+            --title "Raw files $(date -u +%Y-%m)" --notes "data/raw/ from each cloud pipeline run this month."
+          name="raw-$(date -u +%Y-%m-%dT%H%M).tar.gz"
+          tar czf "$RUNNER_TEMP/$name" -C data raw
+          gh release upload "$tag" "$RUNNER_TEMP/$name"

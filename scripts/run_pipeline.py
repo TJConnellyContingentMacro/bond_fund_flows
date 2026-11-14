@@ -4,17 +4,23 @@ alert summary at the end. Exits non-zero if anything needs attention, so a
 scheduler (Windows Task Scheduler, cron) can surface a failed run instead of
 silently swallowing it.
 
-**Schwab needs a visible desktop.** Its adapter (called from daily.py)
-launches a real, headed Chrome window — confirmed during discovery as the
-only way past Akamai's bot-blocking. This script must run in an interactive
-desktop session, not a headless service account.
+**Schwab needs a display.** Its adapter (called from daily.py) launches a
+real, headed Chrome window — confirmed during discovery as the only way past
+Akamai's bot-blocking. Locally that means an interactive desktop session; the
+GitHub Actions run (.github/workflows/pipeline.yml) uses a virtual display.
 
 Usage:
-    python scripts/run_pipeline.py
+    python scripts/run_pipeline.py [--alerts-ok]
+
+--alerts-ok exits 0 when steps succeed but alerts fired (the cloud run uses
+it so a chronic coverage alert doesn't mark every run failed). Alerts are
+also written to $GITHUB_STEP_SUMMARY when that is set.
 """
 
 from __future__ import annotations
 
+import argparse
+import os
 import re
 import subprocess
 import sys
@@ -137,7 +143,25 @@ def _push_snapshot(run_date: date, log_lines: list[str]) -> None:
         raise RuntimeError("git push failed — see logs/")
 
 
+def _write_step_summary(run_date: date, failed_steps: list[str], alerts: list[str]) -> None:
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+    lines = [f"## bondflows pipeline, {run_date.isoformat()}", ""]
+    if failed_steps:
+        lines.append(f"**Failed steps:** {', '.join(failed_steps)}")
+        lines.append("")
+    lines.append("### Alerts" if alerts else "No alerts.")
+    lines.extend(f"- {alert}" for alert in alerts)
+    with open(summary_path, "a", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--alerts-ok", action="store_true", help="exit 0 if only alerts (no step failures) fired")
+    args = parser.parse_args()
+
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     run_date = datetime.now(timezone.utc).date()
     log_lines: list[str] = [f"bondflows pipeline run — {datetime.now(timezone.utc).isoformat()}"]
@@ -159,11 +183,15 @@ def main() -> None:
     for name in failed_steps:
         alerts.insert(0, f"Step '{name}' exited non-zero — see logs/ for its output")
 
+    push_failed = False
     if "export_dashboard_snapshot" not in failed_steps:
         try:
             _push_snapshot(run_date, log_lines)
         except Exception as exc:  # noqa: BLE001 - a push failure is an alert, not a crash
+            push_failed = True
             alerts.append(f"Failed to push dashboard snapshot to GitHub: {exc}")
+
+    _write_step_summary(run_date, failed_steps, alerts)
 
     log_path = LOG_DIR / f"pipeline_{run_date:%Y%m%d}.log"
     log_path.write_text("\n".join(log_lines), encoding="utf-8")
@@ -173,7 +201,8 @@ def main() -> None:
         print("\nALERTS:")
         for alert in alerts:
             print(f"  - {alert}")
-        sys.exit(1)
+        if not args.alerts_ok or failed_steps or push_failed:
+            sys.exit(1)
     else:
         print("\nNo alerts.")
 

@@ -61,10 +61,14 @@ def _is_stale(raw_dir: Path, result: FetchResult, run_date: date, issuer: str, c
     if existing is not None:
         return existing[0]
 
-    prior_path = _prior_raw_path(raw_dir, run_date, issuer, result.ticker, result.raw.content_type)
-    if prior_path is None:
-        return False
-    prior_hash = hashlib.sha256(prior_path.read_bytes()).hexdigest()
+    ext = _EXT_BY_CONTENT_TYPE.get(result.raw.content_type, "bin")
+    prior_hash = db.prior_raw_fingerprint(con, issuer, result.ticker, ext, run_date)
+    if prior_hash is None:
+        # Raw files from before fingerprints were recorded (local runs only).
+        prior_path = _prior_raw_path(raw_dir, run_date, issuer, result.ticker, result.raw.content_type)
+        if prior_path is None:
+            return False
+        prior_hash = hashlib.sha256(prior_path.read_bytes()).hexdigest()
     return prior_hash == hashlib.sha256(result.raw.content).hexdigest()
 
 
@@ -99,6 +103,10 @@ def _run_issuer(
             path = _raw_path(raw_dir, run_date, adapter.name, result.ticker, result.raw.content_type)
             stale = _is_stale(raw_dir, result, run_date, adapter.name, con)
             path.write_bytes(result.raw.content)
+            db.record_raw_fingerprint(
+                con, adapter.name, result.ticker, path.suffix.lstrip("."), run_date,
+                hashlib.sha256(result.raw.content).hexdigest(),
+            )
         else:
             stale = False
 

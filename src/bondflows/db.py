@@ -137,6 +137,18 @@ ALTER TABLE flow_aggregates ADD COLUMN IF NOT EXISTS dv01_usd_per_bp DECIMAL(20,
 ALTER TABLE flow_aggregates ADD COLUMN IF NOT EXISTS spread_dv01_usd_per_bp DECIMAL(20,2);
 ALTER TABLE flow_aggregates ADD COLUMN IF NOT EXISTS has_proxied_spread_dv01 BOOLEAN DEFAULT FALSE;
 
+-- SHA-256 of each raw adapter file, one row per run date. ingest.py's
+-- staleness check compares against the latest earlier row here, so it works
+-- without the raw files on disk (the cloud run starts with no data/raw/).
+CREATE TABLE IF NOT EXISTS raw_fingerprints (
+    issuer      VARCHAR NOT NULL,
+    ticker      VARCHAR NOT NULL,
+    ext         VARCHAR NOT NULL,
+    run_date    DATE NOT NULL,
+    sha256      VARCHAR NOT NULL,
+    PRIMARY KEY (issuer, ticker, ext, run_date)
+);
+
 CREATE TABLE IF NOT EXISTS universe (
     ticker          VARCHAR NOT NULL,
     name            VARCHAR NOT NULL,
@@ -202,6 +214,31 @@ def upsert_fund_daily(
             source_is_stale,
         ],
     )
+
+
+def record_raw_fingerprint(
+    con: duckdb.DuckDBPyConnection, issuer: str, ticker: str, ext: str, run_date, sha256: str
+) -> None:
+    con.execute(
+        """
+        INSERT INTO raw_fingerprints (issuer, ticker, ext, run_date, sha256) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT (issuer, ticker, ext, run_date) DO UPDATE SET sha256 = excluded.sha256
+        """,
+        [issuer, ticker, ext, run_date, sha256],
+    )
+
+
+def prior_raw_fingerprint(con: duckdb.DuckDBPyConnection, issuer: str, ticker: str, ext: str, run_date) -> str | None:
+    """SHA-256 of the latest raw file for this ticker from a run before run_date."""
+    row = con.execute(
+        """
+        SELECT sha256 FROM raw_fingerprints
+        WHERE issuer = ? AND ticker = ? AND ext = ? AND run_date < ?
+        ORDER BY run_date DESC LIMIT 1
+        """,
+        [issuer, ticker, ext, run_date],
+    ).fetchone()
+    return row[0] if row else None
 
 
 def apply_history_row(con: duckdb.DuckDBPyConnection, ticker: str, row, *, source: str, retrieved_at) -> bool:

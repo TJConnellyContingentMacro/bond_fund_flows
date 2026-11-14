@@ -131,6 +131,30 @@ def test_staleness_fixture(tmp_path):
     assert rows == [(date(2026, 9, 18), False), (date(2026, 9, 19), True)]
 
 
+def test_staleness_without_raw_files_on_disk(tmp_path):
+    """The cloud run starts each day with an empty data/raw/, so staleness
+    must come from the fingerprints kept in the database."""
+    funds = [make_fund("BBB", "good_issuer")]
+    same_content = b'{"nav": 100.0}'
+    db_path = tmp_path / "db.duckdb"
+
+    for run_date in (date(2026, 9, 18), date(2026, 9, 19)):
+        ingest.run_daily(
+            {"good_issuer": GoodAdapter(same_content, asof_date=run_date)},
+            run_date=run_date,
+            funds=funds,
+            raw_dir=tmp_path / f"raw-{run_date}",
+            db_path=db_path,
+        )
+
+    con = db.connect(db_path)
+    rows = con.execute(
+        "SELECT asof_date, source_is_stale FROM fund_daily WHERE ticker = 'BBB' ORDER BY asof_date"
+    ).fetchall()
+    con.close()
+    assert rows == [(date(2026, 9, 18), False), (date(2026, 9, 19), True)]
+
+
 def test_rereading_an_unadvanced_date_does_not_poison_the_original_row(tmp_path):
     """If the issuer hasn't posted a newer date yet, a later run re-reads the
     same asof_date. That adds no new row (so no flow), and must not flip the
