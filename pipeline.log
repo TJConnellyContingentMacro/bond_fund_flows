@@ -1,114 +1,114 @@
-bondflows pipeline run — 2026-11-16T20:55:33.796953+00:00
+bondflows pipeline run — 2026-11-17T00:11:16.251389+00:00
 
 ===== backfill_gaps — OK =====
 
-Historical coverage: 4940/6669 business-days (74.1%)
-  - AGG: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - ANGL: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - BIL: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - BKLN: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
-  - BND: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - BNDX: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+Historical coverage: 4967/6771 business-days (73.4%)
+  - AGG: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - ANGL: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - BIL: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - BKLN: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+35 more)
+  - BND: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - BNDX: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
   - BOND: 40 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+35 more)
-  - BWX: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - CLOI: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - CMF: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - CWB: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - EBND: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - EDV: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - EMB: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - EMLC: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - FALN: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - GNMA: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - GOVT: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - GOVZ: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - GSY: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
-  - HYD: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - HYG: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - HYGW: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - HYMB: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - IAGG: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - ICLO: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
-  - ICSH: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - ICVT: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - IEF: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - IEI: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - IGIB: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - IGLB: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - IGOV: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - IGSB: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - IUSB: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - JCPB: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - JMUB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - JNK: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - JPST: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - LQD: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - LQDW: 2 gap day(s) — 2026-09-07, 2026-11-16
+  - BWX: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - CLOI: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - CMF: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - CWB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - EBND: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - EDV: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - EMB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - EMLC: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - FALN: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - GNMA: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - GOVT: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - GOVZ: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - GSY: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+35 more)
+  - HYD: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - HYG: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - HYGW: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - HYMB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IAGG: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - ICLO: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+35 more)
+  - ICSH: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - ICVT: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IEF: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IEI: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IGIB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IGLB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IGOV: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IGSB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - IUSB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - JCPB: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - JMUB: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - JNK: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - JPST: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - LQD: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - LQDW: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
   - LTPZ: 40 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+35 more)
-  - MBB: 2 gap day(s) — 2026-09-07, 2026-11-16
+  - MBB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
   - MINT: 40 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+35 more)
-  - MUB: 2 gap day(s) — 2026-09-07, 2026-11-16
+  - MUB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
   - MUNI: 40 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+35 more)
-  - NEAR: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - NYF: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - PCY: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
-  - PFF: 2 gap day(s) — 2026-09-07, 2026-11-16
+  - NEAR: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - NYF: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - PCY: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+35 more)
+  - PFF: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
   - PYLD: 40 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+35 more)
-  - PZA: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+34 more)
-  - QLTA: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - SCHI: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - SCHJ: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - SCHO: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - SCHP: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - SCHQ: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - SCHR: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - SCHZ: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - SGOV: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - SHM: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SHV: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - SHY: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - SHYG: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - SJNK: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPAB: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPIB: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPIP: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPLB: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPMB: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPSB: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPTI: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPTL: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SPTS: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - SRLN: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - STIP: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - SUB: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - TFI: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - TFLO: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - TIP: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - TIPX: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - TLH: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - TLT: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - TLTW: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - TOTL: 3 gap day(s) — 2026-09-07, 2026-11-13, 2026-11-16
-  - USHY: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - USIG: 2 gap day(s) — 2026-09-07, 2026-11-16
-  - VBIL: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VCIT: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - VCLT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VCSH: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - VGIT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VGLT: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VGSH: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - VMBS: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - VTEB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VTES: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VTIP: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - VUSB: 38 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+33 more)
-  - VWOB: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - PZA: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25 (+35 more)
+  - QLTA: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SCHI: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - SCHJ: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - SCHO: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - SCHP: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - SCHQ: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - SCHR: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - SCHZ: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - SGOV: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SHM: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SHV: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SHY: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SHYG: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SJNK: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPAB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPIB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPIP: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPLB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPMB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPSB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPTI: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPTL: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SPTS: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SRLN: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - STIP: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - SUB: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TFI: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TFLO: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TIP: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TIPX: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TLH: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TLT: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TLTW: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - TOTL: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - USHY: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - USIG: 3 gap day(s) — 2026-09-07, 2026-11-16, 2026-11-17
+  - VBIL: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - VCIT: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - VCLT: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - VCSH: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - VGIT: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - VGLT: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - VGSH: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - VMBS: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - VTEB: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - VTES: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - VTIP: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
+  - VUSB: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
+  - VWOB: 40 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+35 more)
   - ZROZ: 40 gap day(s) — 2026-09-18, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-25 (+35 more)
 
 ===== daily — OK =====
 
-Coverage: 101/124 (81.5%)
+Coverage: 96/124 (77.4%)
   BondBloxx        0/1 (0%)
     - XHLF: no adapter built yet
   DWS/Xtrackers    0/1 (0%)
@@ -130,7 +130,12 @@ Coverage: 101/124 (81.5%)
     - PFFD: no adapter built yet
   Goldman          0/1 (0%)
     - GBIL: no adapter built yet
-  Invesco          5/5 (100%)
+  Invesco          0/5 (0%)
+    - BKLN: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138G508/prices?idType=cusip&variationType=priceListing&productType=ETF
+    - GSY: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46090A887/prices?idType=cusip&variationType=priceListing&productType=ETF
+    - ICLO: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46090A721/prices?idType=cusip&variationType=priceListing&productType=ETF
+    - PCY: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138E784/prices?idType=cusip&variationType=priceListing&productType=ETF
+    - PZA: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138E537/prices?idType=cusip&variationType=priceListing&productType=ETF
   JPMorgan         3/3 (100%)
   Janus Henderson  0/3 (0%)
     - JAAA: no adapter built yet
@@ -154,15 +159,65 @@ Coverage: 101/124 (81.5%)
   iShares/BlackRock 0/2 (0%)
     - BINC: no adapter built yet
     - CLOA: no adapter built yet
+ERROR bondflows.sources.base: Invesco: GSY failed
+Traceback (most recent call last):
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/base.py", line 81, in fetch_all
+    result = self.fetch_one(ticker, identifiers.get(ticker))
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/invesco.py", line 58, in fetch_one
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46090A887/prices?idType=cusip&variationType=priceListing&productType=ETF
+ERROR bondflows.sources.base: Invesco: ICLO failed
+Traceback (most recent call last):
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/base.py", line 81, in fetch_all
+    result = self.fetch_one(ticker, identifiers.get(ticker))
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/invesco.py", line 58, in fetch_one
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46090A721/prices?idType=cusip&variationType=priceListing&productType=ETF
+ERROR bondflows.sources.base: Invesco: BKLN failed
+Traceback (most recent call last):
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/base.py", line 81, in fetch_all
+    result = self.fetch_one(ticker, identifiers.get(ticker))
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/invesco.py", line 58, in fetch_one
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138G508/prices?idType=cusip&variationType=priceListing&productType=ETF
+ERROR bondflows.sources.base: Invesco: PCY failed
+Traceback (most recent call last):
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/base.py", line 81, in fetch_all
+    result = self.fetch_one(ticker, identifiers.get(ticker))
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/invesco.py", line 58, in fetch_one
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138E784/prices?idType=cusip&variationType=priceListing&productType=ETF
+ERROR bondflows.sources.base: Invesco: PZA failed
+Traceback (most recent call last):
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/base.py", line 81, in fetch_all
+    result = self.fetch_one(ticker, identifiers.get(ticker))
+  File "/home/runner/work/bond_fund_flows/bond_fund_flows/src/bondflows/sources/invesco.py", line 58, in fetch_one
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/hostedtoolcache/Python/3.13.18/x64/lib/python3.13/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138E537/prices?idType=cusip&variationType=priceListing&productType=ETF
 
 ===== ssga_history — OK =====
-History since 2026-11-06: 0 rows inserted, 126 existing rows updated, 21/21 funds loaded.
+History since 2026-11-07: 0 rows inserted, 105 existing rows updated, 21/21 funds loaded.
 
 ===== compute_flows — OK =====
-Wrote 4825 fund_flows rows.
+Wrote 4848 fund_flows rows.
 
 ===== compute_analytics — OK =====
-Wrote 1716 flow_aggregates rows.
+Wrote 1730 flow_aggregates rows.
 
 ===== fetch_overlay_holdings — OK =====
 Wrote 3/3 overlay_holdings rows.
@@ -171,7 +226,7 @@ Wrote 3/3 overlay_holdings rows.
 Wrote 6/6 mbs_weights rows.
 
 ===== compute_mbs_flows — OK =====
-Wrote 216 mbs_implied_flows rows.
+Wrote 219 mbs_implied_flows rows.
 
 ===== fetch_ici_weekly — OK =====
 Wrote 5 ici_weekly_flows rows.
@@ -181,4 +236,4 @@ Wrote snapshot to /home/runner/work/bond_fund_flows/bond_fund_flows/dashboard/sn
 
 ===== push_snapshot — OK =====
 To https://github.com/TJConnellyContingentMacro/bond_fund_flows
-   8d9ff41..8ceda4c  master -> master
+   8ceda4c..365e264  master -> master
