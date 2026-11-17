@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T19:55:02.768894+00:00",
+  "generated_at": "2026-11-17T23:38:50.039481+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
@@ -101,8 +101,8 @@
         "covered_today": 0
       }
     },
-    "latest_fund_daily_asof_date": "2026-11-16",
-    "latest_fund_daily_retrieved_at": "2026-11-17T19:54:05.960094"
+    "latest_fund_daily_asof_date": "2026-11-17",
+    "latest_fund_daily_retrieved_at": "2026-11-17T23:37:49.346621"
   },
   "flows": {
     "available": true,
@@ -1131,12 +1131,12 @@
         }
       ],
       "last_date_by_issuer": {
-        "JPMorgan": "2026-11-16",
-        "Schwab": "2026-11-16",
-        "iShares": "2026-11-16",
         "VanEck": "2026-11-16",
+        "JPMorgan": "2026-11-16",
         "PIMCO": "2026-11-16",
-        "SSGA": "2026-11-16"
+        "iShares": "2026-11-16",
+        "SSGA": "2026-11-16",
+        "Schwab": "2026-11-16"
       },
       "largest_contributor": {
         "ticker": "GOVT",
@@ -1272,14 +1272,6 @@
         "weight_date": "2026-11-13"
       },
       {
-        "ticker": "IUSB",
-        "flow_date": "2026-11-16",
-        "implied_mbs_flow_usd": 0.0,
-        "flow_usd": 0.0,
-        "mbs_weight_pct": 19.52,
-        "weight_date": "2026-11-13"
-      },
-      {
         "ticker": "GNMA",
         "flow_date": "2026-11-16",
         "implied_mbs_flow_usd": 0.0,
@@ -1293,6 +1285,14 @@
         "implied_mbs_flow_usd": 0.0,
         "flow_usd": 0.0,
         "mbs_weight_pct": 94.32,
+        "weight_date": "2026-11-13"
+      },
+      {
+        "ticker": "IUSB",
+        "flow_date": "2026-11-16",
+        "implied_mbs_flow_usd": 0.0,
+        "flow_usd": 0.0,
+        "mbs_weight_pct": 19.52,
         "weight_date": "2026-11-13"
       }
     ],
@@ -1417,9 +1417,9 @@
     },
     {
       "ticker": "LQDW",
-      "asof_date": "2026-11-13",
+      "asof_date": "2026-11-16",
       "underlying_ticker": "LQD",
-      "weight_pct": 99.92
+      "weight_pct": 100.03
     },
     {
       "ticker": "TLTW",
@@ -1461,9 +1461,9 @@
     },
     {
       "ticker": "IUSB",
-      "asof_date": "2026-11-13",
+      "asof_date": "2026-11-16",
       "source": "iShares",
-      "mbs_weight_pct": 19.52
+      "mbs_weight_pct": 19.43
     }
   ],
   "notable": [
