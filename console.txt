@@ -1,5 +1,5 @@
-[master 40b56e9] Automated: refresh dashboard snapshot (2026-11-17)
- 1 file changed, 670 insertions(+), 127 deletions(-)
+[master 5e8f8d7] Automated: refresh dashboard snapshot (2026-11-17)
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 [backfill_gaps] OK
 [daily] OK
 [ssga_history] OK
