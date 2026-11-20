@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T19:13:47.643764+00:00",
+  "generated_at": "2026-11-20T22:48:17.544665+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
@@ -102,7 +102,7 @@
       }
     },
     "latest_fund_daily_asof_date": "2026-11-19",
-    "latest_fund_daily_retrieved_at": "2026-11-20T19:12:44.096411"
+    "latest_fund_daily_retrieved_at": "2026-11-20T22:47:07.360891"
   },
   "flows": {
     "available": true,
@@ -1142,12 +1142,12 @@
         }
       ],
       "last_date_by_issuer": {
-        "PIMCO": "2026-11-19",
-        "iShares": "2026-11-19",
-        "JPMorgan": "2026-11-19",
-        "SSGA": "2026-11-19",
         "VanEck": "2026-11-19",
-        "Schwab": "2026-11-19"
+        "SSGA": "2026-11-19",
+        "Schwab": "2026-11-19",
+        "iShares": "2026-11-19",
+        "PIMCO": "2026-11-19",
+        "JPMorgan": "2026-11-19"
       },
       "largest_contributor": {
         "ticker": "SGOV",
@@ -1269,6 +1269,14 @@
         "weight_date": "2026-11-18"
       },
       {
+        "ticker": "GNMA",
+        "flow_date": "2026-11-19",
+        "implied_mbs_flow_usd": 0.0,
+        "flow_usd": 0.0,
+        "mbs_weight_pct": 98.72,
+        "weight_date": "2026-11-18"
+      },
+      {
         "ticker": "IUSB",
         "flow_date": "2026-11-19",
         "implied_mbs_flow_usd": 0.0,
@@ -1282,14 +1290,6 @@
         "implied_mbs_flow_usd": 0.0,
         "flow_usd": 0.0,
         "mbs_weight_pct": 22.0,
-        "weight_date": "2026-11-18"
-      },
-      {
-        "ticker": "GNMA",
-        "flow_date": "2026-11-19",
-        "implied_mbs_flow_usd": 0.0,
-        "flow_usd": 0.0,
-        "mbs_weight_pct": 98.72,
         "weight_date": "2026-11-18"
       }
     ],
@@ -1441,9 +1441,9 @@
     },
     {
       "ticker": "GNMA",
-      "asof_date": "2026-11-18",
+      "asof_date": "2026-11-19",
       "source": "iShares",
-      "mbs_weight_pct": 98.72
+      "mbs_weight_pct": 98.75
     },
     {
       "ticker": "MBB",
