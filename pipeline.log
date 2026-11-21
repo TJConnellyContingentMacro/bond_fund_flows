@@ -1,4 +1,4 @@
-bondflows pipeline run — 2026-11-20T22:38:28.102535+00:00
+bondflows pipeline run — 2026-11-21T17:56:34.403915+00:00
 
 ===== backfill_gaps — OK =====
 
@@ -211,13 +211,13 @@ Traceback (most recent call last):
 requests.exceptions.HTTPError: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138E537/prices?idType=cusip&variationType=priceListing&productType=ETF
 
 ===== ssga_history — OK =====
-History since 2026-11-10: 0 rows inserted, 168 existing rows updated, 21/21 funds loaded.
+History since 2026-11-11: 0 rows inserted, 147 existing rows updated, 21/21 funds loaded.
 
 ===== compute_flows — OK =====
-Wrote 5147 fund_flows rows.
+Wrote 5200 fund_flows rows.
 
 ===== compute_analytics — OK =====
-Wrote 1804 flow_aggregates rows.
+Wrote 1826 flow_aggregates rows.
 
 ===== fetch_overlay_holdings — OK =====
 Wrote 3/3 overlay_holdings rows.
@@ -226,7 +226,7 @@ Wrote 3/3 overlay_holdings rows.
 Wrote 6/6 mbs_weights rows.
 
 ===== compute_mbs_flows — OK =====
-Wrote 240 mbs_implied_flows rows.
+Wrote 244 mbs_implied_flows rows.
 
 ===== fetch_ici_weekly — OK =====
 Wrote 6 ici_weekly_flows rows.
@@ -236,4 +236,4 @@ Wrote snapshot to /home/runner/work/bond_fund_flows/bond_fund_flows/dashboard/sn
 
 ===== push_snapshot — OK =====
 To https://github.com/TJConnellyContingentMacro/bond_fund_flows
-   e1d3f92..1aeb8b3  master -> master
+   1aeb8b3..5d9e76b  master -> master
