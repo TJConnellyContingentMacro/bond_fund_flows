@@ -1,5 +1,5 @@
-[master 1b2fca0] Automated: refresh dashboard snapshot (2026-11-24)
- 1 file changed, 480 insertions(+), 89 deletions(-)
+[master 83b0e12] Automated: refresh dashboard snapshot (2026-11-25)
+ 1 file changed, 84 insertions(+), 86 deletions(-)
 [backfill_gaps] OK
 [daily] OK
 [ssga_history] OK
@@ -12,7 +12,7 @@
 [export_dashboard_snapshot] OK
 [push_snapshot] OK
 
-Log written to /home/runner/work/bond_fund_flows/bond_fund_flows/logs/pipeline_20261124.log
+Log written to /home/runner/work/bond_fund_flows/bond_fund_flows/logs/pipeline_20261125.log
 
 ALERTS:
   - Coverage 96/124 (77.4%) is below the 90.0% threshold
