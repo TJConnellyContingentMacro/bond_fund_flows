@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-24T21:15:58.983801+00:00",
+  "generated_at": "2026-11-25T00:45:36.787948+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
-    "total_covered_today": 87,
+    "total_covered_today": 86,
     "by_issuer": {
       "iShares": {
         "expected": 32,
@@ -58,7 +58,7 @@
       "Schwab": {
         "expected": 7,
         "covered": 7,
-        "covered_today": 7
+        "covered_today": 6
       },
       "Janus Henderson": {
         "expected": 3,
@@ -101,14 +101,14 @@
         "covered_today": 0
       }
     },
-    "latest_fund_daily_asof_date": "2026-11-23",
-    "latest_fund_daily_retrieved_at": "2026-11-24T21:14:43.797781"
+    "latest_fund_daily_asof_date": "2026-11-24",
+    "latest_fund_daily_retrieved_at": "2026-11-25T00:44:34.144896"
   },
   "flows": {
     "available": true,
     "panel_max_gap_days": 4,
     "history_start": "2026-07-28",
-    "history_end": "2026-11-23",
+    "history_end": "2026-11-24",
     "n_funds_weekly": 76,
     "weekly": [
       {
@@ -302,12 +302,12 @@
         "week_start": "2026-11-23",
         "week_end": "2026-11-27",
         "n_funds": 70,
-        "total": 2114541967.69,
-        "ex_bills": 779653022.74,
-        "ex_bills_ex_muni": 734154981.44,
-        "credit": 95450180.04,
+        "total": 2172926406.5,
+        "ex_bills": 838037461.55,
+        "ex_bills_ex_muni": 755868639.75,
+        "credit": 143503614.27,
         "rates": 1920689599.45,
-        "mixed_other": 98402188.2
+        "mixed_other": 108733192.78
       }
     ],
     "latest_week": {
@@ -316,37 +316,37 @@
       "headline": [
         {
           "cut": "total",
-          "flow_usd": 2114541967.69,
+          "flow_usd": 2172926406.5,
           "prior_week_flow_usd": 2862240533.56,
-          "dv01_usd_per_bp": 327893.86,
-          "spread_dv01_usd_per_bp": 45609.69,
+          "dv01_usd_per_bp": 367294.8,
+          "spread_dv01_usd_per_bp": 54478.42,
           "has_proxied_spread_dv01": true,
           "n_funds": 70
         },
         {
           "cut": "ex_bills",
-          "flow_usd": 779653022.74,
+          "flow_usd": 838037461.55,
           "prior_week_flow_usd": -805524568.86,
-          "dv01_usd_per_bp": 316583.16,
-          "spread_dv01_usd_per_bp": 45609.69,
+          "dv01_usd_per_bp": 355984.1,
+          "spread_dv01_usd_per_bp": 54478.42,
           "has_proxied_spread_dv01": true,
           "n_funds": 66
         },
         {
           "cut": "ex_bills_ex_muni",
-          "flow_usd": 734154981.44,
+          "flow_usd": 755868639.75,
           "prior_week_flow_usd": -263161674.8,
-          "dv01_usd_per_bp": 287147.57,
-          "spread_dv01_usd_per_bp": 45609.69,
+          "dv01_usd_per_bp": 302015.76,
+          "spread_dv01_usd_per_bp": 54478.42,
           "has_proxied_spread_dv01": true,
           "n_funds": 58
         },
         {
           "cut": "credit",
-          "flow_usd": 95450180.04,
+          "flow_usd": 143503614.27,
           "prior_week_flow_usd": -1895672079.26,
-          "dv01_usd_per_bp": 79642.63,
-          "spread_dv01_usd_per_bp": 45609.69,
+          "dv01_usd_per_bp": 112906.95,
+          "spread_dv01_usd_per_bp": 54478.42,
           "has_proxied_spread_dv01": true,
           "n_funds": 35
         },
@@ -361,9 +361,9 @@
         },
         {
           "cut": "mixed_other",
-          "flow_usd": 98402188.2,
+          "flow_usd": 108733192.78,
           "prior_week_flow_usd": 957190513.6,
-          "dv01_usd_per_bp": 43202.17,
+          "dv01_usd_per_bp": 49338.79,
           "spread_dv01_usd_per_bp": 0.0,
           "has_proxied_spread_dv01": false,
           "n_funds": 8
@@ -470,6 +470,17 @@
           "ogr": 0.00254206886541413
         },
         {
+          "ticker": "JMUB",
+          "issuer": "JPMorgan",
+          "sleeve": "muni",
+          "flow_usd": 90344142.0,
+          "days": 2,
+          "start_tna": 9156629986.65,
+          "from_date": "2026-11-20",
+          "to_date": "2026-11-24",
+          "ogr": 0.009866527546894233
+        },
+        {
           "ticker": "USHY",
           "issuer": "iShares",
           "sleeve": "hy_corp",
@@ -492,17 +503,6 @@
           "ogr": 0.004193695574131061
         },
         {
-          "ticker": "JMUB",
-          "issuer": "JPMorgan",
-          "sleeve": "muni",
-          "flow_usd": 53673361.5,
-          "days": 1,
-          "start_tna": 9156629986.65,
-          "from_date": "2026-11-20",
-          "to_date": "2026-11-23",
-          "ogr": 0.005861693830399788
-        },
-        {
           "ticker": "ICSH",
           "issuer": "iShares",
           "sleeve": "ultrashort_credit",
@@ -517,12 +517,12 @@
           "ticker": "JPST",
           "issuer": "JPMorgan",
           "sleeve": "ultrashort_credit",
-          "flow_usd": -40277840.0,
-          "days": 1,
+          "flow_usd": -42602653.97,
+          "days": 2,
           "start_tna": 42228366895.13,
           "from_date": "2026-11-20",
-          "to_date": "2026-11-23",
-          "ogr": -0.0009538100324842317
+          "to_date": "2026-11-24",
+          "ogr": -0.001008863403972015
         },
         {
           "ticker": "EMB",
@@ -602,6 +602,17 @@
           "ogr": -0.0006107710800315033
         },
         {
+          "ticker": "QLTA",
+          "issuer": "iShares",
+          "sleeve": "ig_corp",
+          "flow_usd": 13707467.7,
+          "days": 2,
+          "start_tna": 1157798146.0,
+          "from_date": "2026-11-20",
+          "to_date": "2026-11-24",
+          "ogr": 0.011839255182224138
+        },
+        {
           "ticker": "SPIB",
           "issuer": "SSGA",
           "sleeve": "ig_corp",
@@ -655,6 +666,17 @@
           "from_date": "2026-11-20",
           "to_date": "2026-11-23",
           "ogr": -0.00019344554540774882
+        },
+        {
+          "ticker": "JCPB",
+          "issuer": "JPMorgan",
+          "sleeve": "active_multisector",
+          "flow_usd": 10331004.58,
+          "days": 2,
+          "start_tna": 17971878409.24,
+          "from_date": "2026-11-20",
+          "to_date": "2026-11-24",
+          "ogr": 0.0005748427818590433
         },
         {
           "ticker": "TFLO",
@@ -811,34 +833,12 @@
           "ogr": 0.0
         },
         {
-          "ticker": "JCPB",
-          "issuer": "JPMorgan",
-          "sleeve": "active_multisector",
-          "flow_usd": 0.0,
-          "days": 1,
-          "start_tna": 17971878409.24,
-          "from_date": "2026-11-20",
-          "to_date": "2026-11-23",
-          "ogr": 0.0
-        },
-        {
           "ticker": "GNMA",
           "issuer": "iShares",
           "sleeve": "agency_mbs",
           "flow_usd": 0.0,
           "days": 1,
           "start_tna": 421343442.0,
-          "from_date": "2026-11-20",
-          "to_date": "2026-11-23",
-          "ogr": 0.0
-        },
-        {
-          "ticker": "QLTA",
-          "issuer": "iShares",
-          "sleeve": "ig_corp",
-          "flow_usd": 0.0,
-          "days": 1,
-          "start_tna": 1157798146.0,
           "from_date": "2026-11-20",
           "to_date": "2026-11-23",
           "ogr": 0.0
@@ -881,10 +881,10 @@
           "issuer": "iShares",
           "sleeve": "ig_corp",
           "flow_usd": 0.0,
-          "days": 1,
+          "days": 2,
           "start_tna": 23839933734.0,
           "from_date": "2026-11-20",
-          "to_date": "2026-11-23",
+          "to_date": "2026-11-24",
           "ogr": 0.0
         },
         {
@@ -947,10 +947,10 @@
           "issuer": "iShares",
           "sleeve": "aggregate",
           "flow_usd": 0.0,
-          "days": 1,
+          "days": 2,
           "start_tna": 138890459370.0,
           "from_date": "2026-11-20",
-          "to_date": "2026-11-23",
+          "to_date": "2026-11-24",
           "ogr": 0.0
         },
         {
@@ -1142,17 +1142,17 @@
         }
       ],
       "last_date_by_issuer": {
-        "VanEck": "2026-11-23",
-        "JPMorgan": "2026-11-23",
-        "iShares": "2026-11-23",
-        "PIMCO": "2026-11-23",
         "SSGA": "2026-11-23",
-        "Schwab": "2026-11-23"
+        "Schwab": "2026-11-23",
+        "JPMorgan": "2026-11-24",
+        "VanEck": "2026-11-23",
+        "PIMCO": "2026-11-23",
+        "iShares": "2026-11-24"
       },
       "largest_contributor": {
         "ticker": "SGOV",
         "flow_usd": 820236562.45,
-        "total_ex_largest": 1294305405.24
+        "total_ex_largest": 1352689844.05
       }
     },
     "sleeves_recent": {
@@ -1171,7 +1171,7 @@
         },
         {
           "cut": "ig_corp",
-          "flow_usd": 1621918231.5,
+          "flow_usd": 1635625699.2,
           "n_funds": 11
         },
         {
@@ -1181,7 +1181,7 @@
         },
         {
           "cut": "active_multisector",
-          "flow_usd": 600113663.2,
+          "flow_usd": 610444667.78,
           "n_funds": 4
         },
         {
@@ -1196,7 +1196,7 @@
         },
         {
           "cut": "ultrashort_credit",
-          "flow_usd": 229254026.9,
+          "flow_usd": 226929212.93,
           "n_funds": 5
         },
         {
@@ -1221,7 +1221,7 @@
         },
         {
           "cut": "muni",
-          "flow_usd": -588186374.61,
+          "flow_usd": -551515594.11,
           "n_funds": 9
         },
         {
@@ -1261,14 +1261,6 @@
         "weight_date": "2026-11-20"
       },
       {
-        "ticker": "GNMA",
-        "flow_date": "2026-11-23",
-        "implied_mbs_flow_usd": 0.0,
-        "flow_usd": 0.0,
-        "mbs_weight_pct": 98.77,
-        "weight_date": "2026-11-20"
-      },
-      {
         "ticker": "IUSB",
         "flow_date": "2026-11-23",
         "implied_mbs_flow_usd": 0.0,
@@ -1278,10 +1270,18 @@
       },
       {
         "ticker": "AGG",
-        "flow_date": "2026-11-23",
+        "flow_date": "2026-11-24",
         "implied_mbs_flow_usd": 0.0,
         "flow_usd": 0.0,
         "mbs_weight_pct": 22.0,
+        "weight_date": "2026-11-23"
+      },
+      {
+        "ticker": "GNMA",
+        "flow_date": "2026-11-23",
+        "implied_mbs_flow_usd": 0.0,
+        "flow_usd": 0.0,
+        "mbs_weight_pct": 98.77,
         "weight_date": "2026-11-20"
       },
       {
@@ -1471,8 +1471,6 @@
     }
   ],
   "notable": [
-    "Today's coverage 87/106 (82.1%) is below the 90.0% threshold",
-    "tips: z-score 7.27 on 2026-11-23",
-    "loans_clo: z-score -6.20 on 2026-11-23"
+    "Today's coverage 86/106 (81.1%) is below the 90.0% threshold"
   ]
 }
