@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-26T20:14:52.926222+00:00",
+  "generated_at": "2026-11-27T00:40:36.227014+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
-    "total_covered_today": 86,
+    "total_covered_today": 87,
     "by_issuer": {
       "iShares": {
         "expected": 32,
@@ -58,7 +58,7 @@
       "Schwab": {
         "expected": 7,
         "covered": 7,
-        "covered_today": 6
+        "covered_today": 7
       },
       "Janus Henderson": {
         "expected": 3,
@@ -102,7 +102,7 @@
       }
     },
     "latest_fund_daily_asof_date": "2026-11-25",
-    "latest_fund_daily_retrieved_at": "2026-11-26T20:13:41.143386"
+    "latest_fund_daily_retrieved_at": "2026-11-27T00:39:41.041949"
   },
   "flows": {
     "available": true,
@@ -302,11 +302,11 @@
         "week_start": "2026-11-23",
         "week_end": "2026-11-27",
         "n_funds": 71,
-        "total": 6617181983.88,
-        "ex_bills": 5037276068.4,
-        "ex_bills_ex_muni": 5052775368.96,
+        "total": 6629171983.88,
+        "ex_bills": 5049266068.4,
+        "ex_bills_ex_muni": 5064765368.96,
         "credit": 197221189.8,
-        "rates": 6098358786.48,
+        "rates": 6110348786.48,
         "mixed_other": 321602007.6
       }
     ],
@@ -316,27 +316,27 @@
       "headline": [
         {
           "cut": "total",
-          "flow_usd": 6617181983.88,
+          "flow_usd": 6629171983.88,
           "prior_week_flow_usd": 2862240533.56,
-          "dv01_usd_per_bp": 3707559.65,
+          "dv01_usd_per_bp": 3709717.85,
           "spread_dv01_usd_per_bp": 266772.36,
           "has_proxied_spread_dv01": true,
           "n_funds": 71
         },
         {
           "cut": "ex_bills",
-          "flow_usd": 5037276068.4,
+          "flow_usd": 5049266068.4,
           "prior_week_flow_usd": -805524568.86,
-          "dv01_usd_per_bp": 3694963.96,
+          "dv01_usd_per_bp": 3697122.16,
           "spread_dv01_usd_per_bp": 266772.36,
           "has_proxied_spread_dv01": true,
           "n_funds": 67
         },
         {
           "cut": "ex_bills_ex_muni",
-          "flow_usd": 5052775368.96,
+          "flow_usd": 5064765368.96,
           "prior_week_flow_usd": -263161674.8,
-          "dv01_usd_per_bp": 3703134.3,
+          "dv01_usd_per_bp": 3705292.5,
           "spread_dv01_usd_per_bp": 266772.36,
           "has_proxied_spread_dv01": true,
           "n_funds": 59
@@ -352,9 +352,9 @@
         },
         {
           "cut": "rates",
-          "flow_usd": 6098358786.48,
+          "flow_usd": 6110348786.48,
           "prior_week_flow_usd": 3800722099.22,
-          "dv01_usd_per_bp": 3300130.47,
+          "dv01_usd_per_bp": 3302288.67,
           "spread_dv01_usd_per_bp": 0.0,
           "has_proxied_spread_dv01": false,
           "n_funds": 28
@@ -668,17 +668,6 @@
           "ogr": -0.009930362416355112
         },
         {
-          "ticker": "SCHO",
-          "issuer": "Schwab",
-          "sleeve": "ust_short",
-          "flow_usd": -40732000.0,
-          "days": 1,
-          "start_tna": 15173572670.52,
-          "from_date": "2026-11-20",
-          "to_date": "2026-11-24",
-          "ogr": -0.002684404054632185
-        },
-        {
           "ticker": "STIP",
           "issuer": "iShares",
           "sleeve": "tips",
@@ -765,6 +754,17 @@
           "from_date": "2026-11-20",
           "to_date": "2026-11-25",
           "ogr": -0.002020261022817793
+        },
+        {
+          "ticker": "SCHO",
+          "issuer": "Schwab",
+          "sleeve": "ust_short",
+          "flow_usd": -28742000.0,
+          "days": 2,
+          "start_tna": 15173572670.52,
+          "from_date": "2026-11-20",
+          "to_date": "2026-11-25",
+          "ogr": -0.0018942144097573962
         },
         {
           "ticker": "TFI",
@@ -1153,17 +1153,17 @@
         }
       ],
       "last_date_by_issuer": {
+        "Schwab": "2026-11-25",
         "JPMorgan": "2026-11-25",
-        "SSGA": "2026-11-24",
-        "VanEck": "2026-11-25",
-        "PIMCO": "2026-11-25",
         "iShares": "2026-11-25",
-        "Schwab": "2026-11-25"
+        "PIMCO": "2026-11-25",
+        "SSGA": "2026-11-24",
+        "VanEck": "2026-11-25"
       },
       "largest_contributor": {
         "ticker": "IEF",
         "flow_usd": 2255738270.7,
-        "total_ex_largest": 4361443713.18
+        "total_ex_largest": 4373433713.18
       }
     },
     "sleeves_recent": {
@@ -1232,7 +1232,7 @@
         },
         {
           "cut": "ust_short",
-          "flow_usd": -619066815.3,
+          "flow_usd": -607076815.3,
           "n_funds": 3
         },
         {
@@ -1272,11 +1272,11 @@
         "weight_date": "2026-11-23"
       },
       {
-        "ticker": "GNMA",
+        "ticker": "AGG",
         "flow_date": "2026-11-25",
         "implied_mbs_flow_usd": 0.0,
         "flow_usd": 0.0,
-        "mbs_weight_pct": 98.76,
+        "mbs_weight_pct": 22.01,
         "weight_date": "2026-11-24"
       },
       {
@@ -1288,11 +1288,11 @@
         "weight_date": "2026-11-23"
       },
       {
-        "ticker": "AGG",
+        "ticker": "GNMA",
         "flow_date": "2026-11-25",
         "implied_mbs_flow_usd": 0.0,
         "flow_usd": 0.0,
-        "mbs_weight_pct": 22.01,
+        "mbs_weight_pct": 98.76,
         "weight_date": "2026-11-24"
       },
       {
@@ -1489,6 +1489,6 @@
     }
   ],
   "notable": [
-    "Today's coverage 86/106 (81.1%) is below the 90.0% threshold"
+    "Today's coverage 87/106 (82.1%) is below the 90.0% threshold"
   ]
 }
