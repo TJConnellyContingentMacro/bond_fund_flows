@@ -1,8 +1,8 @@
-bondflows pipeline run — 2026-11-27T00:31:17.819607+00:00
+bondflows pipeline run — 2026-11-27T19:53:19.592128+00:00
 
 ===== backfill_gaps — OK =====
 
-Historical coverage: 5718/7587 business-days (75.4%)
+Historical coverage: 5719/7587 business-days (75.4%)
   - AGG: 3 gap day(s) — 2026-09-07, 2026-11-26, 2026-11-27
   - ANGL: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
   - BIL: 4 gap day(s) — 2026-09-07, 2026-11-25, 2026-11-26, 2026-11-27
@@ -58,7 +58,7 @@ Historical coverage: 5718/7587 business-days (75.4%)
   - QLTA: 3 gap day(s) — 2026-09-07, 2026-11-26, 2026-11-27
   - SCHI: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
   - SCHJ: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
-  - SCHO: 44 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+39 more)
+  - SCHO: 43 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+38 more)
   - SCHP: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
   - SCHQ: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
   - SCHR: 39 gap day(s) — 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-28 (+34 more)
@@ -108,7 +108,7 @@ Historical coverage: 5718/7587 business-days (75.4%)
 
 ===== daily — OK =====
 
-Coverage: 97/124 (78.2%)
+Coverage: 96/124 (77.4%)
   BondBloxx        0/1 (0%)
     - XHLF: no adapter built yet
   DWS/Xtrackers    0/1 (0%)
@@ -147,7 +147,8 @@ Coverage: 97/124 (78.2%)
     - TBT: no adapter built yet
     - UBT: no adapter built yet
   SSGA             21/21 (100%)
-  Schwab           7/7 (100%)
+  Schwab           6/7 (86%)
+    - SCHO: could not locate NAV/as-of-date on page
   Simplify         0/1 (0%)
     - MTBA: no adapter built yet
   VanEck           4/4 (100%)
@@ -210,13 +211,13 @@ Traceback (most recent call last):
 requests.exceptions.HTTPError: 406 Client Error: Not Acceptable for url: https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/46138E537/prices?idType=cusip&variationType=priceListing&productType=ETF
 
 ===== ssga_history — OK =====
-History since 2026-11-17: 0 rows inserted, 126 existing rows updated, 21/21 funds loaded.
+History since 2026-11-17: 0 rows inserted, 147 existing rows updated, 21/21 funds loaded.
 
 ===== compute_flows — OK =====
-Wrote 5449 fund_flows rows.
+Wrote 5476 fund_flows rows.
 
 ===== compute_analytics — OK =====
-Wrote 1892 flow_aggregates rows.
+Wrote 1903 flow_aggregates rows.
 
 ===== fetch_overlay_holdings — OK =====
 Wrote 3/3 overlay_holdings rows.
@@ -225,7 +226,7 @@ Wrote 3/3 overlay_holdings rows.
 Wrote 6/6 mbs_weights rows.
 
 ===== compute_mbs_flows — OK =====
-Wrote 262 mbs_implied_flows rows.
+Wrote 264 mbs_implied_flows rows.
 
 ===== fetch_ici_weekly — OK =====
 Wrote 7 ici_weekly_flows rows.
@@ -235,4 +236,4 @@ Wrote snapshot to /home/runner/work/bond_fund_flows/bond_fund_flows/dashboard/sn
 
 ===== push_snapshot — OK =====
 To https://github.com/TJConnellyContingentMacro/bond_fund_flows
-   bc0afb5..4b79d89  master -> master
+   4b79d89..fc89113  master -> master
