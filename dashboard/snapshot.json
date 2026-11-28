@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-27T20:03:03.362511+00:00",
+  "generated_at": "2026-11-28T00:10:37.215749+00:00",
   "coverage": {
     "total_expected": 106,
     "total_covered": 92,
-    "total_covered_today": 87,
+    "total_covered_today": 86,
     "by_issuer": {
       "iShares": {
         "expected": 32,
@@ -58,7 +58,7 @@
       "Schwab": {
         "expected": 7,
         "covered": 7,
-        "covered_today": 7
+        "covered_today": 6
       },
       "Janus Henderson": {
         "expected": 3,
@@ -101,8 +101,8 @@
         "covered_today": 0
       }
     },
-    "latest_fund_daily_asof_date": "2026-11-26",
-    "latest_fund_daily_retrieved_at": "2026-11-27T20:01:54.632505"
+    "latest_fund_daily_asof_date": "2026-11-27",
+    "latest_fund_daily_retrieved_at": "2026-11-28T00:09:23.010700"
   },
   "flows": {
     "available": true,
@@ -1153,12 +1153,12 @@
         }
       ],
       "last_date_by_issuer": {
-        "VanEck": "2026-11-25",
         "Schwab": "2026-11-25",
-        "SSGA": "2026-11-25",
         "PIMCO": "2026-11-26",
-        "JPMorgan": "2026-11-25",
-        "iShares": "2026-11-25"
+        "VanEck": "2026-11-25",
+        "iShares": "2026-11-25",
+        "SSGA": "2026-11-25",
+        "JPMorgan": "2026-11-25"
       },
       "largest_contributor": {
         "ticker": "IEF",
@@ -1288,19 +1288,19 @@
         "weight_date": "2026-11-24"
       },
       {
-        "ticker": "MBB",
-        "flow_date": "2026-11-25",
-        "implied_mbs_flow_usd": 0.0,
-        "flow_usd": 0.0,
-        "mbs_weight_pct": 94.43,
-        "weight_date": "2026-11-24"
-      },
-      {
         "ticker": "AGG",
         "flow_date": "2026-11-25",
         "implied_mbs_flow_usd": 0.0,
         "flow_usd": 0.0,
         "mbs_weight_pct": 22.01,
+        "weight_date": "2026-11-24"
+      },
+      {
+        "ticker": "MBB",
+        "flow_date": "2026-11-25",
+        "implied_mbs_flow_usd": 0.0,
+        "flow_usd": 0.0,
+        "mbs_weight_pct": 94.43,
         "weight_date": "2026-11-24"
       }
     ],
@@ -1489,6 +1489,6 @@
     }
   ],
   "notable": [
-    "Today's coverage 87/106 (82.1%) is below the 90.0% threshold"
+    "Today's coverage 86/106 (81.1%) is below the 90.0% threshold"
   ]
 }
